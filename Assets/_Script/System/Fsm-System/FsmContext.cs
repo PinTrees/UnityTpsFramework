@@ -154,14 +154,6 @@ namespace Fsm
                 return;
 
             await layers[layer].ChangeStateNowAsync(type, param);
-
-            while(true)
-            {
-                if (layers[layer].ContainsState(type))
-                    return;
-
-                await UniTask.Yield();
-            }
         }
         #endregion
     }

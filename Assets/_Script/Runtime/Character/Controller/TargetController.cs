@@ -43,6 +43,14 @@ public class TargetController : MonoBehaviour
         UpdateTargetDetectTask().Forget();
     }
 
+    protected void LateUpdate()
+    {
+        forcusedByCharacters.ForEach(e =>
+        {
+            e.OnConfrontingTrace();
+        });
+    }
+
     async UniTask UpdateTargetDetectTask()
     {
         while (true)
@@ -172,8 +180,6 @@ public class TargetController : MonoBehaviour
     {
         forcusedByCharacters.Add(character);
         ForcusedTargetReposition();
-
-        character.OnConfronting().Forget();
     }
     // 현재 나를 추적중인 캐릭터 제거
     private void RemoveForcusedTarget(CharacterActorBase character)

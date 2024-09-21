@@ -82,8 +82,6 @@ public class NpcCombatController : MonoBehaviour
 
     private void InitOverrideFsmState()
     {
-        Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        
         // Override Movement Idle State
         ownerCharacter.fsmContext.FindLayer(NpcFsmLayer.MovementLayer).FindState(NpcMovementStateType.Idle).onUpdate = () =>
         {

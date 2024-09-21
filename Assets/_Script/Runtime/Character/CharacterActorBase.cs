@@ -51,7 +51,6 @@ public class CharacterActorBase : FsmObjectBase
     public bool IsSturn = false;
     public bool IsKnockDown = false;
     public bool IsCanNotMove = false;
-    public bool IsFsmCreated = false;
 
 
     protected override void OnInit()
@@ -114,10 +113,15 @@ public class CharacterActorBase : FsmObjectBase
     {
         IsDeath = true;
     }
-    public virtual async UniTask OnConfronting()
+    public virtual bool OnConfrontingTrace()
     {
-        await IsCreatedFsmAsync();
-        await UniTask.SwitchToMainThread();
+        if (IsDeath) return false;
+        if (IsHit) return false;
+        if (IsConfronting) return false;
+        if (IsCanNotMove) return false;
+        if (IsKnockDown) return false;
+
+        return true;
     }
 
 
@@ -126,16 +130,5 @@ public class CharacterActorBase : FsmObjectBase
         Vector3 localCenterOfMass = characterCollider.bounds.center - baseObject.transform.position;
         Vector3 worldCenterOfMass = baseObject.transform.TransformPoint(localCenterOfMass);
         return worldCenterOfMass;
-    }
-
-    public async UniTask<bool> IsCreatedFsmAsync()
-    {
-        while (true)
-        {
-            await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
-
-            if(IsFsmCreated)
-                return true;    
-        }
     }
 }

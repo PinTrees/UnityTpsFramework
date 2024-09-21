@@ -4,6 +4,8 @@ using System.Linq;
 using System.Collections;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Threading;
+using System;
 
 namespace Fsm
 {
@@ -47,6 +49,7 @@ namespace Fsm
         // 재정의 가능 초기화자
         protected virtual void OnInit()
         {
+            UpdateStateChangeTask();
         }
 
         public void Update()
@@ -149,30 +152,74 @@ namespace Fsm
             ChangeStateNowAsync(type, param).Forget();
         }
 
+
+        struct StateChangeContainer
+        {
+            public string type;
+            public object param;
+            public Action onCompelet;
+        }
+
+        private async void UpdateStateChangeTask()
+        {
+            while(true)
+            {
+                await UniTask.Yield();
+
+                if (stateChangeQueue.Count <= 0)
+                    continue;
+
+                var currentChangeState = stateChangeQueue.Dequeue();
+                this.param = currentChangeState.param;
+
+                try
+                {
+                    // 현재 상태가 있는 경우 Exit
+                    if (currentState != null)
+                    {
+                        await currentState.Exit();
+                        previousStateType = currentState.stateId;
+                    }
+
+                    // 새로운 상태로 전환
+                    if (stateMap.ContainsKey(currentChangeState.type))
+                    {
+                        currentState = stateMap[currentChangeState.type];
+                        await currentState.Enter();
+                    }
+
+                    currentChangeState.onCompelet();
+                }
+                catch (OperationCanceledException)
+                {
+                }
+            }
+        }
+
+        private Queue<StateChangeContainer> stateChangeQueue = new();
         public async UniTask ChangeStateNowAsync(string type, object param = null)
         {
-            while(isChangeStateLocked)
+            if (stateChangeQueue.Where(e => e.type == type).Count() > 0)
+                return;
+
+            bool isCompelet = false;
+            StateChangeContainer newChange = new StateChangeContainer()
             {
-                await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
-            }
+                type = type,
+                param = param,
+                onCompelet = () =>
+                {
+                    isCompelet = true;
+                }
+            };
+            stateChangeQueue.Enqueue(newChange);
 
-            isChangeStateLocked = true; 
-
-            this.param = param;
-
-            if (currentState != null)
+            while (true)
             {
-                await currentState.Exit();
-                previousStateType = currentState.stateId;
-            }
+                if (isCompelet) return;
 
-            if (stateMap.ContainsKey(type))
-            {
-                currentState = stateMap[type];
-                await currentState.Enter();
+                await UniTask.Yield();
             }
-
-            isChangeStateLocked = false;
         }
         #endregion
     }

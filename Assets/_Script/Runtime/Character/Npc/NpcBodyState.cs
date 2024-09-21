@@ -122,10 +122,12 @@ public class NpcBodyState_Death : FsmState
         owner.IsDeath = true;
         owner.navMeshAgent.ResetPath();
 
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
         await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.HitLayer, NpcHitStateType.None);
         await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
+        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
+        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+
+        Debug.Log("BBBBB");
 
         {
             owner.animator.speed = 1;
@@ -133,6 +135,8 @@ public class NpcBodyState_Death : FsmState
             owner.animator.SetNormalizeTime("Death", 0.01f);
             await owner.animator.TransitionCompleteAsync("Death");
         }
+
+        Debug.Log("CCCCC");
     }
 
     public override async UniTask Exit()

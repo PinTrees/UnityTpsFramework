@@ -67,7 +67,6 @@ public class NpcCharacterActorBase : CharacterActorBase
         fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
         fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
 
-        IsFsmCreated = true;
         healthController.Init(this, 1000);
     }
 
@@ -117,24 +116,26 @@ public class NpcCharacterActorBase : CharacterActorBase
     public override void OnDeath()
     {
         base.OnDeath();
-        fsmContext.ChangeStateNow(NpcFsmLayer.BodyLayer, NpcBodyStateType.Death);
 
-        if(indicator)
-        {
-            indicator.Close();
-        }
+        var bodyLayer = fsmContext.FindLayer(NpcFsmLayer.BodyLayer);
+        bodyLayer.ChangeStateNow(NpcBodyStateType.Death);
+
+        indicator?.Close();
     }
 
-    public override async UniTask OnConfronting()
+    public override bool OnConfrontingTrace()
     {
-        await base.OnConfronting();
+        if (!base.OnConfrontingTrace())
+            return false;
 
-        if (IsDeath)
-            return;
+        var movementLayer = fsmContext.FindLayer(NpcFsmLayer.MovementLayer);
+        if (movementLayer.ContainsState(NpcMovementStateType.ConfrontingTrace))
+            return false;
 
         Debug.Log("Npc OnConfonting Trace");
+        movementLayer.ChangeStateNow(NpcMovementStateType.ConfrontingTrace);
 
-        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.ConfrontingTrace);
+        return true;
     }
 
     public override void OnHit(HitData data)
