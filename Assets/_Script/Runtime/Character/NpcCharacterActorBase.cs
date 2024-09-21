@@ -128,6 +128,9 @@ public class NpcCharacterActorBase : CharacterActorBase
         if (!base.OnConfrontingTrace())
             return false;
 
+        if (IsTrace)
+            return false;
+
         var movementLayer = fsmContext.FindLayer(NpcFsmLayer.MovementLayer);
         if (movementLayer.ContainsState(NpcMovementStateType.ConfrontingTrace))
             return false;

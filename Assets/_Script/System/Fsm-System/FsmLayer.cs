@@ -153,7 +153,7 @@ namespace Fsm
         }
 
 
-        struct StateChangeContainer
+        public struct StateChangeContainer
         {
             public string type;
             public object param;
@@ -172,31 +172,25 @@ namespace Fsm
                 var currentChangeState = stateChangeQueue.Dequeue();
                 this.param = currentChangeState.param;
 
-                try
+                // 현재 상태가 있는 경우 Exit
+                if (currentState != null)
                 {
-                    // 현재 상태가 있는 경우 Exit
-                    if (currentState != null)
-                    {
-                        await currentState.Exit();
-                        previousStateType = currentState.stateId;
-                    }
-
-                    // 새로운 상태로 전환
-                    if (stateMap.ContainsKey(currentChangeState.type))
-                    {
-                        currentState = stateMap[currentChangeState.type];
-                        await currentState.Enter();
-                    }
-
-                    currentChangeState.onCompelet();
+                    await currentState.Exit();
+                    previousStateType = currentState.stateId;
                 }
-                catch (OperationCanceledException)
+
+                // 새로운 상태로 전환
+                if (stateMap.ContainsKey(currentChangeState.type))
                 {
+                    currentState = stateMap[currentChangeState.type];
+                    await currentState.Enter();
                 }
+
+                currentChangeState.onCompelet();
             }
         }
 
-        private Queue<StateChangeContainer> stateChangeQueue = new();
+        public Queue<StateChangeContainer> stateChangeQueue = new();
         public async UniTask ChangeStateNowAsync(string type, object param = null)
         {
             if (stateChangeQueue.Where(e => e.type == type).Count() > 0)

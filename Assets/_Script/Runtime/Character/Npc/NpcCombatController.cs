@@ -12,15 +12,11 @@ public class NpcCombatController : MonoBehaviour
 
     [Header("Runtime Value")]
     [SerializeField] private NpcCharacterActorBase ownerCharacter;
-    [SerializeField] private CharacterCombatData combatData;
     [SerializeField] public AttackNode currentAttackNode;
 
     public void Init(NpcCharacterActorBase ownerCharacter)
     {
         this.ownerCharacter = ownerCharacter;
-        combatData = ownerCharacter.characterData.combatData;
-
-        InitOverrideFsmState();
         UpdateTask().Forget();
     }
 
@@ -78,38 +74,6 @@ public class NpcCombatController : MonoBehaviour
     public void ExitAttack()
     {
         currentAttackNode = null;
-    }
-
-    private void InitOverrideFsmState()
-    {
-        // Override Movement Idle State
-        ownerCharacter.fsmContext.FindLayer(NpcFsmLayer.MovementLayer).FindState(NpcMovementStateType.Idle).onUpdate = () =>
-        {
-            if (ownerCharacter.IsDeath)
-                return;
-            if (ownerCharacter.IsHit)
-                return;
-            if (ownerCharacter.IsAttack)
-                return;
-            if (ownerCharacter.IsKnockDown)
-                return;
-            if (ownerCharacter.IsCanNotMove)
-                return;
-
-            var target = ownerCharacter.targetController.forcusTarget;
-            if (target == null)
-                return;
-
-            var targetPosition = target.baseObject.transform.position;
-            var ownerPosition = ownerCharacter.baseObject.transform.position;
-            var targetDistance = Vector3.Distance(ownerPosition, targetPosition);
-
-            if (targetDistance < combatData.traceStartRange)
-            {
-                ownerCharacter.IsTrace = true;
-                ownerCharacter.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Trace);
-            }
-        };
     }
 
     //public void Update()

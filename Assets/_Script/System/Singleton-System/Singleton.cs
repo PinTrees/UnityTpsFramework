@@ -41,6 +41,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         if (instance == null)       // 인스턴스가 없는 경우 현재 오브젝트를 인스턴스로 설정합니다.
         {
             instance = this as T;
+            gameObject.transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)  // 이미 다른 인스턴스가 존재하는 경우, 현재 오브젝트를 파괴합니다.

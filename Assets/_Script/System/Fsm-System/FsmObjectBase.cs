@@ -1,6 +1,8 @@
 using Fsm;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -86,27 +88,21 @@ public class FsmObjectBaseEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        // 기본 인스펙터 렌더링
-        DrawDefaultInspector();
-
-        EditorGUILayout.Space();
-
         var fsmObject = target as FsmObjectBase;
 
-        var fsmDebug = "";
-
-        if(fsmObject.fsmContext != null)
+        if (fsmObject.fsmContext != null)
         {
             foreach (var layer in fsmObject.fsmContext.layers)
             {
-                fsmDebug += layer.Key + ": ";
-                if (layer.Value.currentState != null)
-                    fsmDebug += layer.Value.currentState.stateId;
-                fsmDebug += "\n";
+                string stateChange = "";
+                layer.Value.stateChangeQueue.ToList().ForEach(e => stateChange += e.type + ", ");
+                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.currentState.stateId}), [{stateChange}]", EditorStyles.helpBox);
             }
         }
-       
-        EditorGUILayout.LabelField("FsmObjectBase\n\n" + fsmDebug, EditorStyles.helpBox);
+
+        // 기본 인스펙터 렌더링
+        EditorGUILayout.Space();
+        DrawDefaultInspector();
     }
 }
 #endif
