@@ -127,16 +127,12 @@ public class NpcBodyState_Death : FsmState
         await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
         await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
 
-        Debug.Log("BBBBB");
-
         {
             owner.animator.speed = 1;
             owner.animator.CrossFadeInFixedTime("Death", 0.15f);
             owner.animator.SetNormalizeTime("Death", 0.01f);
             await owner.animator.TransitionCompleteAsync("Death");
         }
-
-        Debug.Log("CCCCC");
     }
 
     public override async UniTask Exit()

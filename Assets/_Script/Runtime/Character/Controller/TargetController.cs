@@ -40,7 +40,7 @@ public class TargetController : MonoBehaviour
     public void Init(CharacterActorBase owner)
     {
         this.ownerCharacter = owner;
-        UpdateTargetDetectTask().Forget();
+        StartCoroutine(UpdateTargetDetectTask().ToCoroutine());
     }
 
     protected void LateUpdate()

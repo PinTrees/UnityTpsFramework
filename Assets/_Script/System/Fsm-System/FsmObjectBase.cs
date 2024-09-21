@@ -29,6 +29,7 @@ public class FsmObjectBase : MonoBehaviour
     public void Init()
     {
         if (_isFsmInitialized) return;
+        _isFsmInitialized = true;
 
         fsmContext = new FsmContext();
         fsmContext.Initialize(this);
@@ -41,8 +42,6 @@ public class FsmObjectBase : MonoBehaviour
         characterCollider = baseObject.GetComponentInChildren<CapsuleCollider>();
 
         OnInit();
-
-        _isFsmInitialized = true;
     }
 
     // 재정의 가능 초기화자
@@ -95,9 +94,23 @@ public class FsmObjectBaseEditor : Editor
             foreach (var layer in fsmObject.fsmContext.layers)
             {
                 string stateChange = "";
-                layer.Value.stateChangeQueue.ToList().ForEach(e => stateChange += e.type + ", ");
-                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.currentState.stateId}), [{stateChange}]", EditorStyles.helpBox);
+                layer.Value.GetStateChangeList().ForEach(e => stateChange += e.type + ", ");
+                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.currentState.stateId}), [{stateChange}], [{layer.Value.isChangeStateLocked}]" +
+                    $"\nLastUpdate: [{layer.Value.lastStateUpdateTime}], [{layer.Value.lastStateChangeUpdateTime}]"
+                    , EditorStyles.helpBox);
             }
+        }
+
+        if(fsmObject.animator)
+        {
+            // 현재 애니메이터의 상태 정보 얻기
+            var stateInfo = fsmObject.animator.GetCurrentAnimatorStateInfo(0);  // 0은 첫 번째 레이어
+            // 애니메이션 이름 얻기
+            string currentAnimationName = fsmObject.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            // 태그 얻기
+            string currentTag = fsmObject.animator.GetCurrentAnimatorStateInfo(0).tagHash.ToString();
+
+            EditorGUILayout.LabelField($"Animator: ({currentAnimationName}), [{currentTag}]", EditorStyles.helpBox);
         }
 
         // 기본 인스펙터 렌더링

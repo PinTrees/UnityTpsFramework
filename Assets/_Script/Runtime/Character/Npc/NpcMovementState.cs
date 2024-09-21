@@ -29,6 +29,9 @@ public class NpcMovementState_Idle : FsmState
         owner = GetOwner<NpcCharacterActorBase>();
         combatData = owner.characterData.combatData;
 
+        if (owner.IsHit) return;
+        if (owner.IsDeath) return;
+
         owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f); 
         await owner.animator.TransitionCompleteAsync("Idle"); 
     }
@@ -42,18 +45,12 @@ public class NpcMovementState_Idle : FsmState
     {
         base.Update();
 
-        if (owner.IsTrace)
-            return;
-        if (owner.IsDeath)
-            return;
-        if (owner.IsHit)
-            return;
-        if (owner.IsAttack)
-            return;
-        if (owner.IsKnockDown)
-            return;
-        if (owner.IsCanNotMove)
-            return;
+        if (owner.IsTrace) return;
+        if (owner.IsDeath) return;
+        if (owner.IsHit) return;
+        if (owner.IsAttack) return;
+        if (owner.IsKnockDown) return;
+        if (owner.IsCanNotMove) return;
 
         var target = owner.targetController.forcusTarget;
         if (target == null)
@@ -110,7 +107,6 @@ public class NpcMovementState_Trace : FsmState
 
         owner.animator.applyRootMotion = false;
         owner.animator.CrossFadeInFixedTime("StandRun", 0.15f);
-        Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     }
 
     public override async UniTask Exit()

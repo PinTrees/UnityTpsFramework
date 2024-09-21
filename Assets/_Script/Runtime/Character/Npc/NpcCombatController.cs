@@ -17,7 +17,7 @@ public class NpcCombatController : MonoBehaviour
     public void Init(NpcCharacterActorBase ownerCharacter)
     {
         this.ownerCharacter = ownerCharacter;
-        UpdateTask().Forget();
+        StartCoroutine(UpdateTask().ToCoroutine());
     }
 
     // Attackable Loop Task

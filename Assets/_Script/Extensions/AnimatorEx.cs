@@ -1,21 +1,25 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public static class AnimatorEx
 {
-    public static async UniTask TransitionCompleteAsync(this Animator animator, string state, float normalizeTime=0.15f)
+    public static async UniTask TransitionCompleteAsync(this Animator animator, string state) => 
+        await animator.WaitForStateToStart(state);
+    public static async UniTask TransitionCompleteAsync(this Animator animator, string state, float normalizeTime)
+        =>  await animator.WaitForStateToEnd(state, normalizeTime);
+
+    private static IEnumerator WaitForStateToStart(this Animator animator, string state)
     {
-        while (true)
-        {
-            if (animator.IsPlayedInTime(state, 0, normalizeTime))
-                break;
-           
-            await UniTask.Yield();
-        }
+        while (!animator.IsPlaying(state, 0))
+            yield return null;  // 코루틴으로 대기
     }
+    private static IEnumerator WaitForStateToEnd(this Animator animator, string state, float normalizeTime)
+    {
+        while (!animator.IsPlayedOverTime(state, normalizeTime, 0))
+            yield return null;  // 코루틴으로 대기
+    }
+
 
     public static IEnumerator TransitionCompleteCorutine(this Animator animator, string state, float normalizeTime = 0.15f)
     {
@@ -113,9 +117,9 @@ public static class AnimatorEx
     {
         return animator.GetCurrentAnimatorStateInfo(0).length;
     }
-    public static bool IsPlaying(this Animator animator, string tag)
+    public static bool IsPlaying(this Animator animator, string tag, int layer=0)
     {
-        return animator.GetCurrentAnimatorStateInfo(0).IsTag(tag);
+        return animator.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
     }
     public static bool IsPlayedOverTime(this Animator animator, float normalizedTime, int layerIndex = 0)
     {

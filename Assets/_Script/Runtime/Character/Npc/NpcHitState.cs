@@ -66,8 +66,8 @@ public class NpcHitState_HitHard : FsmState
         hitDirection.Normalize();
 
         // State Setting
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+        owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
 
         // Animation Setting;
         {

@@ -26,8 +26,8 @@ public class PlayerAttackController : MonoBehaviour
         isInit = true;
 
         ownerCharacter = owner;
-        UpdateAttackTask().Forget();
-        UpdateJustDodgeTask().Forget();
+        StartCoroutine(UpdateAttackTask().ToCoroutine());
+        StartCoroutine(UpdateJustDodgeTask().ToCoroutine());
     }
 
     async UniTask UpdateJustDodgeTask()

@@ -1,16 +1,22 @@
 using System.Collections.Generic;
 using Fsm.State;
 using System.Linq;
-using System.Collections;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading;
 using System;
+using UnityEngine;
+using System.Collections;
 
 namespace Fsm
 {
+    public struct StateChangeContainer
+    {
+        public string type;
+        public object param;
+        public Action onComplete;
+    }
+
     /// <summary>
-    /// FSM(Finite State Machine) 오브젝트를 관리하는 베이스 클래스입니다.
+    /// FSM(Finite State Machine) 컨텍스트 하위 상태 레이어 입니다.
     /// </summary>
     public class FsmLayer
     {
@@ -19,19 +25,19 @@ namespace Fsm
         public FsmState currentState;       // 현재 활성화된 FSM 상태
 
         private readonly Dictionary<string, FsmState> stateMap = new();     // 가능한 모든 상태들을 저장하는 맵   
-        private readonly Queue<FsmState> changeStateQueue = new();          // 상태 변경을 위한 대기열
+        private readonly Queue<StateChangeContainer> changeStateQueue = new();          // 상태 변경을 위한 대기열
+        public List<StateChangeContainer> GetStateChangeList() { return changeStateQueue.ToList(); }
 
-        public bool isAnimatorInitialized { get; set; }             // 애니메이터 초기화 여부 
         public string previousStateType { get; private set; }        // 이전에 활성화되었던 상태
 
         // Systen value
-        private bool isChangeStateLocked = false;       // 상태 변경 상태 잠금
+        public bool isChangeStateLocked = false;       // 상태 변경 상태 잠금
+        public bool isFsmInitialized { get; private set; }
 
         // state value
         public object param;
-
-        public bool isFsmInitialized { get; private set; }
-
+        public float lastStateUpdateTime;
+        public float lastStateChangeUpdateTime;
 
         /// <summary>
         /// FSM을 초기화하는 메소드입니다.
@@ -39,17 +45,9 @@ namespace Fsm
         public void Init()
         {
             if (isFsmInitialized) return;
-            isFsmInitialized = false;
-
-            OnInit();
-
             isFsmInitialized = true;
-        }
 
-        // 재정의 가능 초기화자
-        protected virtual void OnInit()
-        {
-            UpdateStateChangeTask();
+
         }
 
         public void Update()
@@ -60,6 +58,13 @@ namespace Fsm
             if (isFsmInitialized)
             {
                 currentState?.Update();
+                lastStateUpdateTime = Time.time;
+
+                if (changeStateQueue.Count > 0)
+                {
+                    fsmObject.StartCoroutine(UpdateStateChangeTask());
+                    lastStateChangeUpdateTime = Time.time;
+                }
             }
         }
 
@@ -153,67 +158,52 @@ namespace Fsm
         }
 
 
-        public struct StateChangeContainer
-        {
-            public string type;
-            public object param;
-            public Action onCompelet;
-        }
+ 
 
-        private async void UpdateStateChangeTask()
+        IEnumerator UpdateStateChangeTask()
         {
-            while(true)
+            isChangeStateLocked = true;
+
+            var currentChangeState = changeStateQueue.Dequeue();
+            this.param = currentChangeState.param;
+
+            // 현재 상태가 있는 경우 Exit
+            if (currentState != null)
             {
-                await UniTask.Yield();
-
-                if (stateChangeQueue.Count <= 0)
-                    continue;
-
-                var currentChangeState = stateChangeQueue.Dequeue();
-                this.param = currentChangeState.param;
-
-                // 현재 상태가 있는 경우 Exit
-                if (currentState != null)
-                {
-                    await currentState.Exit();
-                    previousStateType = currentState.stateId;
-                }
-
-                // 새로운 상태로 전환
-                if (stateMap.ContainsKey(currentChangeState.type))
-                {
-                    currentState = stateMap[currentChangeState.type];
-                    await currentState.Enter();
-                }
-
-                currentChangeState.onCompelet();
+                yield return fsmObject.StartCoroutine(currentState.Exit().ToCoroutine());
+                previousStateType = currentState.stateId;
             }
+
+            // 새로운 상태로 전환
+            if (stateMap.ContainsKey(currentChangeState.type))
+            {
+                currentState = stateMap[currentChangeState.type];
+                yield return fsmObject.StartCoroutine(currentState.Enter().ToCoroutine());
+            }
+
+            currentChangeState.onComplete();
+
+            isChangeStateLocked = false;
         }
 
-        public Queue<StateChangeContainer> stateChangeQueue = new();
         public async UniTask ChangeStateNowAsync(string type, object param = null)
         {
-            if (stateChangeQueue.Where(e => e.type == type).Count() > 0)
+            if (changeStateQueue.Where(e => e.type == type).Count() > 0)
                 return;
 
-            bool isCompelet = false;
+            bool isComplete = false;
             StateChangeContainer newChange = new StateChangeContainer()
             {
                 type = type,
                 param = param,
-                onCompelet = () =>
+                onComplete = () =>
                 {
-                    isCompelet = true;
+                    isComplete = true;
                 }
             };
-            stateChangeQueue.Enqueue(newChange);
+            changeStateQueue.Enqueue(newChange);
 
-            while (true)
-            {
-                if (isCompelet) return;
-
-                await UniTask.Yield();
-            }
+            await UniTask.WaitUntil(() => isComplete);
         }
         #endregion
     }

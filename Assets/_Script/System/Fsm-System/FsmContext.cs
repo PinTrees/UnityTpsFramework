@@ -37,46 +37,27 @@ namespace Fsm
         #region Add Layer
         public void AddLayer(FsmLayer layer, string layerName)
         {
+            layer.context = this;
+            layer.fsmObject = fsmObject;
+            layer.Init();
+
             layers[layerName] = layer;
-            layers[layerName].context = this;
-            layers[layerName].fsmObject = fsmObject;
-            layers[layerName].Init();
         }
         public FsmLayer CreateLayer(string layerName)
         {
-            layers[layerName] = new FsmLayer();
-            layers[layerName].context = this;
-            layers[layerName].fsmObject = fsmObject;
-            layers[layerName].Init();
+            var layer = new FsmLayer();
+            layer.context = this;
+            layer.fsmObject = fsmObject;
+            layer.Init();
 
-            return layers[layerName];
+            layers[layerName] = layer;
+            return layer;
         }
         public FsmLayer FindLayer(string layerName)
         {
             if (!layers.ContainsKey(layerName))
                 return null;
             return layers[layerName];   
-        }
-
-        /// <summary>
-        /// 상태를 FSM에 추가합니다.
-        /// </summary>
-        /// <param name="state">추가할 상태</param>
-        public void AddState(FsmState state)
-        {
-            layers.First().Value.AddState(state);
-        }
-
-        /// <summary>
-        /// 다수의 상태를 FSM에 추가합니다.
-        /// </summary>
-        /// <param name="states">추가할 상태들의 목록</param>
-        public void AddStateRange(List<FsmState> states)
-        {
-            foreach (var state in states)
-            {
-                AddState(state);
-            }
         }
         #endregion
 
@@ -145,7 +126,7 @@ namespace Fsm
             if (!layers.ContainsKey(layer))
                 return;
 
-            ChangeStateNowAsync(layer, type, param).Forget();
+            fsmObject.StartCoroutine(ChangeStateNowAsync(layer, type, param).ToCoroutine());
         }
 
         public async UniTask ChangeStateNowAsync(string layer, string type, object param=null)
