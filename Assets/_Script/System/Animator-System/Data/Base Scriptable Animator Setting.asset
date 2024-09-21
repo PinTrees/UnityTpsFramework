@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33990a865ec92af4db8932095cf9773d, type: 3}
+  m_Name: Base Scriptable Animator Setting
+  m_EditorClassIdentifier: 
+  animatorController: {fileID: 9100000, guid: c87079b1bf4e1504db264224d37485b0, type: 2}
+  idleAnimatorSetting: {fileID: 11400000, guid: d53096095b94b24458915c294cde46b5, type: 2}
+  movementAnimatorSetting: {fileID: 11400000, guid: da1dd2504ddadfc4abcace0463eb03d2, type: 2}
+  dodgeAnimatorSetting: {fileID: 11400000, guid: 605b7a15c16084649b3e5deae571ef32, type: 2}

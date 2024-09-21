@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64957ccaa9cdff14e82ae7ef36585770, type: 3}
+  m_Name: Npc Soldier 1 Data
+  m_EditorClassIdentifier: 
+  combatData:
+    traceStartRange: 10
+    avoidDistance: 1.5
+    confrontingRange: 3.5
+    confrontingBandingOffset: 0.8
+    congrontingPositionOffset: 1.5
+    repositionDuration: 5
+    repositionDurationRandomOffset: 5
+  uid: af5e4cd1-57f9-4711-b550-91e39c9efff6
+  hostilityLimit: 0
+  hostilityCriteriaWeight:
+    Morality: 0
+    Theft: 0
+    RacialBias: 0
+    SocialStatus: 0
+    PoliticalRelation: 0
+    PersonalGrudge: 0
+  npcCombatData:
+    traceStartRange: 0
+    confrontingRange: 0
+    confrontingBandingOffset: 0
+    confrontingPositionOffset: 0
+    repositionDuration: 0
+    repositionDurationRandomOffset: 0
+  perfab: {fileID: 3443539735993927099, guid: 19a22116f977e4349bc670efbd09e812, type: 3}

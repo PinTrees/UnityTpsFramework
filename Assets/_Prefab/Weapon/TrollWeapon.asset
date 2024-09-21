@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27981843503dc640ad5e2ac368b6ba5, type: 3}
+  m_Name: TrollWeapon
+  m_EditorClassIdentifier: 
+  equipPositions:
+  - parentBoneType: 18
+    localPosition: {x: 0.215, y: 0.177, z: 0.023}
+    localEulerAngle: {x: 304.24374, y: 0.11341005, z: 16.713163}
+  perfab: {fileID: 5148394017866816787, guid: 923347bcbcbe5ac47b896bc8454b68d6, type: 3}

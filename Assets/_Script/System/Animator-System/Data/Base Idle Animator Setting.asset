@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261c3520187ead44486e9376d29010cc, type: 3}
+  m_Name: Base Idle Animator Setting
+  m_EditorClassIdentifier: 
+  standIdle: {fileID: 1827226128182048838, guid: dd79d46b35e0b7c43b55bcf6a4888f35, type: 3}
+  crouchIdle: {fileID: 1827226128182048838, guid: e6d9e832944440e4c852aaf6f9b16675, type: 3}
+  crawlIdle: {fileID: 0}
+  standIdles:
+  - {fileID: 1827226128182048838, guid: dd79d46b35e0b7c43b55bcf6a4888f35, type: 3}
+  - {fileID: 1827226128182048838, guid: 8ade1d5ccf98b1a40ada6e03fbda2e39, type: 3}
+  - {fileID: 1827226128182048838, guid: 09ec4b3359405404d8e0c4a4ae171493, type: 3}
+  - {fileID: 1827226128182048838, guid: 2871edbaa3510e94eb5df6b4e9824703, type: 3}
+  - {fileID: 1827226128182048838, guid: 49d9ac5aa1fdabc47b0a9b4b19435d9a, type: 3}
+  - {fileID: 1827226128182048838, guid: a10592a81d238ea4ba44a888fa8c8f64, type: 3}
+  - {fileID: 1827226128182048838, guid: d63f6ab5009ddc24eb4bbb3e91a7d2f6, type: 3}
+  - {fileID: 1827226128182048838, guid: bfa6d87462093a34a831ae488434a713, type: 3}
+  - {fileID: 1827226128182048838, guid: dcc8b8e54019a3347815720a7a39c22a, type: 3}
+  - {fileID: 1827226128182048838, guid: 13e7f7618e4b1aa408c781b8e49a2f0b, type: 3}
+  - {fileID: 1827226128182048838, guid: f9571266a98f55246ab99578c7fc12a1, type: 3}
+  - {fileID: 1827226128182048838, guid: c45ba73a37a06a543b2610d6f87a12b4, type: 3}
+  - {fileID: 1827226128182048838, guid: 8935fafd57575ec4e8484f15c1855bcd, type: 3}
+  - {fileID: 1827226128182048838, guid: 38b586c22db546340bd32cde54fefae5, type: 3}
+  - {fileID: 1827226128182048838, guid: 73206ad9c0d4a5546a2263ae57efc5ab, type: 3}
+  - {fileID: 1827226128182048838, guid: 5f571afbe1f018c47b6d44d872aa3713, type: 3}
+  - {fileID: 1827226128182048838, guid: 7c587e32385d01245914d49b90287a6b, type: 3}
+  - {fileID: 1827226128182048838, guid: 0507c9a19e549ca4dbe955a1fd879e1f, type: 3}
+  - {fileID: 1827226128182048838, guid: f2abb2d88e7bfad4bba8dd9274dea494, type: 3}

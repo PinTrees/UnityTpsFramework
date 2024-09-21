@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8182871522506038594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uB85C\uC6B0\uD0A5 - \uC6B0\uCE21 Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 20000000
+--- !u!114 &-6248048007054268735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uB85C\uC6B0\uD0A5 - \uC6B0\uCE21"
+  m_EditorClassIdentifier: 
+  uid: 000740d7-c4f4-4caa-a996-b2d69ec370f9
+  priorityRank: 0
+  conditions:
+  - {fileID: -8182871522506038594}
+  events:
+  - eventNormalizeTime:
+      start: 0.1085044
+      exit: 0.26881722
+    events:
+    - {fileID: 11400000, guid: 5ea416e7f1a6b9a41b66bede974ff456, type: 2}
+  vfxEvents: []
+  cameraEvents: []
+  hitboxTree: {fileID: 0}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 0
+    lookAtTarget: 0
+    distanceFromTarget: 0
+    distanceFromTargetOver: 0
+    transitionDuration: 0
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400048, guid: ec11ddf4c9321c24c9509644025391dc, type: 3}
+  animationSpeed: 1
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.5042517
+  nextAttackNormalizeTime:
+    start: 0.34608844
+    exit: 1
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 1
+  timeScale: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e56adf0081cc5384497936a0940f31ba, type: 3}
+  m_Name: Bask Kick Attack Tree
+  m_EditorClassIdentifier: 
+  attackNodes:
+  - {fileID: 2858937456510234080}
+  - {fileID: -6248048007054268735}
+--- !u!114 &2858937456510234080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uBC1C\uCC28\uAE30 - \uC804\uBC29"
+  m_EditorClassIdentifier: 
+  uid: ad03adfa-31ef-40fa-8a34-eb6aca52ccab
+  priorityRank: 0
+  conditions:
+  - {fileID: 2900624139022392075}
+  events: []
+  vfxEvents: []
+  cameraEvents:
+  - eventNormalizeTime: 0.2
+    shakeData:
+      positionIntensity: 0.5
+      rotationIntensity: 1
+      zoomInAmount: 0.5
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: eccf4dcd3f50c5c4dbb8e9388bdc6d73, type: 2}
+  attackDirectionType: 3
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 1
+    distanceFromTarget: 1
+    distanceFromTargetOver: 2.5
+    transitionDuration: 0.35
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 0
+  animationClip: {fileID: 7400030, guid: e77b327c3e548a14d85c1516d7e85d48, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.6974886
+  nextAttackNormalizeTime:
+    start: 0.54680365
+    exit: 0.99914527
+  useTimeScale: 1
+  timeScaleNormailzeTime:
+    start: 0.10159818
+    exit: 0.28424656
+  timeScale: 0.7
+--- !u!114 &2900624139022392075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uBC1C\uCC28\uAE30 - \uC804\uBC29 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 66000000

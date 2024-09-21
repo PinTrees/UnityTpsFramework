@@ -1,0 +1,543 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8128387828873457944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49715e7796b1a9847a57a989e29f5611, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC0C1\uB2E8 (RandomCondition)"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: 2cd2a3594be903d428c4a251003e6c4f, type: 2}
+  id: 1
+  frequency: 2
+  activePercent: 0.1
+--- !u!114 &-7932561642709408646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uCC0C\uB974\uAE30 - 1"
+  m_EditorClassIdentifier: 
+  uid: 34a624dfaa42aa2468d3b7e40866582c
+  priorityRank: 10
+  conditions:
+  - {fileID: -7321123330997530433}
+  events: []
+  vfxEvents: []
+  cameraEvents:
+  - eventNormalizeTime: 0.05
+    shakeData:
+      positionIntensity: 0.5
+      rotationIntensity: 1
+      zoomInAmount: 2
+      frequency: 2
+    duration: 1.2
+  - eventNormalizeTime: 0.35
+    shakeData:
+      positionIntensity: 0.5
+      rotationIntensity: 2
+      zoomInAmount: 0
+      frequency: 3
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: 735cf26229137ea4c8dc58fcda8cd932, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 0
+    lookAtTarget: 0
+    distanceFromTarget: 0
+    distanceFromTargetOver: 0
+    transitionDuration: 0
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400042, guid: fb07a934dbc1969468121112ca048964, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.7462122
+  nextAttackNormalizeTime:
+    start: 0.6038813
+    exit: 0.9895238
+  useTimeScale: 1
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 0.34761906
+  timeScale: 0.8
+--- !u!114 &-7321123330997530433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uCC0C\uB974\uAE30 - 1 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &-6178802782016952792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC0C1\uB2E8 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 4301000030010000
+--- !u!114 &-4128375688604016122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uCC98\uD615 - 1"
+  m_EditorClassIdentifier: 
+  uid: aae1200e8da6f4d4ea70babcf6416f29
+  priorityRank: 50
+  conditions:
+  - {fileID: 8518331147882895614}
+  - {fileID: -3532435493634853091}
+  events: []
+  vfxEvents: []
+  cameraEvents: []
+  hitboxTree: {fileID: 11400000, guid: 705390e1ba4949145ad772b23ab79c86, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 0
+    lookAtTarget: 0
+    distanceFromTarget: 0
+    distanceFromTargetOver: 0
+    transitionDuration: 0
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 0
+  animationClip: {fileID: 7400000, guid: b919cbd75a4e22b47bcf0c8c37b6d751, type: 3}
+  animationSpeed: 1
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.7463769
+  nextAttackNormalizeTime:
+    start: 0.59937894
+    exit: 1
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 1
+  timeScale: 1
+--- !u!114 &-3532435493634853091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ce2a511c482bb4cb57e3be12cdde38, type: 3}
+  m_Name: "\uCC98\uD615 - 1 - TargetDistance"
+  m_EditorClassIdentifier: 
+  targetLayers: []
+  distanceFromOwner: 2
+--- !u!114 &-1345903827481412357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uD6A1\uB3CC\uB824\uBCA0\uAE30 - \uC88C\uCE21"
+  m_EditorClassIdentifier: 
+  uid: dc2f3084-cea6-4a04-99b2-eba0a245df86
+  priorityRank: 10
+  conditions:
+  - {fileID: -1314383962672108146}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.29319957
+      exit: 0.51170576
+    vfxObject: {fileID: 7080828956039450347, guid: b72f0b1f164b4d74894247d037e2f6fc, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.25, z: 0.8}
+    offsetLocalRotation: {x: 0, y: 70, z: 0}
+    useOverrideScale: 1
+    overrideScale: {x: 1.3, y: 1.3, z: 1.3}
+    useOverrideArc: 1
+    overrideArcAngle: 280
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 1
+  cameraEvents:
+  - eventNormalizeTime: 0.3
+    shakeData:
+      positionIntensity: 0.5
+      rotationIntensity: 2
+      zoomInAmount: 0
+      frequency: 3
+    duration: 0.8
+  hitboxTree: {fileID: 11400000, guid: 042dd2dbf60211b478a5b3f391080689, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 0
+    distanceFromTarget: 1.25
+    distanceFromTargetOver: 2
+    transitionDuration: 0.5
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400026, guid: fb07a934dbc1969468121112ca048964, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.78
+  nextAttackNormalizeTime:
+    start: 0.6009524
+    exit: 1
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 1
+  timeScale: 1
+--- !u!114 &-1314383962672108146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uD6A1\uB3CC\uB824\uBCA0\uAE30 - \uC88C\uCE21 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &-376127047773115630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uC62C\uB824\uBCA0\uAE30 - \uC6B0\uCE21"
+  m_EditorClassIdentifier: 
+  uid: 4e1a635219f87ad40acf571eb4f09318
+  priorityRank: 10
+  conditions:
+  - {fileID: 4945072514318800264}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.23522857
+      exit: 0.40468234
+    vfxObject: {fileID: 7080828956039450347, guid: b72f0b1f164b4d74894247d037e2f6fc, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.55, z: 0.8}
+    offsetLocalRotation: {x: 0, y: 0, z: 120}
+    useOverrideScale: 1
+    overrideScale: {x: 1.1, y: 1.1, z: 1.1}
+    useOverrideArc: 0
+    overrideArcAngle: 180
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 1
+  cameraEvents:
+  - eventNormalizeTime: 0.25
+    shakeData:
+      positionIntensity: 0.5
+      rotationIntensity: 2
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.6
+  hitboxTree: {fileID: 11400000, guid: c866ce40c43c6c54182c1e1b0d5dff8c, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 0
+    distanceFromTarget: 1.25
+    distanceFromTargetOver: 0
+    transitionDuration: 0.5
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400030, guid: fb07a934dbc1969468121112ca048964, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.74190474
+  nextAttackNormalizeTime:
+    start: 0.54952383
+    exit: 0.9809603
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 1
+  timeScale: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e56adf0081cc5384497936a0940f31ba, type: 3}
+  m_Name: Longsword Strong Attack Tree
+  m_EditorClassIdentifier: 
+  attackNodes:
+  - {fileID: 5349612243107348667}
+  - {fileID: -1345903827481412357}
+  - {fileID: -376127047773115630}
+  - {fileID: 4840603460765898814}
+  - {fileID: -4128375688604016122}
+  - {fileID: -7932561642709408646}
+--- !u!114 &2316845183568485972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC88C\uCE21 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &4840603460765898814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC88C\uCE21"
+  m_EditorClassIdentifier: 
+  uid: 2b27997b7b1c5b44a92ac5039c67ff12
+  priorityRank: 10
+  conditions:
+  - {fileID: 2316845183568485972}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.30880716
+      exit: 0.529543
+    vfxObject: {fileID: 7080828956039450347, guid: b72f0b1f164b4d74894247d037e2f6fc, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.35, z: 1}
+    offsetLocalRotation: {x: -30, y: 0, z: 65}
+    useOverrideScale: 1
+    overrideScale: {x: 1.2, y: 1.2, z: 1.2}
+    useOverrideArc: 1
+    overrideArcAngle: 200
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 0
+  cameraEvents:
+  - eventNormalizeTime: 0.05
+    shakeData:
+      positionIntensity: 0
+      rotationIntensity: 2
+      zoomInAmount: 1.5
+      frequency: 3
+    duration: 1
+  - eventNormalizeTime: 0.35
+    shakeData:
+      positionIntensity: 1.5
+      rotationIntensity: 2
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: 722c6922d1fc8e04d8b1732d025ef091, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 0
+    distanceFromTarget: 1.25
+    distanceFromTargetOver: 0
+    transitionDuration: 0.5
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400022, guid: fb07a934dbc1969468121112ca048964, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0.0028571428
+    exit: 0.6542857
+  nextAttackNormalizeTime:
+    start: 0.49809527
+    exit: 0.9990476
+  useTimeScale: 1
+  timeScaleNormailzeTime:
+    start: 0.0066666687
+    exit: 0.30190477
+  timeScale: 0.8
+--- !u!114 &4945072514318800264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uC62C\uB824\uBCA0\uAE30 - \uC6B0\uCE21 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &5349612243107348667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC0C1\uB2E8"
+  m_EditorClassIdentifier: 
+  uid: 8392866e-8840-47de-b03f-3e1c25ed319c
+  priorityRank: 10
+  conditions:
+  - {fileID: -6178802782016952792}
+  - {fileID: -8128387828873457944}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.16833891
+      exit: 0.3221851
+    vfxObject: {fileID: 7080828956039450347, guid: b72f0b1f164b4d74894247d037e2f6fc, type: 3}
+    offsetLocalPosition: {x: 0, y: 1, z: 1}
+    offsetLocalRotation: {x: 0, y: 0, z: -90}
+    useOverrideScale: 0
+    overrideScale: {x: 1, y: 1, z: 1}
+    useOverrideArc: 0
+    overrideArcAngle: 180
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 1
+  cameraEvents:
+  - eventNormalizeTime: 0.25
+    shakeData:
+      positionIntensity: 0.5
+      rotationIntensity: 1
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: e1c865c3a0d541e41bb2e16e092b0575, type: 2}
+  attackDirectionType: 5
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 0
+    distanceFromTarget: 1.25
+    distanceFromTargetOver: 2
+    transitionDuration: 0.3
+  canJustDodge: 1
+  canJustDodgeDistance: 2.5
+  canJustDodgeNormailzetime:
+    start: 0.05238096
+    exit: 0.30190477
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400036, guid: fb07a934dbc1969468121112ca048964, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0.00082781614
+    exit: 0.652381
+  nextAttackNormalizeTime:
+    start: 0.4466667
+    exit: 1
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0.14761904
+    exit: 0.48476192
+  timeScale: 0.5
+--- !u!114 &8518331147882895614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uCC98\uD615 - 1 - Input"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 65000000

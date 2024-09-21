@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a55de4e1ab119049bc3716774f6a6e9, type: 3}
+  m_Name: Npc Soldier1 Lonsword Attack Pattern
+  m_EditorClassIdentifier: 
+  attackCombos:
+  - conditions: []
+    attackNodes:
+    - {fileID: 5349612243107348667, guid: b1e7c15e5932f4a40b5963c17531e9be, type: 2}
+    - {fileID: -1345903827481412357, guid: b1e7c15e5932f4a40b5963c17531e9be, type: 2}
+    - {fileID: -376127047773115630, guid: b1e7c15e5932f4a40b5963c17531e9be, type: 2}
+    - {fileID: 4840603460765898814, guid: b1e7c15e5932f4a40b5963c17531e9be, type: 2}
+  - conditions: []
+    attackNodes:
+    - {fileID: -6767701423362386726, guid: 06e25ea0d3ccfe849b2243229a3a2060, type: 2}
+    - {fileID: -4529840970715600514, guid: 06e25ea0d3ccfe849b2243229a3a2060, type: 2}
+    - {fileID: -1524818942313332643, guid: 06e25ea0d3ccfe849b2243229a3a2060, type: 2}
+    - {fileID: -8693359378715381279, guid: 06e25ea0d3ccfe849b2243229a3a2060, type: 2}
+--- !u!114 &9183343079852687792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49715e7796b1a9847a57a989e29f5611, type: 3}
+  m_Name: 1 - RandomCondition
+  m_EditorClassIdentifier: 
+  targetLayers: []
+  id: 1
+  frequency: 1
+  activePercent: 0.35

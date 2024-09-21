@@ -1,0 +1,147 @@
+using Cysharp.Threading.Tasks;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
+
+public static class AnimatorEx
+{
+    public static async UniTask TransitionCompleteAsync(this Animator animator, string state, float normalizeTime=0.15f)
+    {
+        while (true)
+        {
+            if (animator.IsPlayedInTime(state, 0, normalizeTime))
+                break;
+           
+            await UniTask.Yield();
+        }
+    }
+
+    public static IEnumerator TransitionCompleteCorutine(this Animator animator, string state, float normalizeTime = 0.15f)
+    {
+        while (true)
+        {
+            if (animator.IsPlayedInTime(state, 0, normalizeTime))
+                break;
+
+            yield return null;
+        }
+    }
+
+    private static void set_animation_clip(AnimatorOverrideController controller, string stateName, AnimationClip clip)
+    {
+        controller[stateName] = clip;
+        //Debug.Log(controller[stateName]);
+    }
+
+    public static void SetAnimationClip(this Animator animator, string stateName, AnimationClip clip)
+    {
+        if (animator.runtimeAnimatorController is AnimatorOverrideController overrideController)
+        {
+            set_animation_clip(overrideController, stateName, clip);
+            //animator.runtimeAnimatorController = overrideController; 
+        }
+        else
+        {
+            //var newOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+            //set_animation_clip(newOverrideController, stateName, clip);
+
+            Debug.LogError("[Animator-Ex] Animator controller is not an AnimatorOverrideController.");
+        }
+
+        // 강제 초기화
+        animator.Rebind();
+        //Debug.Log($"[Animator-Ex] {stateName} motion successfully changed. {clip.name}");
+    }
+
+    public static void SetAnimationClip(this Animator animator, AnimationClip clip)
+    {
+        ((AnimatorOverrideController)animator.runtimeAnimatorController)["Base Layer.DefaultState"] = clip;
+    }
+
+
+    public static void CrossFadeAnimatorController(this Animator animator, RuntimeAnimatorController runtimeAnimatorController)
+    {
+        if (runtimeAnimatorController == null)
+            return;
+
+        if (animator.runtimeAnimatorController == runtimeAnimatorController)
+            return;
+
+        animator.runtimeAnimatorController = new AnimatorOverrideController(runtimeAnimatorController);
+        animator.Update(Time.deltaTime);
+    }
+
+    public static void SetNormalizeTime(this Animator animator, string stateName, float point, int layerIndex = 0)
+    {
+        // Step 0: 오류 확인
+        if (point < 0 || point > 1)
+        {
+            Debug.LogError("Normalized time 'point' must be between 0 and 1.");
+            return;
+        }
+
+        // Step 1: 애니메이션 기초 세팅
+        float preAnimationSpeed = animator.speed;
+        bool preApplyRootMotion = animator.applyRootMotion;
+        animator.applyRootMotion = false;
+        animator.speed = 0.0001f;
+
+        // Step 2: 애니메이터 상태를 즉시 업데이트
+        animator.Play(stateName, layerIndex, point);
+        animator.Update(Time.deltaTime);
+
+        // Step 3: 재생 중지 후 복원
+        animator.StopPlayback();
+        animator.speed = preAnimationSpeed;
+        animator.applyRootMotion = preApplyRootMotion;
+    }
+
+    // Action
+    public static void Replay(this Animator animator)
+    {
+        float clipLength = animator.GetAnimationLenght();
+        float newNormalizedTime = Mathf.Clamp01(0);
+        float newTimeValue = newNormalizedTime * clipLength;
+        animator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, -1, newTimeValue / clipLength);
+    }
+
+
+
+    // State
+    public static float GetAnimationLenght(this Animator animator)
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).length;
+    }
+    public static bool IsPlaying(this Animator animator, string tag)
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsTag(tag);
+    }
+    public static bool IsPlayedOverTime(this Animator animator, float normalizedTime, int layerIndex = 0)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime >= normalizedTime)
+        {
+            return true;
+        }
+        else return false;
+    }
+    public static bool IsPlayedOverTime(this Animator animator, string tag, float normalizedTime, int layerIndex = 0)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(layerIndex).IsTag(tag)
+         && animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime >= normalizedTime)
+        {
+            return true;
+        }
+        else return false;
+    }
+    public static bool IsPlayedInTime(this Animator animator, string tag, float start, float end)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag(tag)
+         && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= start
+         && animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= end)
+        {
+            return true;
+        }
+        else return false;
+    }
+}

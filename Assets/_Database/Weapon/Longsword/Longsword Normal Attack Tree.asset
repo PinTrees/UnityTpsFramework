@@ -1,0 +1,377 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8693359378715381279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uC62C\uB824\uBCA0\uAE30 - \uC88C\uCE21"
+  m_EditorClassIdentifier: 
+  uid: 44444250705083b4a9fe243542a5caf2
+  priorityRank: 0
+  conditions:
+  - {fileID: -3980826444005497558}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.19732441
+      exit: 0.400223
+    vfxObject: {fileID: 6924551903130891082, guid: 41ea53fbe840fcf4cae30034b88f9e04, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.4, z: 0.8}
+    offsetLocalRotation: {x: 0, y: 0, z: 70}
+    useOverrideScale: 0
+    overrideScale: {x: 0, y: 0, z: 0}
+    useOverrideArc: 0
+    overrideArcAngle: 0
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 0
+  cameraEvents:
+  - eventNormalizeTime: 0.15
+    shakeData:
+      positionIntensity: 0.35
+      rotationIntensity: 0
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: b5b26967c67295b44a51726fa9ec1cab, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 1
+    distanceFromTarget: 1
+    distanceFromTargetOver: 2.5
+    transitionDuration: 0.5
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400010, guid: b198a6ab6b6c4004792420f5a6eb82e3, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.6028572
+  nextAttackNormalizeTime:
+    start: 0.4047619
+    exit: 0.7990476
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 0
+  timeScale: 0
+--- !u!114 &-8658882805325164958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC6B0\uCE21 (InputCondition)"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &-6767701423362386726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC6B0\uCE21"
+  m_EditorClassIdentifier: 
+  uid: 416d6a360b5554e48afc4d2092e348b7
+  priorityRank: 0
+  conditions:
+  - {fileID: -8658882805325164958}
+  - {fileID: 8178034392383246569}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.1393534
+      exit: 0.28874028
+    vfxObject: {fileID: 6924551903130891082, guid: 41ea53fbe840fcf4cae30034b88f9e04, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.35, z: 0.7}
+    offsetLocalRotation: {x: 0, y: 0, z: -130}
+    useOverrideScale: 0
+    overrideScale: {x: 0, y: 0, z: 0}
+    useOverrideArc: 0
+    overrideArcAngle: 0
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 0
+  cameraEvents:
+  - eventNormalizeTime: 0.15
+    shakeData:
+      positionIntensity: 0.35
+      rotationIntensity: 0
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: e39cf22e20624fe42b814266f5355dfc, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 1
+    distanceFromTarget: 1
+    distanceFromTargetOver: 2.5
+    transitionDuration: 0.5
+  canJustDodge: 1
+  canJustDodgeDistance: 2
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0.1952381
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400004, guid: b198a6ab6b6c4004792420f5a6eb82e3, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.6518265
+  nextAttackNormalizeTime:
+    start: 0.25428572
+    exit: 0.7
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 0
+  timeScale: 0
+--- !u!114 &-4529840970715600514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC88C\uCE21"
+  m_EditorClassIdentifier: 
+  uid: b4e4bbd0f7ab2fa499ae4fcad4d06f8f
+  priorityRank: 0
+  conditions:
+  - {fileID: 5170765179205274096}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.1928651
+      exit: 0.3957637
+    vfxObject: {fileID: 6924551903130891082, guid: 41ea53fbe840fcf4cae30034b88f9e04, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.4, z: 0.8}
+    offsetLocalRotation: {x: 0, y: 0, z: 120}
+    useOverrideScale: 0
+    overrideScale: {x: 0, y: 0, z: 0}
+    useOverrideArc: 0
+    overrideArcAngle: 0
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 0
+  cameraEvents:
+  - eventNormalizeTime: 0.15
+    shakeData:
+      positionIntensity: 0.35
+      rotationIntensity: 0
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: b5b26967c67295b44a51726fa9ec1cab, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 1
+    distanceFromTarget: 1
+    distanceFromTargetOver: 2.5
+    transitionDuration: 0.5
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400006, guid: b198a6ab6b6c4004792420f5a6eb82e3, type: 3}
+  animationSpeed: 1.3
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.59904766
+  nextAttackNormalizeTime:
+    start: 0.3571429
+    exit: 0.59523815
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 0
+  timeScale: 0
+--- !u!114 &-3980826444005497558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uC62C\uB824\uBCA0\uAE30 - \uC88C\uCE21 (InputCondition)"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &-1524818942313332643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbeec908b335944a90bdb1064d4aee, type: 3}
+  m_Name: "\uD6A1\uBCA0\uAE30 - \uC6B0\uCE21"
+  m_EditorClassIdentifier: 
+  uid: c22a592d7ae60a242926492ec8240629
+  priorityRank: 0
+  conditions:
+  - {fileID: 2806846448326759807}
+  events: []
+  vfxEvents:
+  - vfxPlayNormalizeTime:
+      start: 0.17056856
+      exit: 0.34163213
+    vfxObject: {fileID: 6924551903130891082, guid: 41ea53fbe840fcf4cae30034b88f9e04, type: 3}
+    offsetLocalPosition: {x: 0, y: 1.4, z: 0.6}
+    offsetLocalRotation: {x: 0, y: 30, z: 0}
+    useOverrideScale: 1
+    overrideScale: {x: 1.2, y: 1.2, z: 1.2}
+    useOverrideArc: 1
+    overrideArcAngle: 280
+    useOverrideEmission: 0
+    overrideEmission: 0
+    useOverrideAlpha: 0
+    overrideAlpha: 0
+  cameraEvents:
+  - eventNormalizeTime: 0.15
+    shakeData:
+      positionIntensity: 0.35
+      rotationIntensity: 0
+      zoomInAmount: 0
+      frequency: 5
+    duration: 0.5
+  hitboxTree: {fileID: 11400000, guid: 77f577d9ac3fab142a9e624d0e67fb85, type: 2}
+  attackDirectionType: 0
+  attackerTransformSetting:
+    useAttackerTransform: 1
+    lookAtTarget: 1
+    distanceFromTarget: 1
+    distanceFromTargetOver: 2.5
+    transitionDuration: 0.5
+  canJustDodge: 0
+  canJustDodgeDistance: 0
+  canJustDodgeNormailzetime:
+    start: 0
+    exit: 0
+  useRootMotion: 1
+  useLegIK: 1
+  animationClip: {fileID: 7400008, guid: b198a6ab6b6c4004792420f5a6eb82e3, type: 3}
+  animationSpeed: 1.2
+  animationPlayNormailzeTime:
+    start: 0
+    exit: 0.6015982
+  nextAttackNormalizeTime:
+    start: 0.30571428
+    exit: 0.98
+  useTimeScale: 0
+  timeScaleNormailzeTime:
+    start: 0
+    exit: 0
+  timeScale: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e56adf0081cc5384497936a0940f31ba, type: 3}
+  m_Name: Longsword Normal Attack Tree
+  m_EditorClassIdentifier: 
+  attackNodes:
+  - {fileID: -4529840970715600514}
+  - {fileID: -6767701423362386726}
+  - {fileID: -8693359378715381279}
+  - {fileID: -1524818942313332643}
+--- !u!114 &2806846448326759807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uD6A1\uBCA0\uAE30 - \uC6B0\uCE21 (InputCondition)"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &5170765179205274096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c36a669f45775b24fb32559ae947ec90, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC88C\uCE21 (InputCondition)"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: eb996dd0e00bf8a4bac161095ab77d06, type: 2}
+  inputDownKey: 
+  inputUpKey: 
+  inputHoldKey: 43010000
+--- !u!114 &8178034392383246569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49715e7796b1a9847a57a989e29f5611, type: 3}
+  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC6B0\uCE21 (RandomCondition)"
+  m_EditorClassIdentifier: 
+  targetLayers:
+  - {fileID: 11400000, guid: 2cd2a3594be903d428c4a251003e6c4f, type: 2}
+  id: 2
+  frequency: 1.25
+  activePercent: 0.1

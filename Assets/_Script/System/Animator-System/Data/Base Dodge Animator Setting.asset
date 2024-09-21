@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e9352427f8af414180eea30d395c0a2, type: 3}
+  m_Name: Base Dodge Animator Setting
+  m_EditorClassIdentifier: 
+  overrideAnimatorSetting: {fileID: 0}
+  overrideAvataMaskType: 0
+  overrideAvataMask: {fileID: 0}
+  dodgeShort:
+    useRootMotion: 0
+    CENTER: {fileID: 0}
+    F: {fileID: 0}
+    R: {fileID: 0}
+    L: {fileID: 0}
+    B: {fileID: 0}
+    FR: {fileID: 0}
+    FL: {fileID: 0}
+    BR: {fileID: 0}
+    BL: {fileID: 0}
+  dodgeLong:
+    useRootMotion: 0
+    CENTER: {fileID: 0}
+    F: {fileID: 1827226128182048838, guid: b041df5d4f592e3479f3cbdf403fe4b5, type: 3}
+    R: {fileID: 1827226128182048838, guid: 6519b2fbce4d87047a6c274f738b1276, type: 3}
+    L: {fileID: 1827226128182048838, guid: df9c56127c0d4b440ab1f5da77c0b66b, type: 3}
+    B: {fileID: 1827226128182048838, guid: 977362bdc0dd7784f8a4eec5b8ec511b, type: 3}
+    FR: {fileID: 1827226128182048838, guid: 7ed1b9b695fc9ab4587594adf13ca90f, type: 3}
+    FL: {fileID: 1827226128182048838, guid: ee19992d381f65e43b4c49c6edaedc23, type: 3}
+    BR: {fileID: 1827226128182048838, guid: 438184d22a05f3e4aafe0effcb7845d0, type: 3}
+    BL: {fileID: 1827226128182048838, guid: 549665ba8cdaa034fb95b4839cbc3e3e, type: 3}
+  dodgeRoll:
+    useRootMotion: 1
+    CENTER: {fileID: 0}
+    F: {fileID: 7400000, guid: 773eb8bb70eee6448854caf0a7ebfc1a, type: 3}
+    R: {fileID: 7400000, guid: 8831631cdff9891489df049fcfefe82e, type: 3}
+    L: {fileID: 7400000, guid: 4b49b24d907c8f14ea1ba424d519c7c8, type: 3}
+    B: {fileID: 7400000, guid: 6a9117b6b23cd3b4186edf2a397e3990, type: 3}
+    FR: {fileID: 0}
+    FL: {fileID: 0}
+    BR: {fileID: 0}
+    BL: {fileID: 0}
+  dodgeSlide:
+    useRootMotion: 0
+    CENTER: {fileID: 0}
+    F: {fileID: 7400000, guid: d5805de9566ad8e4483c4daf31a67d9d, type: 3}
+    R: {fileID: 7400000, guid: b6a17640596593c42aeae17a3d3f2c48, type: 3}
+    L: {fileID: 7400000, guid: 66b9d8624e728044fa801599eb998076, type: 3}
+    B: {fileID: 7400000, guid: 645ea744ac75e9841a39a45d227390c5, type: 3}
+    FR: {fileID: 0}
+    FL: {fileID: 0}
+    BR: {fileID: 7400000, guid: b6a17640596593c42aeae17a3d3f2c48, type: 3}
+    BL: {fileID: 7400000, guid: 66b9d8624e728044fa801599eb998076, type: 3}
