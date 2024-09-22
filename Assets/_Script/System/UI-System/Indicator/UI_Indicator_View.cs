@@ -1,8 +1,10 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_Indicator_View : UIViewBase
 {
+    public UpdateType updateType;
     public List<UIIndicatorBase> indicators = new();
 
     // System Value
@@ -19,16 +21,35 @@ public class UI_Indicator_View : UIViewBase
     {
         base.Update();
 
-        if (_updateLock) return;
-
-        for (int i = 0; i < indicators.Count; ++i)
-        {
-            if (_updateLock) return;
-
-            indicators[i].UpdateTargetIndicator();
-        }
+        if (updateType == UpdateType.Normal)
+            UpdateIndicators();
     }
 
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        if (updateType == UpdateType.Fixed)
+            UpdateIndicators();
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+
+        if (updateType == UpdateType.Late)
+            UpdateIndicators();
+    }
+
+    private void UpdateIndicators()
+    {
+        try
+        {
+            for (int i = 0; i < indicators.Count; ++i)
+                indicators[i].UpdateTargetIndicator();
+        }
+        catch { }
+    }
 
     public void AddIndicator(UIIndicatorBase indicator)
     {

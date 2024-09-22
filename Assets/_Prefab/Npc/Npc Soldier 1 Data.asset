@@ -29,11 +29,8 @@ MonoBehaviour:
     SocialStatus: 0
     PoliticalRelation: 0
     PersonalGrudge: 0
-  npcCombatData:
-    traceStartRange: 0
-    confrontingRange: 0
-    confrontingBandingOffset: 0
-    confrontingPositionOffset: 0
-    repositionDuration: 0
-    repositionDurationRandomOffset: 0
   perfab: {fileID: 3443539735993927099, guid: 19a22116f977e4349bc670efbd09e812, type: 3}
+  equipOnWeaponDatas:
+  - parentBone: 18
+    weaponData: {fileID: 11400000, guid: 3759c09eeb5d8ee45ba9baf2fb9af991, type: 2}
+  equipOffWeaponDatas: []

@@ -80,6 +80,7 @@ public class CharacterActorBase : FsmObjectBase
         {
             buffDebuffController?.Init(this);
             targetController?.Init(this);
+            weaponController?.Init(this);
         }
 
         if (scriptableAnimatorSetting)

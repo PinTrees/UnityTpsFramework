@@ -8,8 +8,7 @@ using UnityEngine.UI;
 public class UIIndicatorBase : UIObjectBase
 {
     public bool outOffScreenDisable = false;
-    public float OutOfSightOffset = 20f;
-    private float outOfSightOffest { get => OutOfSightOffset; }
+    public float outOfSightOffset = 20f;
 
     GameObject target;
     RectTransform canvasRect;
@@ -40,8 +39,8 @@ public class UIIndicatorBase : UIObjectBase
     {
         base.Close();
 
-        transform.SetParent(null, true);
         UISystemManager.Instance.GetView<UI_Indicator_View>().RemoveIndicator(this);
+        transform.SetParent(null);
     }
 
 
@@ -99,14 +98,14 @@ public class UIIndicatorBase : UIObjectBase
 
         // 대상 벡터가 캔버스 직사각형의 y 테두리와 (첫 번째) 교차하는지 또는 벡터가 x 테두리와 (첫 번째) 교차하는지 계산합니다.
         // 최대값으로 설정해야 하는 경계선과 표시기를 이동해야 하는 경계선(위 및 아래 또는 왼쪽 및 오른쪽)을 확인하는 데 필요합니다.
-        float divX = (canvasRect.rect.width / 2f - outOfSightOffest) / Mathf.Abs(indicatorPosition.x);
-        float divY = (canvasRect.rect.height / 2f - outOfSightOffest) / Mathf.Abs(indicatorPosition.y);
+        float divX = (canvasRect.rect.width / 2f - outOfSightOffset) / Mathf.Abs(indicatorPosition.x);
+        float divY = (canvasRect.rect.height / 2f - outOfSightOffset) / Mathf.Abs(indicatorPosition.y);
 
         // x 경계선과 먼저 교차하는 경우 x-원을 경계선에 놓고 그에 따라 y-원을 조정합니다(삼각법).
         if (divX < divY)
         {
             float angle = Vector3.SignedAngle(Vector3.right, indicatorPosition, Vector3.forward);
-            indicatorPosition.x = Mathf.Sign(indicatorPosition.x) * (canvasRect.rect.width * 0.5f - outOfSightOffest) * canvasRect.localScale.x;
+            indicatorPosition.x = Mathf.Sign(indicatorPosition.x) * (canvasRect.rect.width * 0.5f - outOfSightOffset) * canvasRect.localScale.x;
             indicatorPosition.y = Mathf.Tan(Mathf.Deg2Rad * angle) * indicatorPosition.x;
         }
 
@@ -115,7 +114,7 @@ public class UIIndicatorBase : UIObjectBase
         {
             float angle = Vector3.SignedAngle(Vector3.up, indicatorPosition, Vector3.forward);
 
-            indicatorPosition.y = Mathf.Sign(indicatorPosition.y) * (canvasRect.rect.height / 2f - outOfSightOffest) * canvasRect.localScale.y;
+            indicatorPosition.y = Mathf.Sign(indicatorPosition.y) * (canvasRect.rect.height / 2f - outOfSightOffset) * canvasRect.localScale.y;
             indicatorPosition.x = -Mathf.Tan(Mathf.Deg2Rad * angle) * indicatorPosition.y;
         }
 

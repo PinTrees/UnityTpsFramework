@@ -112,11 +112,13 @@ public class UIViewBase : MonoBehaviour
 
     protected virtual void Update()
     {
-
     }
 
     protected virtual void FixedUpdate()
     {
+    }
 
+    protected virtual void LateUpdate()
+    {
     }
 }

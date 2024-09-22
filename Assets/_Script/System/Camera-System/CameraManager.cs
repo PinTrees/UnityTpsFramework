@@ -284,19 +284,20 @@ public class CameraManager : Singleton<CameraManager>
         targetCamera.farClipPlane = Mathf.Lerp(targetCamera.farClipPlane, setting.farClipPlane, lerp);
     }
 
-    public void Update()
+
+    protected void Update()
     {
         if (updateType == CameraUpdateType.Update)
             UpdateCameraTransform();
     }
 
-    public void FixedUpdate()
+    protected void FixedUpdate()
     {
         if (updateType == CameraUpdateType.FixedUpdate)
             UpdateCameraTransform();
     }
 
-    public void LateUpdate()
+    protected void LateUpdate()
     {
         if (updateType == CameraUpdateType.LateUpdate)
             UpdateCameraTransform();

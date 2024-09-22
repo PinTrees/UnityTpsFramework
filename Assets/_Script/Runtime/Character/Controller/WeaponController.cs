@@ -10,6 +10,11 @@ public class WeaponController : MonoBehaviour
     public List<Weapon> equipOffWeapons = new(); 
 
 
+    public void Init(CharacterActorBase owner)
+    {
+        ownerCharacter = owner;
+    }
+
     public void EquipWeapon(Weapon weapon)
     {
         equipOnWeapons.Add(weapon);

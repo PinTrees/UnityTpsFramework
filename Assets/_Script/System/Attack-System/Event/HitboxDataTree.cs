@@ -111,10 +111,6 @@ public class HitboxDataTree : ScriptableObject
     [Header("Custom Hit Setting")]
     public HitboxCustomHitSetting customHitSetting;
 
-    [Header("Override Time Stop Setting")]
-    public bool useTimeStopEvent;
-    public float timeStopDuration = 0.1f;
-
     [Header("BuffDebuff Setting")]
     [HideInInspector]
     public List<BuffDebuffEventBase> buffDebuffEvents;
@@ -191,9 +187,6 @@ public class HitboxDataTree : ScriptableObject
                             knockbackSetting = knockbackSetting,
                             buffDebuffEvents = buffDebuffEvents,
                         });
-
-                        if (useTimeStopEvent)
-                            TimeEx.Stop(timeStopDuration).Forget();
 
                         owner.targetController.hitTargets.Add(target);
                     }
