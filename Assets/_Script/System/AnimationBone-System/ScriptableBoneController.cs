@@ -21,6 +21,14 @@ public class ScriptableBoneController : MonoBehaviour
         ownerCharacter = owner;
     }
 
+    public ScriptableBone GetScriptableBone(HumanBodyBones targetBone)
+    {
+        if (boneData == null)
+            return null;
+
+        return boneData.bones.Where(e => e.targetBone == targetBone).FirstOrDefault();
+    }
+
 #if UNITY_EDITOR
     [Button("Save Current Edite Bone")]
     public void _Editor_SaveBone()
