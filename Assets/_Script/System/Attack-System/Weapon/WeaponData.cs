@@ -27,7 +27,9 @@ public class WeaponData : ScriptableObject
     public Weapon Create()
     {
         var weaponPerfab = GameObject.Instantiate(perfab);
-        return weaponPerfab.GetComponent<Weapon>();
+        var weapon = weaponPerfab.GetComponent<Weapon>();
+        weapon.Init();
+        return weapon;
     }
 
 #if UNITY_EDITOR

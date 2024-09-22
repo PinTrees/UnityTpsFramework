@@ -133,6 +133,8 @@ public class NpcBodyState_Death : FsmState
             owner.animator.SetNormalizeTime("Death", 0.01f);
             await owner.animator.TransitionCompleteAsync("Death");
         }
+
+        owner.weaponController.DropEquipOnWeapon();
     }
 
     public override async UniTask Exit()

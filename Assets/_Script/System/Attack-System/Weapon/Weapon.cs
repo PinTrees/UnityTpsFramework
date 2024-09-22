@@ -1,27 +1,32 @@
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Weapon : MonoBehaviour
 {
     public WeaponData weaponData;
 
     [Header("Transforms")]
+    public BoxCollider boxCollider;
+    public Rigidbody rb;
     public Transform hitboxTransform;
 
     [Header("Editor Test Value")]
     public HitboxEvent hitboxEvent;
 
-    void Start()
+
+    public void Init()
     {
-        
+        boxCollider = GetComponent<BoxCollider>();
+        boxCollider.enabled = false;
+
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+#if UNITY_EDITOR
     public void OnDrawGizmos()
     {
         if(hitboxTransform)
@@ -33,6 +38,7 @@ public class Weapon : MonoBehaviour
                 hitboxEvent.OnDrawGizmo(hitboxTransform);
         }
     }
+#endif
 
 #if UNITY_EDITOR
     [Button("Save RightHand")]

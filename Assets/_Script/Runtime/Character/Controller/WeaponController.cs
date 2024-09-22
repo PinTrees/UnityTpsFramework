@@ -18,6 +18,39 @@ public class WeaponController : MonoBehaviour
         boneController?.Init(owner);
     }
 
+    public void DropEquipOnWeapon()
+    {
+        for(int i = 0; i < equipOnWeapons.Count; ++i)
+        {
+            equipOnWeapons[i].transform.SetParent(null, true);
+            equipOnWeapons[i].boxCollider.enabled = true;
+            equipOnWeapons[i].rb.isKinematic = false;
+
+            // 무기를 랜덤하게 튕겨나가게 할 힘의 크기
+            float upwardForce = 2.5f * equipOnWeapons[i].rb.mass;     // 위로 가는 힘
+            float horizontalForce = 1f * equipOnWeapons[i].rb.mass;   // 옆으로 가는 힘
+            float torqueForce = 5f * equipOnWeapons[i].rb.mass;       // 회전력
+
+            // 랜덤한 힘을 무기에게 가함
+            Vector3 randomDirection = new Vector3(
+                Random.Range(-1f, 1f),   // 좌우 방향 랜덤
+                Random.Range(0.5f, 1.5f), // 위로 가는 방향 (0.5 ~ 1.5 정도로 설정)
+                Random.Range(-1f, 1f));  // 앞뒤 방향 랜덤
+
+            // AddForce로 무기를 튕겨나가게 함 (질량 보정)
+            equipOnWeapons[i].rb.AddForce((randomDirection.normalized * horizontalForce + Vector3.up * upwardForce), ForceMode.Impulse);
+
+            // 랜덤한 회전력 추가 (질량 보정)
+            Vector3 randomTorque = new Vector3(
+                Random.Range(-1f, 1f) * torqueForce,
+                Random.Range(-1f, 1f) * torqueForce,
+                Random.Range(-1f, 1f) * torqueForce);
+            equipOnWeapons[i].rb.AddTorque(randomTorque);
+        }
+
+        equipOnWeapons.Clear();
+    }
+
     public void EquipWeapon(Weapon weapon, HumanBodyBones equipTargetBone)
     {
         var weaponEquipPosition = weapon.weaponData.equipPositions.Where(e => e.parentBoneType == equipTargetBone).FirstOrDefault();
@@ -50,6 +83,11 @@ public class WeaponController : MonoBehaviour
         AdjustWeaponRotation(weapon.transform, expectedParentUpAxis, expectedParentForwardAxis, actualParentUpAxis, actualParentForwardAxis);
 
         equipOnWeapons.Add(weapon);
+    }
+
+    public Weapon GetEquipWeapon()
+    {
+        return equipOnWeapons.First();
     }
 
     private void AdjustWeaponRotation(Transform weaponTransform, ScriptableBoneAxisType expectedUp, ScriptableBoneAxisType expectedForward, ScriptableBoneAxisType actualUp, ScriptableBoneAxisType actualForward)
@@ -103,10 +141,5 @@ public class WeaponController : MonoBehaviour
             default:
                 return Vector3.up; // 기본값
         }
-    }
-
-    public Weapon GetEquipWeapon()
-    {
-        return equipOnWeapons.First();
     }
 }
