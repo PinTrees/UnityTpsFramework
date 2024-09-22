@@ -25,6 +25,7 @@ public class CharacterActorBase : FsmObjectBase
 
     [Header("Data Setting")]
     public CharacterData characterData;
+    public T GetData<T>() where T: CharacterData { return characterData as T; }
 
     [Header("Animator Setting")]
     public ScriptableAnimatorSetting scriptableAnimatorSetting;

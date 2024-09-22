@@ -20,10 +20,14 @@ public class NpcCharacterActorBase : CharacterActorBase
     [Header("Runtime Value")]
     public bool IsTrace;
     private UI_Npc_Indicator indicator;
+    private NpcCharacterData npcCharacterData;
+
 
     protected override void OnInit()
     {
         base.OnInit();
+
+        npcCharacterData = GetData<NpcCharacterData>();
 
         IniFsm();
         InitUI();
@@ -91,6 +95,12 @@ public class NpcCharacterActorBase : CharacterActorBase
     {
         combatController = baseObject.GetComponent<NpcCombatController>();
         combatController.Init(this);
+
+        npcCharacterData.equipOnWeaponDatas.ForEach(e =>
+        {
+            var weapon = e.weaponData.Create();
+            weaponController.EquipWeapon(weapon, e.parentBone);
+        });
     }
 
     protected override void Start()

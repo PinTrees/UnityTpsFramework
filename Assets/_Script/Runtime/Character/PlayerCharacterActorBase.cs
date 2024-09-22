@@ -35,8 +35,8 @@ public class PlayerCharacterActorBase : CharacterActorBase
 
         userdata.equipWeaponDatas.ForEach(e =>
         {
-            var weapon = e.weaponData.Equip(e.parentBone, this);
-            weaponController.EquipWeapon(weapon);
+            var weapon = e.weaponData.Create();
+            weaponController.EquipWeapon(weapon, e.parentBone);
         });
     }
 

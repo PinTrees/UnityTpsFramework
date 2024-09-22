@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Longsword 1
   m_EditorClassIdentifier: 
   equipPositions:
-  - parentBoneType: 18
+  - upAxis: 0
+    forwardAxis: 1
+    parentBoneType: 18
     localPosition: {x: -0.043, y: 0.045, z: -0.021}
     localEulerAngle: {x: 323.76678, y: 84.76033, z: 357.0947}
   perfab: {fileID: 7866335914969629838, guid: 4d30327a12fab6b44a934bb642ecafad, type: 3}

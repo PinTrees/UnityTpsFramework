@@ -10,6 +10,8 @@ using UnityEditor;
 [Serializable]
 public class EquipPositionContainer
 {
+    public ScriptableBoneAxisType upAxis;
+    public ScriptableBoneAxisType forwardAxis;
     public HumanBodyBones parentBoneType;
 
     public Vector3 localPosition;
@@ -22,16 +24,9 @@ public class WeaponData : ScriptableObject
     public List<EquipPositionContainer> equipPositions = new();
     public GameObject perfab;
 
-    public Weapon Equip(HumanBodyBones equipPosition, CharacterActorBase owner)
+    public Weapon Create()
     {
         var weaponPerfab = GameObject.Instantiate(perfab);
-        var weaponEquipPosition = equipPositions.Where(e => e.parentBoneType == equipPosition).FirstOrDefault();
-
-        var parentTransform = owner.animator.GetBoneTransform(equipPosition);
-        weaponPerfab.transform.SetParent(parentTransform, true);
-        weaponPerfab.transform.localPosition = weaponEquipPosition.localPosition;
-        weaponPerfab.transform.localEulerAngles = weaponEquipPosition.localEulerAngle;
-
         return weaponPerfab.GetComponent<Weapon>();
     }
 

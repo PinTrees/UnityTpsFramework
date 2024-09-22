@@ -2712,6 +2712,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7769657866093675248, guid: 588f5e0dae46682479e11ed20aa16223, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3979907474187230660}
+    - targetCorrespondingSourceObject: {fileID: 7769657866093675248, guid: 588f5e0dae46682479e11ed20aa16223, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6442613402983134143}
     - targetCorrespondingSourceObject: {fileID: 3052080577482082528, guid: 588f5e0dae46682479e11ed20aa16223, type: 3}
       insertIndex: -1
       addedObject: {fileID: 286994123540168799}
@@ -4263,6 +4266,21 @@ MonoBehaviour:
   ownerCharacter: {fileID: 0}
   equipOnWeapons: []
   equipOffWeapons: []
+--- !u!114 &6442613402983134143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4391847927488828035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 158d6a07f8ff93945bb30773e0e3709d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boneData: {fileID: 11400000, guid: 0a1fa4b961f02a34a8f83eef47193f77, type: 2}
+  ownerCharacter: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!137 &4412637234139585488 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7646394105800018851, guid: 588f5e0dae46682479e11ed20aa16223, type: 3}
