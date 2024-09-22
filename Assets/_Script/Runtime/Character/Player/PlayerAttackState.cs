@@ -44,7 +44,8 @@ public class PlayerAttackState_Attack : FsmState
         await base.Enter();
 
         // Data Set
-        owner = GetOwner<PlayerCharacterActorBase>();   
+        owner = GetOwner<PlayerCharacterActorBase>();
+        owner.IsAttack = true;
         isComboAttack = false;
         currentCameraShakeIndex = 0;
 

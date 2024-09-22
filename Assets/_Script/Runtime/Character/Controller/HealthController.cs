@@ -13,6 +13,7 @@ public class HealthController : MonoBehaviour
 
     [HideInInspector] public int currentHealth;
     [HideInInspector] public int maxHealth;
+    private float dampedHealth;
 
     public event System.Action<int> OnHealthChanged;
 
@@ -20,7 +21,7 @@ public class HealthController : MonoBehaviour
     public void Init(CharacterActorBase owner, int maxHealth)
     {
         this.ownerCharacter = owner;
-        currentHealth = this.maxHealth = maxHealth; 
+        dampedHealth = currentHealth = this.maxHealth = maxHealth; 
     }
 
     public void TakeDamage(vDamage damage)
@@ -48,10 +49,19 @@ public class HealthController : MonoBehaviour
     {
         return (float)currentHealth / maxHealth; 
     }
+    public float GetHealthAmountDamp()
+    {
+        return (float)dampedHealth / maxHealth;
+    }
 
     public void Revive(int healthAmount)
     {
         currentHealth = Mathf.Clamp(healthAmount, 0, maxHealth);
         OnHealthChanged?.Invoke(currentHealth);
+    }
+
+    public void UpdateHealth()
+    {
+        dampedHealth = Mathf.Lerp(dampedHealth, currentHealth, Time.deltaTime * 1);
     }
 }

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,12 +23,12 @@ public class TargetController : MonoBehaviour
     public float canSeeAngle;
 
     [Header("Runtime Value")]
+    private Coroutine targetDetectCoroutine = null;
+
     public CharacterActorBase forcusTarget;                         // 현재 포커싱 타겟
     public List<CharacterActorBase> targets = new();                // 탐지된 모든 타겟   
     public List<CharacterActorBase> forcusedByCharacters = new();   // 현재 나를 포커싱 중인 적
-
     public List<CharacterActorBase> hitTargets = new();             // 현재 내가 타격중인 캐릭터
-
 
     // 나를 포커싱 중인 적의 대치거리 레이어에 따른 대상 주변 위치 포인트
     private Dictionary<int, List<CharacterActorBase>> forcusedByCharacterWithLayerCache = new();
@@ -36,26 +37,32 @@ public class TargetController : MonoBehaviour
     private List<Transform> tmpTargets = new();                     // 임시 타겟 캐싱
     public bool lockDetectUpdate;
 
+
     
     public void Init(CharacterActorBase owner)
     {
         this.ownerCharacter = owner;
-        StartCoroutine(UpdateTargetDetectTask().ToCoroutine());
+        targetDetectCoroutine = StartCoroutine(UpdateTargetDetectTask());
+    }
+    public void Exit()
+    {
+        forcusTarget.targetController.RemoveForcusedTarget(ownerCharacter);
+        if (targetDetectCoroutine != null) StopCoroutine(targetDetectCoroutine);
     }
 
     protected void LateUpdate()
     {
-        forcusedByCharacters.ForEach(e =>
+        for(int i = 0; i < forcusedByCharacters.Count; ++i)
         {
-            e.OnConfrontingTrace();
-        });
+            forcusedByCharacters[i].OnConfrontingTrace();
+        }
     }
 
-    async UniTask UpdateTargetDetectTask()
+    IEnumerator UpdateTargetDetectTask()
     {
         while (true)
         {
-            await UniTask.Delay((int)(detectDelay * 1000));
+            yield return new WaitForSeconds(detectDelay);
 
             if (lockDetectUpdate)
                 continue;
@@ -185,7 +192,6 @@ public class TargetController : MonoBehaviour
     private void RemoveForcusedTarget(CharacterActorBase character)
     {
         forcusedByCharacters.Remove(character);
-        ForcusedTargetReposition();
 
         if (character.characterData == null)
             return;

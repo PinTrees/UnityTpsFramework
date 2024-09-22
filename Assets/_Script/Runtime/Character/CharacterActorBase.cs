@@ -94,6 +94,7 @@ public class CharacterActorBase : FsmObjectBase
     protected override void Update()
     {
         base.Update();
+        healthController?.UpdateHealth();
     }
 
     protected override void FixedUpdate()
@@ -112,6 +113,7 @@ public class CharacterActorBase : FsmObjectBase
     public virtual void OnDeath()
     {
         IsDeath = true;
+        targetController?.Exit();
     }
     public virtual bool OnConfrontingTrace()
     {

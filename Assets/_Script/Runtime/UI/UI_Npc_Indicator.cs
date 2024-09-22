@@ -8,6 +8,7 @@ public class UI_Npc_Indicator : UIIndicatorBase
 
     [Header("UI Components Setting")]
     public Image hpBarImage;
+    public Image hpDampedBarImage;
 
 
     public void Show(NpcCharacterActorBase owner)
@@ -36,5 +37,6 @@ public class UI_Npc_Indicator : UIIndicatorBase
             return;
 
         hpBarImage.fillAmount = ownerCharacter.healthController.GetHealthAmount();
+        hpDampedBarImage.fillAmount = ownerCharacter.healthController.GetHealthAmountDamp();
     }
 }

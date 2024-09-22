@@ -138,35 +138,21 @@ public class HitboxDataTree : ScriptableObject
             return;
         }
 
-        hitboxTimelines.ForEach(e =>
+        for(int i = 0; i < hitboxTimelines.Count; ++i)
         {
-            UpdateHitbox(e, owner).Forget();
-        });
+            UpdateHitbox(hitboxTimelines[i], owner);
+        }
     }
 
-    private async UniTask UpdateHitbox(HitboxTimeline timeline, CharacterActorBase owner)
+    private void UpdateHitbox(HitboxTimeline timeline, CharacterActorBase owner)
     {
         bool isStart = false;
         bool isUpdate = false;
         int index = hitboxTimelines.IndexOf(timeline);
         hitboxs[index].detectorSetting.detectLayer = targetLayerMask;
 
-        // 일정 시간 타임아웃 설정 (예: 5초)
-        float timeoutDuration = 5f; // 5초 타임아웃
-        float elapsedTime = 0f; // 경과 시간 추적
-
-        while (true)
+        TaskSystem.CoroutineUpdateLost(() =>
         {
-            await UniTask.Yield();
-            elapsedTime += Time.deltaTime; 
-
-            if (elapsedTime > timeoutDuration)
-            {
-                hitboxs[index].Exit();
-                Debug.LogWarning("Hitbox update timed out.");
-                break;
-            }
-
             if (!isStart && owner.animator.IsPlayedOverTime(timeline.hitboxSpawnNormailzeTime.start))
             {
                 hitboxs[index].Enter();
@@ -217,9 +203,16 @@ public class HitboxDataTree : ScriptableObject
             if (isStart && isUpdate && owner.animator.IsPlayedOverTime(timeline.hitboxSpawnNormailzeTime.exit))
             {
                 hitboxs[index].Exit();
-                break;
+                return true;
             }
-        }
+
+            return false;
+        }, delay: 0.05f,
+        timeout: 5, timeoutAction: () => 
+        {
+            hitboxs[index].Exit();
+            Debug.LogWarning("Hitbox update timed out.");
+        });
     }
 
     public void Exit()

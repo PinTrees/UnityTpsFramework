@@ -24,8 +24,8 @@ namespace Fsm
         public FsmContext context;
         public FsmState currentState;       // 현재 활성화된 FSM 상태
 
-        private readonly Dictionary<string, FsmState> stateMap = new();     // 가능한 모든 상태들을 저장하는 맵   
-        private readonly Queue<StateChangeContainer> changeStateQueue = new();          // 상태 변경을 위한 대기열
+        private readonly Dictionary<string, FsmState> stateMap = new();         // 가능한 모든 상태들을 저장하는 맵   
+        private readonly Queue<StateChangeContainer> changeStateQueue = new();  // 상태 변경을 위한 대기열
         public List<StateChangeContainer> GetStateChangeList() { return changeStateQueue.ToList(); }
 
         public string previousStateType { get; private set; }        // 이전에 활성화되었던 상태
@@ -154,11 +154,8 @@ namespace Fsm
         /// <param name="type">변경할 상태</param>
         public void ChangeStateNow(string type, object param = null)
         {
-            ChangeStateNowAsync(type, param).Forget();
+            fsmObject.StartCoroutine(ChangeStateNowAsync(type, param).ToCoroutine()); 
         }
-
-
- 
 
         IEnumerator UpdateStateChangeTask()
         {
@@ -203,7 +200,8 @@ namespace Fsm
             };
             changeStateQueue.Enqueue(newChange);
 
-            await UniTask.WaitUntil(() => isComplete);
+            while (!isComplete)
+                await UniTask.Yield();
         }
         #endregion
     }

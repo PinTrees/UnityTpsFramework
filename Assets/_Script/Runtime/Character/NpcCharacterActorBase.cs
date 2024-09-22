@@ -135,7 +135,7 @@ public class NpcCharacterActorBase : CharacterActorBase
         if (movementLayer.ContainsState(NpcMovementStateType.ConfrontingTrace))
             return false;
 
-        Debug.Log("Npc OnConfonting Trace");
+        //Debug.Log("Npc OnConfonting Trace");
         movementLayer.ChangeStateNow(NpcMovementStateType.ConfrontingTrace);
 
         return true;

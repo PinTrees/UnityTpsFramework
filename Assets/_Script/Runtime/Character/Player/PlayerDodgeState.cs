@@ -25,8 +25,6 @@ public class PlayerDodgeState_None : FsmState
     {
         await base.Enter();
         owner = GetOwner<PlayerCharacterActorBase>();
-        owner.IsJustDodge = false;
-        owner.IsDodge = false;
     }
 
     public override async UniTask Exit()
@@ -38,12 +36,9 @@ public class PlayerDodgeState_None : FsmState
     {
         base.Update();
 
-        if (owner.IsJustDodge)
-            return;
-        if (owner.IsHit)
-            return;
-        if (owner.IsAttack)
-            return;
+        if (owner.IsJustDodge) return;
+        if (owner.IsHit) return;
+        if (owner.IsAttack) return;
 
         if (owner.movementDir != Vector3.zero)
         {
@@ -200,8 +195,6 @@ public class PlayerDodgeState_Roll : FsmState
 
         float upwardForce = owner.rb.mass * 2f;  
         owner.rb.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
-
-        await owner.animator.TransitionCompleteAsync(currentAnimationTag);
     }
 
     public override async UniTask Exit()
