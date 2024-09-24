@@ -4,6 +4,9 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Linq;
 using System.Reflection;
+using UnityEngine.Pool;
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -147,6 +150,8 @@ public class HitboxDataTree : ScriptableObject
         int index = hitboxTimelines.IndexOf(timeline);
         hitboxs[index].detectorSetting.detectLayer = targetLayerMask;
 
+        List<CharacterActorBase> hitTargets = ListPool<CharacterActorBase>.Get();
+
         TaskSystem.CoroutineUpdateLost(() =>
         {
             if (!isStart && owner.animator.IsPlayedOverTime(timeline.hitboxSpawnNormailzeTime.start))
@@ -157,12 +162,12 @@ public class HitboxDataTree : ScriptableObject
 
             if (isStart)
             {
-                var targets = hitboxs[index].FindHit(owner, this);
+                hitboxs[index].FindHit(owner, this, hitTargets);
                 isUpdate = true;        // 최소 1프레임 실행 보장
 
-                if (targets != null && targets.Count > 0)
+                if (hitTargets != null && hitTargets.Count > 0)
                 {
-                    foreach (var target in targets)
+                    foreach (var target in hitTargets)
                     {
                         var isTagMatch = target.characterTags.Any(targetTag => owner.targetTags.Any(ownerTag => ownerTag.tag == targetTag.tag));
                         if (!isTagMatch)
@@ -205,6 +210,9 @@ public class HitboxDataTree : ScriptableObject
         {
             hitboxs[index].Exit();
             Debug.LogWarning("Hitbox update timed out.");
+        }, onExit: () =>
+        {
+            ListPool<CharacterActorBase>.Release(hitTargets);
         });
     }
 

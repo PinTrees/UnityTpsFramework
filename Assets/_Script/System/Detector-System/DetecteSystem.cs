@@ -76,17 +76,17 @@ public class DetecteSystem
             Quaternion rotation = ownerTransform.rotation * Quaternion.Euler(setting.rotationOffset);
             Vector3 position = ownerTransform.position + rotation * setting.offset;
 
+            boxColliderUnit.transform.rotation = rotation;
+            boxColliderUnit.transform.position = position;
+            boxColliderUnit.transform.localScale = setting.size;
+            Physics.SyncTransforms();
+
             var more = Mathf.Max(setting.size.x, setting.size.y, setting.size.z);
             Collider[] colliders = Physics.OverlapSphere(position, setting.detectRange > 0 ? setting.detectRange : more, setting.detectLayer);
 
             if (colliders != null && colliders.Length > 0)
             {
-                boxColliderUnit.transform.rotation = rotation;
-                boxColliderUnit.transform.position = position;
-                boxColliderUnit.transform.localScale = setting.size;
                 boxColliderUnit.gameObject.layer = detectSystemLayerIndex;
-
-                Physics.SyncTransforms();
 
                 // 충돌 검사 로직 추가
                 foreach (Collider col in colliders)

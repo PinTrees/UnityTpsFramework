@@ -118,8 +118,6 @@ public class CharacterActorBase : FsmObjectBase
     }
     public virtual void OnDeath()
     {
-        IsDeath = true;
-        targetController?.Exit();
     }
     public virtual bool OnConfrontingTrace()
     {

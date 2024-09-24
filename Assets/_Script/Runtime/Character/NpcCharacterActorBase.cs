@@ -127,6 +127,10 @@ public class NpcCharacterActorBase : CharacterActorBase
     {
         base.OnDeath();
 
+        if (IsDeath)
+            return;
+
+        IsDeath = true;
         var bodyLayer = fsmContext.FindLayer(NpcFsmLayer.BodyLayer);
         bodyLayer.ChangeStateNow(NpcBodyStateType.Death);
 
@@ -150,13 +154,13 @@ public class NpcCharacterActorBase : CharacterActorBase
 
     public override bool OnHit(HitData data)
     {
+       if (!base.OnHit(data))
+            return false;
+
         healthController.TakeDamage(new vDamage()
         {
             damage = 250,
         });
-
-       if (!base.OnHit(data))
-            return false;
 
         IsHit = true;
         if (data.customHitSetting.useCustomHit)

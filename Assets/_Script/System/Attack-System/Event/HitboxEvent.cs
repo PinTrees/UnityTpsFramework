@@ -56,10 +56,12 @@ public class HitboxEvent : AttackEvent
         isHit = false;
     }
 
-    public List<CharacterActorBase> FindHit(CharacterActorBase owner, HitboxDataTree root)
+    public void FindHit(CharacterActorBase owner, HitboxDataTree root, List<CharacterActorBase> hitTargets)
     {
+        hitTargets.Clear();
+
         if (isHit)
-            return null;
+            return;
 
         Transform rootTransform = null;
         if (useBaseTransform) rootTransform = owner.baseObject.transform;
@@ -71,25 +73,22 @@ public class HitboxEvent : AttackEvent
         if (targets.Count > 0)
         {
             isHit = true;
-            List<CharacterActorBase> targetCharacters = new();
 
             if (damageType == HitboxDamageType.Single)
             {
                 var targetTransform = targets.Where(e => e.GetComponentInParent<CharacterActorBase>()).FirstOrDefault();
-                targetCharacters.Add(targetTransform.GetComponentInParent<CharacterActorBase>());
+                hitTargets.Add(targetTransform.GetComponentInParent<CharacterActorBase>());
             }
             else if (damageType == HitboxDamageType.Multiple)
             {
                 targets.Where(e => e.GetComponentInParent<CharacterActorBase>()).ToList().ForEach(e =>
                 {
-                    targetCharacters.Add(e.GetComponentInParent<CharacterActorBase>());
+                    hitTargets.Add(e.GetComponentInParent<CharacterActorBase>());
                 });
             }
-
-            return targetCharacters;
         }
 
-        return null;
+        return;
     }
 
 

@@ -39,11 +39,11 @@ public class TaskSystem : Singleton<TaskSystem>
         }
     }
 
-    public static void CoroutineUpdateLost(Func<bool> action, float delay = 0, float timeout = 999, Action timeoutAction=null)
+    public static void CoroutineUpdateLost(Func<bool> action, float delay = 0, float timeout = 999, Action timeoutAction=null, Action onExit=null)
     {
         if (coroutineHost == null) return;
 
-        if (delay > 0) coroutineHost.StartCoroutine(CoroutineUpdateWithDelay(action, delay, timeout, timeoutAction));
+        if (delay > 0) coroutineHost.StartCoroutine(CoroutineUpdateWithDelay(action, delay, timeout, timeoutAction, onExit));
         else coroutineHost.StartCoroutine(CoroutineUpdate(action, timeout));
     }
 
@@ -61,7 +61,7 @@ public class TaskSystem : Singleton<TaskSystem>
             }
         }
     }
-    private static IEnumerator CoroutineUpdateWithDelay(Func<bool> action, float delay, float timeout, Action timeoutAction = null)
+    private static IEnumerator CoroutineUpdateWithDelay(Func<bool> action, float delay, float timeout, Action timeoutAction = null, Action onExit = null)
     {
         float elapsedTime = 0f;
         while (!action())
@@ -78,5 +78,8 @@ public class TaskSystem : Singleton<TaskSystem>
                 }
             }
         }
+
+        if (onExit != null)
+            onExit();
     }
 }

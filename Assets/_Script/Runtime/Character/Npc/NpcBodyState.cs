@@ -122,9 +122,9 @@ public class NpcBodyState_Death : FsmState
         owner.IsDeath = true;
         owner.navMeshAgent.ResetPath();
 
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.HitLayer, NpcHitStateType.None);
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.None);
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
         await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
 
         {
@@ -134,6 +134,7 @@ public class NpcBodyState_Death : FsmState
             await owner.animator.TransitionCompleteAsync("Death");
         }
 
+        owner.targetController.Exit();
         owner.weaponController.DropEquipOnWeapon();
     }
 
