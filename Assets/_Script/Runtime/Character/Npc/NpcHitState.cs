@@ -66,8 +66,8 @@ public class NpcHitState_HitHard : FsmState
         hitDirection.Normalize();
 
         // State Setting
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
-        owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
 
         // Animation Setting;
         {
@@ -77,8 +77,9 @@ public class NpcHitState_HitHard : FsmState
             currentAnimationTag = "Hit";
             owner.animator.speed = 1;
             owner.animator.applyRootMotion = animationSetting.standHitHard.useRootMotion;
-            owner.animator.CrossFadeInFixedTime("StandHitHard", 0.15f);
-            owner.animator.SetNormalizeTime("StandHitHard", 0.01f);
+            owner.animator.Play("StandIdle", 0, 0);
+            await UniTask.Yield();
+            owner.animator.Play("StandHitHard", 0, 0.0f);
             owner.legsAnimator.CrossFadeActive(true);
 
             await owner.animator.TransitionCompleteAsync(currentAnimationTag);
@@ -109,8 +110,8 @@ public class NpcHitState_HitHard : FsmState
     {
         await base.Exit();
 
-        owner.IsHit = false;
         owner.legsAnimator.CrossFadeActive(false);
+        owner.IsHit = false;
     }
 
     public override void Update()
@@ -119,13 +120,7 @@ public class NpcHitState_HitHard : FsmState
 
         if (owner.animator.IsPlayedOverTime(currentAnimationTag, 0.99f))
         {
-            if (hitData.hitEndMotionType == HitboxHitEndMotionType.LieDown_Up)
-            {
-                layer.ChangeStateNow(NpcHitStateType.None);
-                return;
-            }
-
-            layer.ChangeStateNow(NpcHitStateType.None);
+            HitExit();
             return;
         }
     }
@@ -133,7 +128,19 @@ public class NpcHitState_HitHard : FsmState
     public override void OnAnimationExit()
     {
         base.OnAnimationExit();
+        HitExit();
+    }
+
+    private void HitExit()
+    {
+        if (hitData.hitEndMotionType == HitboxHitEndMotionType.LieDown_Up)
+        {
+            layer.ChangeStateNow(NpcHitStateType.None);
+            return;
+        }
+
         layer.ChangeStateNow(NpcHitStateType.None);
+        return;
     }
 }
 
