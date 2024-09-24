@@ -133,9 +133,7 @@ public class NpcMovementState_Trace : FsmState
         var targetDistance = Vector3.Distance(owner.baseObject.transform.position, targetPosition);
         if(npcCombatData.confrontingRange > targetDistance)
         {
-            owner.IsConfronting = true;
-            layer.ChangeStateNow(NpcMovementStateType.Confronting);
-            return;
+            owner.OnConfrontingTrace();
         }
     }
 }
@@ -262,8 +260,8 @@ public class NpcMovementState_ConfrontingTrace : FsmState
     public override async UniTask Enter()
     {
         await base.Exit();
-
         owner = GetOwner<NpcCharacterActorBase>();
+        owner.IsConfrontingTrace = true;
         combatData = owner.characterData.combatData;
         confrontingBandingOffset = Random.Range(-(float)combatData.confrontingBandingOffset, (float)combatData.confrontingBandingOffset);
         confrontingPositionOffset = Random.insideUnitCircle * combatData.congrontingPositionOffset;
@@ -287,6 +285,7 @@ public class NpcMovementState_ConfrontingTrace : FsmState
     {
         await base.Exit();
         owner.navMeshAgent.ResetPath();
+        owner.IsConfrontingTrace = false;
     }
 
     public override void Update()

@@ -111,14 +111,13 @@ public class PlayerCharacterActorBase : CharacterActorBase
         base.LateUpdate();
     }
 
-    public override void OnHit(HitData hitData)
+    public override bool OnHit(HitData hitData)
     {
-        base.OnHit(hitData);
+        if (!base.OnHit(hitData))
+            return false;
 
-        if (IsDodge)
-            return;
-        if (IsJustDodge)
-            return;
+        if (IsDodge) return false;
+        if (IsJustDodge) return false;
 
         Debug.Log("Player Hit");
         IsHit = true;
@@ -127,19 +126,6 @@ public class PlayerCharacterActorBase : CharacterActorBase
             hitData = hitData,
         });
 
-        //if (hitData.customHitSetting.useCustomHit)
-        //{
-        //    fsmContext.ChangeStateNowAsync(PlayerFsmLayer.HitLayer, PlayerHitStateType.Custom, new HitStateData()
-        //    {
-        //        hitData = hitData,
-        //    }).Forget();
-        //}
-        //else
-        //{
-        //    fsmContext.ChangeStateNowAsync(PlayerFsmLayer.HitLayer, PlayerHitStateType.HitHard, new HitStateData()
-        //    {
-        //        hitData = hitData,
-        //    }).Forget();
-        //}
+        return true;
     }
 }

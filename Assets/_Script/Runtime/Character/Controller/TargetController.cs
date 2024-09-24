@@ -52,10 +52,10 @@ public class TargetController : MonoBehaviour
 
     protected void LateUpdate()
     {
-        for(int i = 0; i < forcusedByCharacters.Count; ++i)
-        {
-            forcusedByCharacters[i].OnConfrontingTrace();
-        }
+        //for(int i = 0; i < forcusedByCharacters.Count; ++i)
+        //{
+        //    forcusedByCharacters[i].OnConfrontingTrace();
+        //}
     }
 
     IEnumerator UpdateTargetDetectTask()

@@ -40,7 +40,7 @@ MonoBehaviour:
       zoomInAmount: 0
       frequency: 5
     duration: 0.5
-  hitboxTree: {fileID: 11400000, guid: b5b26967c67295b44a51726fa9ec1cab, type: 2}
+  hitboxTree: {fileID: 11400000, guid: e39cf22e20624fe42b814266f5355dfc, type: 2}
   attackDirectionType: 0
   attackerTransformSetting:
     useAttackerTransform: 1

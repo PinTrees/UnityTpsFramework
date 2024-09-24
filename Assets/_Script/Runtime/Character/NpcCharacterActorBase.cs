@@ -138,34 +138,29 @@ public class NpcCharacterActorBase : CharacterActorBase
         if (!base.OnConfrontingTrace())
             return false;
 
-        if (IsTrace)
-            return false;
-
         var movementLayer = fsmContext.FindLayer(NpcFsmLayer.MovementLayer);
         if (movementLayer.ContainsState(NpcMovementStateType.ConfrontingTrace))
             return false;
 
-        //Debug.Log("Npc OnConfonting Trace");
+        IsConfrontingTrace = true;
         movementLayer.ChangeStateNow(NpcMovementStateType.ConfrontingTrace);
 
         return true;
     }
 
-    public override void OnHit(HitData data)
+    public override bool OnHit(HitData data)
     {
-        base.OnHit(data);
-
-        if (IsDeath)
-            return;
-
-        healthController.TakeDamage(new vDamage() 
-        { 
+        healthController.TakeDamage(new vDamage()
+        {
             damage = 250,
         });
 
-        if(data.customHitSetting.useCustomHit)
+       if (!base.OnHit(data))
+            return false;
+
+        IsHit = true;
+        if (data.customHitSetting.useCustomHit)
         {
-            IsHit = true;
             fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.Custom, new HitStateData()
             {
                 hitData = data,
@@ -173,11 +168,12 @@ public class NpcCharacterActorBase : CharacterActorBase
         }
         else
         {
-            IsHit = true;
             fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.HitHard, new HitStateData()
             {
                 hitData = data,
             });
         }
+
+        return true;
     }
 }

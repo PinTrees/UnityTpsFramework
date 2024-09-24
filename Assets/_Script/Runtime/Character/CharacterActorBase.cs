@@ -47,6 +47,7 @@ public class CharacterActorBase : FsmObjectBase
     public bool IsHit = false;
     public bool IsMove = false;
     public bool IsConfronting = false;
+    public bool IsConfrontingTrace = false;
     public bool IsDeath = false;
     // State - BuffDebuff Value
     public bool IsSturn = false;
@@ -109,8 +110,11 @@ public class CharacterActorBase : FsmObjectBase
         base.LateUpdate();
     }
 
-    public virtual void OnHit(HitData hitData)
+    public virtual bool OnHit(HitData hitData)
     {
+        if (IsDeath) return false;
+        if (IsKnockDown) return false;
+        return true;
     }
     public virtual void OnDeath()
     {
@@ -124,6 +128,7 @@ public class CharacterActorBase : FsmObjectBase
         if (IsConfronting) return false;
         if (IsCanNotMove) return false;
         if (IsKnockDown) return false;
+        if (IsConfrontingTrace) return false;
 
         return true;
     }

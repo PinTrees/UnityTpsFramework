@@ -48,6 +48,12 @@ public static class DetectRaycastEx
         return (closestTarget, targets);
     }
 
+    public static Collider[] ScanObjectWithSpehre(Transform baseTransform, float radius, LayerMask targetLayerMask)
+    {
+        Collider[] collisionTargets = Physics.OverlapSphere(baseTransform.position, radius, targetLayerMask);
+        return collisionTargets;
+    }
+
     public static (Transform, List<Transform>)? ScanNearByWithBox(Transform ownerTransform, Vector3 localOffset, Vector3 localRotationOffset, Vector3 size, LayerMask targetLayer)
     {
         // 로컬 오프셋을 월드 좌표로 변환하여 박스의 중심 계산

@@ -11,6 +11,7 @@ public class Initializer_InGame : MonoBehaviour
     // 절차적 초기화
     protected async UniTaskVoid Init()
     {
+        DetecteSystem.Init();
         InputManager.Instance.Init();
         GraphicManager.Instance.Init();
         TaskSystem.Instance.Init();
@@ -25,6 +26,8 @@ public class Initializer_InGame : MonoBehaviour
 
         CameraManager.Instance.Init();
         CameraManager.Instance.ChangeCamera("PlayerMainCamera");
+
+        NavigationSystem.Instance.Init();
 
         // Character Create
         NpcManager.Instance.Init();
