@@ -45,15 +45,12 @@ public class NpcAttackState_Attack : FsmState
         await base.Enter();
         
         owner = GetOwner<NpcCharacterActorBase>();
+        owner.IsAttack = true;
         attackNode = owner.combatController.currentAttackNode;
         isComboAttack = false;
 
-        // Error Check
-        if(attackNode == null)
-        {
-            await layer.ChangeStateNowAsync(NpcAttackStateType.None);
-            return;
-        }
+        // State Setting
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
 
         // Animation Setting
         {
@@ -104,6 +101,7 @@ public class NpcAttackState_Attack : FsmState
 
         if (!isComboAttack)
         {
+            owner.targetController.forcusTarget.targetController.activeAttackers.Remove(owner);
             await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
         }
     }

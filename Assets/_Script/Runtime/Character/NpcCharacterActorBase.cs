@@ -152,6 +152,24 @@ public class NpcCharacterActorBase : CharacterActorBase
         return true;
     }
 
+    public override void OnAttack()
+    {
+        base.OnAttack();
+
+        targetController.lockDetectUpdate = true;
+
+        TaskSystem.CoroutineUpdateLost(() =>
+        {
+            if (IsHit)
+                return false;
+
+            IsAttack = true;
+            IsReadyToAttack = false;
+            fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.Attack);
+            return true;
+        }, 0.1f);
+    }
+
     public override bool OnHit(HitData data)
     {
        if (!base.OnHit(data))

@@ -14,10 +14,61 @@ public class NpcCombatController : MonoBehaviour
     [SerializeField] private NpcCharacterActorBase ownerCharacter;
     [SerializeField] public AttackNode currentAttackNode;
 
+    public Coroutine coroutineUpdateReadyToAttack;
+
     public void Init(NpcCharacterActorBase ownerCharacter)
     {
         this.ownerCharacter = ownerCharacter;
-        StartCoroutine(UpdateTask().ToCoroutine());
+        coroutineUpdateReadyToAttack = StartCoroutine(UpdateReayToAttack());
+    }
+
+    IEnumerator UpdateReayToAttack()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.15f);
+
+
+            if (ownerCharacter.IsDeath)
+                continue;
+
+            if (ownerCharacter.IsReadyToAttack) 
+                continue;
+
+            if (ownerCharacter.IsAttack)
+                continue;
+            if (ownerCharacter.IsHit)
+                continue;
+
+            if (ownerCharacter.IsDodge)
+                continue;
+            if (!ownerCharacter.IsConfronting)
+                continue;
+            if (!ownerCharacter.targetController.forcusTarget)
+                continue;
+
+            var attackCombo = attackPatternData.FindAttackCombo(ownerCharacter);
+            if (attackCombo == null)
+                continue;
+            
+            currentAttackNode = attackCombo.attackNodes.First();
+            if (currentAttackNode)
+            {
+                var target = ownerCharacter.targetController.forcusTarget;
+                if (target.targetController.activeAttackers.Count <= 0
+                && target.targetController.attackers.Count <= 0)
+                {
+                    ownerCharacter.IsReadyToAttack = true;
+                    target.targetController.attackers.Add(ownerCharacter);
+                }
+            }
+        }
+    }
+
+    public void Exit()
+    {
+        if (coroutineUpdateReadyToAttack != null)
+            StopCoroutine(coroutineUpdateReadyToAttack);
     }
 
     // Attackable Loop Task

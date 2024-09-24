@@ -4207,6 +4207,7 @@ GameObject:
   - component: {fileID: 19363794963795871}
   - component: {fileID: 2109814119959213443}
   - component: {fileID: 8871317685116431208}
+  - component: {fileID: 3689252303197798660}
   m_Layer: 10
   m_Name: Character
   m_TagString: Untagged
@@ -4319,6 +4320,7 @@ MonoBehaviour:
       m_Calls: []
   EventExecuteSooner: 0.05
   SendOnMovingGlue: 0
+  SendOnStopping: 0
   StepEventOnLanding: 0
   StepInfoReceiver: {fileID: 0}
   ExtraPelvisOffset: {x: 0, y: 0, z: 0}
@@ -5120,7 +5122,7 @@ MonoBehaviour:
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 6144
-  detectDelay: 1
+  detectDelay: 0.5
   canHearRange: 10
   canHearAngle: 360
   canSeeRange: 25
@@ -5129,6 +5131,8 @@ MonoBehaviour:
   targets: []
   forcusedByCharacters: []
   hitTargets: []
+  activeAttackers: []
+  attackers: []
   lockDetectUpdate: 0
 --- !u!114 &2109814119959213443
 MonoBehaviour:
@@ -5143,6 +5147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownerCharacter: {fileID: 2543580114763407753}
+  boneController: {fileID: 0}
   equipOnWeapons: []
   equipOffWeapons: []
 --- !u!114 &8871317685116431208
@@ -5167,6 +5172,25 @@ MonoBehaviour:
   currentAttackNode: {fileID: 0}
   justDodgeAttacker: {fileID: 0}
   justDodgeAttackNode: {fileID: 0}
+--- !u!114 &3689252303197798660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409886658273263579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 158d6a07f8ff93945bb30773e0e3709d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boneData: {fileID: 11400000, guid: ae0a0dce88db3f943b46757c4b394940, type: 2}
+  editingBoneData:
+    upAxis: 0
+    forwardAxis: 1
+    targetBone: 18
+  ownerCharacter: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!1 &5439281634782658295
 GameObject:
   m_ObjectHideFlags: 0
@@ -8500,8 +8524,11 @@ MonoBehaviour:
   IsHit: 0
   IsMove: 0
   IsConfronting: 0
+  IsConfrontingTrace: 0
+  IsDeath: 0
   IsSturn: 0
   IsKnockDown: 0
+  IsCanNotMove: 0
   userdata:
     equipWeaponDatas:
     - parentBone: 18
@@ -8537,7 +8564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownerCharacter: {fileID: 2543580114763407753}
-  hitboxTree: {fileID: 11400000, guid: 77f577d9ac3fab142a9e624d0e67fb85, type: 2}
+  hitboxTree: {fileID: 0}
 --- !u!114 &2473812889034284036
 MonoBehaviour:
   m_ObjectHideFlags: 0

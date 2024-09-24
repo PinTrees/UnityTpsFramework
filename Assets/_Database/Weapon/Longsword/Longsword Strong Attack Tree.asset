@@ -1,22 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8128387828873457944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49715e7796b1a9847a57a989e29f5611, type: 3}
-  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC0C1\uB2E8 (RandomCondition)"
-  m_EditorClassIdentifier: 
-  targetLayers:
-  - {fileID: 11400000, guid: 2cd2a3594be903d428c4a251003e6c4f, type: 2}
-  id: 1
-  frequency: 2
-  activePercent: 0.1
 --- !u!114 &-7932561642709408646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,7 +454,6 @@ MonoBehaviour:
   priorityRank: 10
   conditions:
   - {fileID: -6178802782016952792}
-  - {fileID: -8128387828873457944}
   events: []
   vfxEvents:
   - vfxPlayNormalizeTime:

@@ -67,7 +67,7 @@ public class NpcHitState_HitHard : FsmState
 
         // State Setting
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
-        owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+        owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle); 
 
         // Animation Setting;
         {

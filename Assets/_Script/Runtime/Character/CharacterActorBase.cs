@@ -53,6 +53,7 @@ public class CharacterActorBase : FsmObjectBase
     public bool IsSturn = false;
     public bool IsKnockDown = false;
     public bool IsCanNotMove = false;
+    public bool IsReadyToAttack = false;
 
 
     protected override void OnInit()
@@ -110,6 +111,9 @@ public class CharacterActorBase : FsmObjectBase
         base.LateUpdate();
     }
 
+    public virtual void OnAttack()
+    {
+    }
     public virtual bool OnHit(HitData hitData)
     {
         if (IsDeath) return false;

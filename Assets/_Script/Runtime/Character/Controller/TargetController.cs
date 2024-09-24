@@ -30,6 +30,9 @@ public class TargetController : MonoBehaviour
     public List<CharacterActorBase> forcusedByCharacters = new();   // 현재 나를 포커싱 중인 적
     public List<CharacterActorBase> hitTargets = new();             // 현재 내가 타격중인 캐릭터
 
+    public List<CharacterActorBase> activeAttackers = new();        // 현재 나를 공격중인 캐릭터
+    public List<CharacterActorBase> attackers = new();              // 현재 나를 공격 대기중인 캐릭터
+
     // 나를 포커싱 중인 적의 대치거리 레이어에 따른 대상 주변 위치 포인트
     private Dictionary<int, List<CharacterActorBase>> forcusedByCharacterWithLayerCache = new();
     private Dictionary<int, List<Vector3>> forcuedByCharacterAroundPositionLayer = new();
@@ -46,16 +49,25 @@ public class TargetController : MonoBehaviour
     }
     public void Exit()
     {
-        forcusTarget.targetController.RemoveForcusedTarget(ownerCharacter);
+        if(forcusTarget)
+        {
+            forcusTarget.targetController.RemoveForcusedTarget(ownerCharacter);
+            forcusTarget.targetController.attackers.Remove(ownerCharacter);
+        }
+
         if (targetDetectCoroutine != null) StopCoroutine(targetDetectCoroutine);
     }
 
     protected void LateUpdate()
     {
-        //for(int i = 0; i < forcusedByCharacters.Count; ++i)
-        //{
-        //    forcusedByCharacters[i].OnConfrontingTrace();
-        //}
+        // 이 캐릭터를 공격이 가능한지에 대한 정보 확인
+        for(int i = 0; i < attackers.Count; ++i)
+        {
+            var attacker = attackers[i];
+            attacker.OnAttack();
+            activeAttackers.Add(attacker);
+            attackers.RemoveAt(i--);
+        }
     }
 
     IEnumerator UpdateTargetDetectTask()
