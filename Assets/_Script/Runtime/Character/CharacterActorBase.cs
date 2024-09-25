@@ -54,6 +54,8 @@ public class CharacterActorBase : FsmObjectBase
     public bool IsKnockDown = false;
     public bool IsCanNotMove = false;
     public bool IsReadyToAttack = false;
+    public bool IsStartToAttack = false;
+    public bool IsRunToAttack = false;
 
 
     protected override void OnInit()

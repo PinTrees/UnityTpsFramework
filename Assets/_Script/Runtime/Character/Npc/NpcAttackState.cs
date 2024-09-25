@@ -46,8 +46,9 @@ public class NpcAttackState_Attack : FsmState
         
         owner = GetOwner<NpcCharacterActorBase>();
         owner.IsAttack = true;
-        attackNode = owner.combatController.currentAttackNode;
+        owner.IsStartToAttack = false;
         isComboAttack = false;
+        attackNode = owner.combatController.currentAttackNode;
 
         // State Setting
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);

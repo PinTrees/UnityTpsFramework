@@ -60,6 +60,7 @@ public class NpcCharacterActorBase : CharacterActorBase
         movementLayer.AddState(new NpcMovementState_Trace());
         movementLayer.AddState(new NpcMovementState_Confronting());
         movementLayer.AddState(new NpcMovementState_ConfrontingTrace());
+        movementLayer.AddState(new NpcMovementState_RunToAttack());
 
         var attackLayer = fsmContext.CreateLayer(NpcFsmLayer.AttackLayer);
         attackLayer.AddState(new NpcAttackState_None());
@@ -162,11 +163,33 @@ public class NpcCharacterActorBase : CharacterActorBase
         {
             if (IsHit)
                 return false;
+          
+            if (IsStartToAttack)
+            {
+                IsAttack = true;
+                IsReadyToAttack = false;
+                IsStartToAttack = false;
+                fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.Attack);
+                return true;
+            }
 
-            IsAttack = true;
-            IsReadyToAttack = false;
-            fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.Attack);
-            return true;
+            if (IsRunToAttack)
+                return false;
+
+            // 플레이어와의 거리 확인
+            if (combatController.currentAttackNode.attackerTransformSetting.useAttackerTransform)
+            {
+                var attackerTransformSetting = combatController.currentAttackNode.attackerTransformSetting;
+                var distancFromTarget = attackerTransformSetting.distanceFromTarget;
+                var distance = Vector3.Distance(targetController.forcusTarget.baseObject.transform.position, baseObject.transform.position);
+
+                if(distance > distancFromTarget)
+                {
+                    IsRunToAttack = true;
+                    fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.RunToAttack, distancFromTarget);
+                }
+            }
+            return false;
         }, 0.1f);
     }
 

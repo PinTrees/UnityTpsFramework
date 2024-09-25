@@ -121,12 +121,15 @@ public class NpcBodyState_Death : FsmState
         owner = GetOwner<NpcCharacterActorBase>();
         owner.IsDeath = true;
         owner.navMeshAgent.ResetPath();
+        owner.navMeshAgent.enabled = false;
 
+        // State Setting
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.None);
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
         await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
 
+        // Animation Setting
         {
             owner.animator.speed = 1;
             owner.animator.CrossFadeInFixedTime("Death", 0.15f);

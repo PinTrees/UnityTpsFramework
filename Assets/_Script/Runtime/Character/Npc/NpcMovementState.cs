@@ -1,8 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Fsm.State;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class NpcMovementStateType
 {
@@ -15,6 +14,7 @@ public class NpcMovementStateType
     public const string Confronting = "Confronting";                // 대치상태 - 타겟 따라서 이동
     public const string ConfrontingTrace = "ConfrontingTrace";      // 대치 달리기 상태 - 타겟주위까지 전속력으로 이동
     public const string TacticalMove = "TacticalMove";              // 전술적 위치 조정
+    public const string RunToAttack = "ReadyToAttackTrace";
 }
 
 public class NpcMovementState_Idle : FsmState
@@ -364,5 +364,50 @@ public class NpcMovementState_ConfrontingTrace : FsmState
 
         // Navigation Setting
         owner.navMeshAgent.SetDestination(confrontingPosition);
+    }
+}
+
+public class NpcMovementState_RunToAttack : FsmState
+{
+    new NpcCharacterActorBase owner;
+    float distanseFromTarget = 0.0f;
+    public NpcMovementState_RunToAttack() : base(NpcMovementStateType.RunToAttack) { }
+
+    public override async UniTask Enter()
+    {
+        await base.Enter();
+        owner = GetOwner<NpcCharacterActorBase>();
+        owner.IsRunToAttack = true;
+        distanseFromTarget = float.Parse(layer.param.ToString());
+        distanseFromTarget = Mathf.Max(distanseFromTarget, 0.75f);
+    }
+
+    public override async UniTask Exit()
+    {
+        await base.Exit();
+        owner.IsRunToAttack = false;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (owner.IsStartToAttack)
+            return;
+
+        var target = owner.targetController.forcusTarget;
+        if (target == null)
+            return;
+       
+        owner.navMeshAgent.SetDestination(target.baseObject.transform.position);
+        owner.baseObject.transform.LookAt_Y(target.baseObject.transform, 360.0f);
+
+        var distance = Vector3.Distance(owner.baseObject.transform.position, target.baseObject.transform.position);
+        if (distance < distanseFromTarget)
+        {
+            owner.IsStartToAttack = true;
+            owner.navMeshAgent.ResetPath();
+            return;
+        }
     }
 }
