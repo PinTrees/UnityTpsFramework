@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class PlayerHitStateType
 {
-    public const string None = "None";
-    public const string HitLow = "HitLow";
-    public const string HitHard = "HitHard";
-    public const string HitCustom = "HitCustom";
+    public const string None = "HIT_None";
+    public const string HitLow = "HIT_Low";
+    public const string HitHard = "HIT_Hard";
+    public const string HitCustom = "HIT_Custom";
 }
 
 public class PlayerHitState_None : FsmState
@@ -28,11 +28,6 @@ public class PlayerHitState_None : FsmState
     public override void Update()
     {
         base.Update();
-
-        //if(Input.GetKey(KeyCode.H))
-        //{
-        //    layer.ChangeStateNow(PlayerHitStateType.HitLow);
-        //}
     }
 }
 
@@ -107,10 +102,10 @@ public class PlayerHitState_HitHard : FsmState
         hitDirection = hitDirection.normalized;
 
         // State Setting
-        await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
-        await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
-        await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
-      
+        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
+        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
+        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+
         // Animation Setting;
         {
             owner.legsAnimator.CrossFadeActive(true);
@@ -121,10 +116,12 @@ public class PlayerHitState_HitHard : FsmState
             currentAnimationTag = "Hit";
             owner.animator.speed = 1;
             owner.animator.applyRootMotion = animationSetting.standHitHard.useRootMotion;
-            owner.animator.CrossFadeInFixedTime("StandHitHard", 0.15f);
-            owner.animator.SetNormalizeTime("StandHitHard", 0.01f);
+            owner.animator.Play("StandIdle", 0, 0);
+            await UniTask.Yield();
+            owner.animator.Play("StandHitHard", 0, 0.0f);
+            owner.legsAnimator.CrossFadeActive(true);
 
-            await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            //await owner.animator.TransitionCompleteAsync(currentAnimationTag);
         }
 
         // Camera Setting
@@ -140,15 +137,14 @@ public class PlayerHitState_HitHard : FsmState
     public override async UniTask Exit()
     {
         await base.Exit();
+        owner.IsHit = false;
 
         // Animator Setting
         owner.legsAnimator.CrossFadeActive(false);
-
-        await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
         //owner.animator.CrossFadeLayerWeight(1, 1);
 
-        // Status Setting
-        owner.IsHit = false;
+        // State Setting
+        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
     }
 
     public override void Update()

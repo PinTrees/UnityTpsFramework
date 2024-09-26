@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class PlayerMovementStateType
 {
-    public const string Idle = "Idle";
-    public const string Walk = "Walk";
-    public const string Run = "Run";
+    public const string Idle = "MV_Idle";
+    public const string Walk = "MV_Walk";
+    public const string Run = "MV_Run";
 }
 
 public class PlayerMovementState_Idle : FsmState
@@ -21,6 +21,10 @@ public class PlayerMovementState_Idle : FsmState
         await base.Enter();
 
         owner = GetOwner<PlayerCharacterActorBase>();
+
+        if (owner.IsAttack) return;
+        if (owner.IsHit) return;
+        if (owner.IsDeath) return;
 
         currentAnimationTag = "Idle";
         owner.animator.applyRootMotion = true;

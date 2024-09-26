@@ -1,20 +1,17 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Fsm.State;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.Analytics.IAnalytic;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class NpcHitStateType
 {
-    public const string None = "None";
-    public const string HitLow = "HitLow";
-    public const string HitHard = "HitHard";
-    public const string Custom = "Custom";
+    public const string None = "HT_None";
+    public const string HitLow = "HT_Low";
+    public const string HitHard = "HT_Hard";
+    public const string Custom = "HT_Custom";
 
-    public const string Air = "Air";
+    public const string Air = "HT_Air";
 }
 
 public class HitStateData

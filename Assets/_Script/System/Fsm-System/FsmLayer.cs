@@ -178,6 +178,10 @@ namespace Fsm
                 yield return fsmObject.StartCoroutine(currentState.Enter().ToCoroutine());
             }
 
+            context.stateChangeHistory.Insert(0, currentChangeState.type);
+            if (context.stateChangeHistory.Count > 5)
+                context.stateChangeHistory.RemoveAt(context.stateChangeHistory.Count - 1);
+
             currentChangeState.onComplete();
 
             isChangeStateLocked = false;

@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class PlayerAttackStateType
 {
-    public const string None = "None";
-    public const string Attack = "Attack";
+    public const string None = "ATK_None";
+    public const string Attack = "ATK_Attack";
 }
 
 public class PlayerAttackState_None  : FsmState
@@ -56,6 +56,10 @@ public class PlayerAttackState_Attack : FsmState
         var targetPosition = attackTarget != null ? attackTarget.baseObject.transform.position : Vector3.zero;
         var ownerPosition = owner.baseObject.transform.position;
 
+        // State Setting
+        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
+        
         // Target Position Setting
         targetLookAtPosition = targetPosition;
         if (targetLookAtPosition != Vector3.zero)
@@ -92,12 +96,12 @@ public class PlayerAttackState_Attack : FsmState
             owner.legsAnimator.CrossFadeActive(attackNode.useLegIK);
             owner.lookAnimator.CrossFadeActive(false);
 
-            await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            // await owner.animator.TransitionCompleteAsync(currentAnimationTag);
         }
 
         // Event Start
         attackNode.Enter(owner);
-        attackNode.hitboxTree.Enter(owner);
+        attackNode.hitboxTree.Enter(owner, attackNode.uid);
 
         // Vfx Event Setting
         vfxEventsActive.Clear();
@@ -128,7 +132,7 @@ public class PlayerAttackState_Attack : FsmState
         if (!isComboAttack)
         {
             owner.attackController.ClearAttackCombo();
-            await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+            owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle); 
             owner.IsAttack = false;
         }
     }

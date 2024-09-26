@@ -4,6 +4,7 @@ using FIMSpace.FProceduralAnimation;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CharacterActorBase : FsmObjectBase
 {
@@ -14,6 +15,7 @@ public class CharacterActorBase : FsmObjectBase
     public LegsAnimator legsAnimator    { get; private set; }
     public FLookAnimator lookAnimator   { get; private set; }
     public Rigidbody rb                 { get; private set; }
+    public NavMeshAgent navMeshAgent    { get; private set; }
 
     // Controllers
     public TargetController targetController { get; private set; }
@@ -65,6 +67,14 @@ public class CharacterActorBase : FsmObjectBase
         lookTargetTransform = new GameObject("lookTargetTransform").transform;
         lookTargetTransform.SetParent(baseObject.transform);
 
+        navMeshAgent = baseObject.CreateChildWithComponent<NavMeshAgent>();
+        navMeshAgent.height = 1.5f;
+        navMeshAgent.speed = 0.01f;
+        navMeshAgent.angularSpeed = 180.0f;
+        navMeshAgent.acceleration = 99.0f;
+        navMeshAgent.stoppingDistance = 0.0f;
+        navMeshAgent.radius = 0.5f;
+
         // Set Components
         {
             legsAnimator = baseObject.GetComponent<LegsAnimator>();
@@ -113,6 +123,9 @@ public class CharacterActorBase : FsmObjectBase
         base.LateUpdate();
     }
 
+    public virtual void OnKnockDown(KnockDownMotionType motionType)
+    {
+    }
     public virtual void OnAttack()
     {
     }

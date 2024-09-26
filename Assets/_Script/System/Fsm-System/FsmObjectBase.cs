@@ -4,6 +4,7 @@ using UnityEngine.AI;
 using System.Linq;
 
 
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,7 +17,6 @@ public class FsmObjectBase : MonoBehaviour
 
     [Header("Components")]
     [HideInInspector] public Animator animator;
-    [HideInInspector] public NavMeshAgent navMeshAgent;
     [HideInInspector] public CapsuleCollider characterCollider; 
 
     public bool _isFsmInitialized { get; private set; }
@@ -37,7 +37,6 @@ public class FsmObjectBase : MonoBehaviour
         if (baseObject == null)
             baseObject = gameObject;
 
-        baseObject.TryGetComponent(out navMeshAgent); 
         baseObject.TryGetComponent(out animator);
         characterCollider = baseObject.GetComponentInChildren<CapsuleCollider>();
 
@@ -95,10 +94,17 @@ public class FsmObjectBaseEditor : Editor
             {
                 string stateChange = "";
                 layer.Value.GetStateChangeList().ForEach(e => stateChange += e.type + ", ");
-                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.currentState.stateId}), [{stateChange}], [{layer.Value.isChangeStateLocked}]" +
+                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.previousStateType} -> {layer.Value.currentState.stateId} -> {stateChange}), [{layer.Value.isChangeStateLocked}]" +
                     $"\nLastUpdate: [{layer.Value.lastStateUpdateTime}], [{layer.Value.lastStateChangeUpdateTime}]"
-                    , EditorStyles.helpBox);
+                , EditorStyles.helpBox);
             }
+
+            string stateChangeHitsory = "";
+            fsmObject.fsmContext.stateChangeHistory.ForEach(e =>
+            {
+                stateChangeHitsory += $" {e},";
+            });
+            EditorGUILayout.LabelField($"[{stateChangeHitsory}]", EditorStyles.helpBox);
         }
 
         if(fsmObject.animator)

@@ -124,6 +124,19 @@ public class NpcCharacterActorBase : CharacterActorBase
         base.FixedUpdate();
     }
 
+    public override void OnKnockDown(KnockDownMotionType motionType)
+    {
+        base.OnKnockDown(motionType);
+
+        IsKnockDown = true;
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+
+        if (motionType == KnockDownMotionType.KnockDown_Up)
+        {
+            fsmContext.ChangeStateNow(NpcFsmLayer.BodyLayer, NpcBodyStateType.KnockDown_Up);
+        }
+    }
+
     public override void OnDeath()
     {
         base.OnDeath();
@@ -158,12 +171,18 @@ public class NpcCharacterActorBase : CharacterActorBase
         base.OnAttack();
 
         targetController.lockDetectUpdate = true;
+        var target = targetController.forcusTarget;
 
         TaskSystem.CoroutineUpdateLost(() =>
         {
-            if (IsHit)
-                return false;
-          
+            if (IsDeath || IsHit)
+            {
+                IsReadyToAttack = false;
+                IsStartToAttack = false;
+                target.targetController.activeAttackers.Remove(this);
+                return true;
+            }
+
             if (IsStartToAttack)
             {
                 IsAttack = true;

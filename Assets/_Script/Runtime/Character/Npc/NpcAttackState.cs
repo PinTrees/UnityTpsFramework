@@ -3,11 +3,12 @@ using Fsm.State;
 using System.Collections;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class NpcAttackStateType
 {
-    public const string None = "None";
-    public const string Attack = "Attack";
+    public const string None = "ATK_None";
+    public const string Attack = "ATK_Attack";
 }
 
 public class NpcAttackState_None : FsmState
@@ -35,6 +36,7 @@ public class NpcAttackState_Attack : FsmState
     new NpcCharacterActorBase owner;
     bool isComboAttack = false;
     AttackNode attackNode;
+    CharacterActorBase attackTarget;
     Dictionary<int, bool> vfxEventsActive = new();
     Dictionary<int, VfxObject> spawnedVfxObjects = new();
 
@@ -49,9 +51,31 @@ public class NpcAttackState_Attack : FsmState
         owner.IsStartToAttack = false;
         isComboAttack = false;
         attackNode = owner.combatController.currentAttackNode;
+        attackTarget = owner.targetController.forcusTarget;
+        var targetPosition = attackTarget.baseObject.transform.position;
+        var ownerPosition = owner.baseObject.transform.position;
 
         // State Setting
         owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+
+        // Attacker Transform Setting
+        if (attackTarget)
+        {
+            // LookAt Target - RRR
+            owner.baseObject.transform.LookAt_Y(targetPosition);
+
+            if (attackNode.attackerTransformSetting.useAttackerTransform && attackTarget)
+            {
+                if ((Vector3.Distance(ownerPosition, targetPosition) < attackNode.attackerTransformSetting.distanceFromTargetOver)
+                 || attackNode.attackerTransformSetting.distanceFromTargetOver == 0)
+                {
+                    var dir = owner.baseObject.transform.position - targetPosition;
+                    var attackerPosition = targetPosition + dir.normalized * attackNode.attackerTransformSetting.distanceFromTarget;
+                    owner.baseObject.transform.DOMoveX(attackerPosition.x, attackNode.attackerTransformSetting.transitionDuration);
+                    owner.baseObject.transform.DOMoveZ(attackerPosition.z, attackNode.attackerTransformSetting.transitionDuration);
+                }
+            }
+        }
 
         // Animation Setting
         {
@@ -66,7 +90,7 @@ public class NpcAttackState_Attack : FsmState
         }
 
         // Hitbox Event Start
-        attackNode.hitboxTree.Enter(owner);
+        attackNode.hitboxTree.Enter(owner, attackNode.uid);
 
         // Vfx Event Setting
         vfxEventsActive.Clear();
@@ -92,7 +116,7 @@ public class NpcAttackState_Attack : FsmState
             attackNode.hitboxTree.Exit();
             attackNode.conditions.ForEach(e => e.Exit(owner));
         }
-      
+
         // Vfx Event Exit
         foreach (var item in spawnedVfxObjects)
         {
@@ -103,8 +127,14 @@ public class NpcAttackState_Attack : FsmState
         if (!isComboAttack)
         {
             owner.targetController.forcusTarget.targetController.activeAttackers.Remove(owner);
-            await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+            owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
         }
+    }
+
+    public override void OnAnimationExit()
+    {
+        base.OnAnimationExit();
+        layer.ChangeStateNow(NpcAttackStateType.None);
     }
 
     public override void Update()

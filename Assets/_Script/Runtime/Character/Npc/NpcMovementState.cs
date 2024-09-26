@@ -1,20 +1,19 @@
 using Cysharp.Threading.Tasks;
 using Fsm.State;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class NpcMovementStateType
 {
-    public const string Idle = "Idle";
-    public const string Walk = "Walk";
-    public const string Run = "Run";
+    public const string Idle = "MV_Idle";
+    public const string Walk = "MV_Walk";
+    public const string Run = "MV_Run";
 
     // Combat State
-    public const string Trace = "Trace";                            
-    public const string Confronting = "Confronting";                // 대치상태 - 타겟 따라서 이동
-    public const string ConfrontingTrace = "ConfrontingTrace";      // 대치 달리기 상태 - 타겟주위까지 전속력으로 이동
-    public const string TacticalMove = "TacticalMove";              // 전술적 위치 조정
-    public const string RunToAttack = "ReadyToAttackTrace";
+    public const string Trace = "MV_Trace";                            
+    public const string Confronting = "MV_Confronting";                // 대치상태 - 타겟 따라서 이동
+    public const string ConfrontingTrace = "MV_ConfrontingTrace";      // 대치 달리기 상태 - 타겟주위까지 전속력으로 이동
+    public const string TacticalMove = "MV_TacticalMove";              // 전술적 위치 조정
+    public const string RunToAttack = "MV_ReadyToAttackTrace";
 }
 
 public class NpcMovementState_Idle : FsmState
@@ -32,6 +31,7 @@ public class NpcMovementState_Idle : FsmState
         if (owner.IsHit) return;
         if (owner.IsDeath) return;
         if (owner.IsAttack) return;
+        if (owner.IsKnockDown) return;
 
         owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f); 
         await owner.animator.TransitionCompleteAsync("Idle"); 
@@ -106,7 +106,9 @@ public class NpcMovementState_Trace : FsmState
         owner.IsTrace = true;
         npcCombatData = owner.characterData.combatData;
 
-        owner.animator.applyRootMotion = false;
+        owner.navMeshAgent.transform.rotation = owner.baseObject.transform.rotation;
+
+        owner.animator.applyRootMotion = true;
         owner.animator.CrossFadeInFixedTime("StandRun", 0.15f);
     }
 
@@ -127,6 +129,19 @@ public class NpcMovementState_Trace : FsmState
             layer.ChangeStateNow(NpcMovementStateType.Idle);
             return;
         }
+
+        // Animation Setting
+        {
+            Vector3 currentDirection = owner.navMeshAgent.desiredVelocity.normalized;
+            Vector3 localDirection = owner.baseObject.transform.InverseTransformDirection(currentDirection);
+            Vector3 currentV = new Vector3(owner.animator.GetFloat("x"), 0, owner.animator.GetFloat("y"));
+
+            localDirection = Vector3.Lerp(currentV, localDirection, 5f * Time.deltaTime);
+
+            owner.animator.SetFloat("x", localDirection.x);
+            owner.animator.SetFloat("y", localDirection.z);
+        }
+        owner.baseObject.transform.rotation = Quaternion.Lerp(owner.baseObject.transform.rotation, owner.navMeshAgent.transform.rotation, 5 * Time.deltaTime);
 
         var targetPosition = target.baseObject.transform.position;
         owner.navMeshAgent.SetDestination(targetPosition);
@@ -274,7 +289,7 @@ public class NpcMovementState_ConfrontingTrace : FsmState
         // Animation Setting
         {
             owner.animator.speed = 1;
-            owner.animator.applyRootMotion = false;
+            owner.animator.applyRootMotion = true;
             owner.animator.SetFloat("x", 0);
             owner.animator.SetFloat("y", 1);
             owner.animator.CrossFadeInFixedTime("StandRun", 0.15f);
@@ -306,18 +321,17 @@ public class NpcMovementState_ConfrontingTrace : FsmState
         var targetPosition = target.baseObject.transform.position;
 
         // Transform Setting
+        owner.navMeshAgent.transform.localPosition = Vector3.zero;
         owner.baseObject.transform.LookAt_Y(target.baseObject.transform.position, 360f);
 
         // Animation Setting
         {
             // 1. 현재 이동방향 획득
             Vector3 currentDirection = owner.navMeshAgent.desiredVelocity.normalized;
-
-            // 2. 현재 이동 방향을 적을 기준으로 변환
-            // 타겟을 기준으로 현재 방향을 로컬 좌표계로 변환 (LookAt 방향이 Z축이므로 Z축 기준 회전 적용)
             Vector3 localDirection = owner.baseObject.transform.InverseTransformDirection(currentDirection);
+            Vector3 currentV = new Vector3(owner.animator.GetFloat("x"), 0, owner.animator.GetFloat("y"));
+            localDirection = Vector3.Lerp(currentV, localDirection, 5f * Time.deltaTime);
 
-            // 3. 애니메이션 파라미터 세팅
             owner.animator.SetFloat("x", localDirection.x);
             owner.animator.SetFloat("y", localDirection.z);
         }
@@ -356,7 +370,7 @@ public class NpcMovementState_ConfrontingTrace : FsmState
 
         // Contronting End Position
         var distance = Vector3.Distance(confrontingPosition, ownerPosition);
-        if (distance < 0.3f)
+        if (distance < 0.5f)
         {
             layer.ChangeStateNow(NpcMovementStateType.Confronting);
             return;
@@ -378,19 +392,39 @@ public class NpcMovementState_RunToAttack : FsmState
         await base.Enter();
         owner = GetOwner<NpcCharacterActorBase>();
         owner.IsRunToAttack = true;
+        owner.navMeshAgent.speed = 0.0f;
         distanseFromTarget = float.Parse(layer.param.ToString());
         distanseFromTarget = Mathf.Max(distanseFromTarget, 0.75f);
+
+        currentAnimationTag = "Sprint";
+        owner.animator.applyRootMotion = true;
+        owner.animator.SetFloat("x", 0);
+        owner.animator.SetFloat("y", 1);
+        owner.animator.CrossFadeInFixedTime("StandSprint", 0.1f);
+        owner.legsAnimator.CrossFadeActive(false);
     }
 
     public override async UniTask Exit()
     {
         await base.Exit();
+        owner.navMeshAgent.speed = 3.0f;
         owner.IsRunToAttack = false;
+        owner.IsStartToAttack = false;
     }
 
     public override void Update()
     {
         base.Update();
+
+        if (owner.IsDeath || owner.IsHit)
+        {
+            owner.IsReadyToAttack = false;
+            owner.IsStartToAttack = false;
+            owner.targetController.forcusTarget.targetController.activeAttackers.Remove(owner);
+            return;
+        }
+
+        GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, owner.targetController.forcusTarget.baseObject.transform.position);
 
         if (owner.IsStartToAttack)
             return;

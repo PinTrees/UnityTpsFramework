@@ -75,6 +75,7 @@ public class TaskSystem : Singleton<TaskSystem>
                 {
                     if (timeoutAction != null)
                         timeoutAction();
+                    yield break; 
                 }
             }
         }

@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using Fsm;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerFsmLayer
 {
@@ -109,6 +108,14 @@ public class PlayerCharacterActorBase : CharacterActorBase
     protected override void LateUpdate()
     {
         base.LateUpdate();
+    }
+
+    public override void OnAttack()
+    {
+        base.OnAttack();
+
+        IsAttack = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.Attack);
     }
 
     public override bool OnHit(HitData hitData)

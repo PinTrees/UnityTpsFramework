@@ -15,6 +15,7 @@ namespace Fsm
     public class FsmContext
     {
         public FsmObjectBase fsmObject;
+        public List<string> stateChangeHistory = new();
         [SerializeField] public Dictionary<string, FsmLayer> layers = new();      // FSM 컨텍스트를 소유하는 오브젝트
 
 

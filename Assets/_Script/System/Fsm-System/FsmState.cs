@@ -41,6 +41,7 @@ namespace Fsm.State
         public float stateEnterTime;
         public string currentAnimationTag;
         public bool isStartAnimation;
+        public bool canUpdate = true;
 
         private float stateEnterAnimationNormalizeTime;
 
@@ -77,6 +78,7 @@ namespace Fsm.State
             stateEnterTime = Time.time;
             currentAnimationTag = "";
             isStartAnimation = false;
+            canUpdate = true;
             stateEnterAnimationNormalizeTime = 0;
             if (onEnter != null) onEnter();
         }
@@ -86,17 +88,23 @@ namespace Fsm.State
         }
 
 
-        public virtual void Update() 
+        public void StateUpdate()
+        {
+            if (onUpdate != null) onUpdate();
+            AnimationUpdate();
+
+            if (canUpdate)
+                Update();
+        }
+        private void AnimationUpdate()
         {
             float n;
 
-            if (onUpdate != null) onUpdate();
-
             if (currentAnimationTag != "")
             {
-                if (owner.animator.IsPlaying(currentAnimationTag)) 
+                if (owner.animator.IsPlaying(currentAnimationTag))
                 {
-                    if(!isStartAnimation)
+                    if (!isStartAnimation)
                     {
                         isStartAnimation = true;
                         stateEnterAnimationNormalizeTime = owner.animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
@@ -104,10 +112,10 @@ namespace Fsm.State
 
                     OnAnimationUpdate();
 
-                    if(stateEnterAnimationNormalizeTime >= 0.99f)
+                    if (stateEnterAnimationNormalizeTime >= 0.99f)
                     {
                         n = owner.animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                        if(n < stateEnterAnimationNormalizeTime)
+                        if (n < stateEnterAnimationNormalizeTime)
                         {
                             stateEnterAnimationNormalizeTime = 0;
                         }
@@ -117,13 +125,22 @@ namespace Fsm.State
                         OnAnimationExit();
                     }
                 }
-                else 
+                else
                 {
                     if (isStartAnimation)
+                    {
                         OnAnimationExit();
+                    }
                 }
             }
+            else
+            {
+                if(isStartAnimation)
+                    OnAnimationExit();
+            }
         }
+
+        public virtual void Update() { }
         public virtual void FixedUpdate() { if (onFixedUpdate != null) onFixedUpdate(); }
         public virtual void LateUpdate() { if (onLateUpdate != null) onLateUpdate(); }
 
@@ -132,9 +149,12 @@ namespace Fsm.State
 
         /// <summary>
         /// 현재 스테이트에 할당된 애니메이션이 종료되는 시점에 자동호출됩니다.
-        /// 루프 애니메이션의 경우 정확한 타이밍에 호출되지 않을 수 있습니다.
+        /// 해당 함수가 호출되면 업데이트루프는 종료됩니다.
         /// </summary>
-        public virtual void OnAnimationExit() { }
+        public virtual void OnAnimationExit() 
+        {
+            canUpdate = false;
+        }
 
         public virtual void OnDrawGizmos() { }
         #endregion

@@ -238,6 +238,7 @@ MonoBehaviour:
     FL: {fileID: 7400080, guid: 1bdc2ef74b0fc8b459c915473007e656, type: 3}
     BR: {fileID: 7400086, guid: 1bdc2ef74b0fc8b459c915473007e656, type: 3}
     BL: {fileID: 7400082, guid: 1bdc2ef74b0fc8b459c915473007e656, type: 3}
+  standSprint: {fileID: 7400014, guid: c5937c944a220444aa33be3fe1480174, type: 3}
   overrideAnimatorSetting: {fileID: 0}
   overrideAvataMask: {fileID: 0}
 --- !u!114 &622803980086369732

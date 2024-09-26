@@ -58,15 +58,25 @@ public class TargetController : MonoBehaviour
         if (targetDetectCoroutine != null) StopCoroutine(targetDetectCoroutine);
     }
 
+    protected void Update()
+    {
+        //attackers.ForEach(e =>
+        //{
+        //    GizmosSystem.Instance.DrawLine(ownerCharacter.GetCenterOfMass(), e.GetCenterOfMass());
+        //});
+    }
+
     protected void LateUpdate()
     {
         // 이 캐릭터를 공격이 가능한지에 대한 정보 확인
-        for(int i = 0; i < attackers.Count; ++i)
+        if(activeAttackers.Count <= 0)
         {
-            var attacker = attackers[i];
-            attacker.OnAttack();
-            activeAttackers.Add(attacker);
-            attackers.RemoveAt(i--);
+            var attacker = attackers.PopRandomElement();
+            if(attacker)
+            {
+                attacker.OnAttack();
+                activeAttackers.Add(attacker);
+            }
         }
     }
 

@@ -26,7 +26,7 @@ public class PlayerAttackController : MonoBehaviour
         isInit = true;
 
         ownerCharacter = owner;
-        StartCoroutine(UpdateAttackTask().ToCoroutine());
+        StartCoroutine(UpdateAttackTask());
         StartCoroutine(UpdateJustDodgeTask().ToCoroutine());
     }
 
@@ -94,16 +94,16 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    async UniTask UpdateAttackTask()
+    IEnumerator UpdateAttackTask()
     {
         if (attackPatternData == null)
         {
-            return;
+            yield break;
         }
 
         while (true)
         {
-            await UniTask.Yield();
+            yield return null;
 
             if (ownerCharacter.IsJustDodge)
                 continue;
@@ -123,15 +123,7 @@ public class PlayerAttackController : MonoBehaviour
             currentAttackNode = currentAttackCombo.attackNodes.First();
             if (currentAttackNode != null)
             {
-                ownerCharacter.IsAttack = true;
-
-                // State Chain Setting - 반드시 연속 체인 변경 - Queue
-                var dodgeLayer = ownerCharacter.fsmContext.FindLayer(PlayerFsmLayer.DodgeLayer);
-                var movementLayer = ownerCharacter.fsmContext.FindLayer(PlayerFsmLayer.MovementLayer);
-                var attackLayer = ownerCharacter.fsmContext.FindLayer(PlayerFsmLayer.AttackLayer);
-                await dodgeLayer.ChangeStateNowAsync(PlayerDodgeStateType.None);
-                await movementLayer.ChangeStateNowAsync(PlayerMovementStateType.Idle);
-                await attackLayer.ChangeStateNowAsync(PlayerAttackStateType.Attack);
+                ownerCharacter.OnAttack();
             }
         }
     }

@@ -1,18 +1,23 @@
 using System;
 using UnityEngine;
 
+public enum KnockDownMotionType
+{ 
+    None,
+    KnockDown_Up,
+    KnockDown_Down,
+}
+
 [Serializable]
 public class KnockDownDebuffEvent : BuffDebuffEventBase
 {
+    [Header("KnockDown Animation Setting")]
+    public KnockDownMotionType motionType;
+
     protected override void Enter(CharacterActorBase owner)
     {
         base.Enter(owner);
-
-        if(owner is NpcCharacterActorBase npc)
-        {
-            npc.IsKnockDown = true;
-            npc.fsmContext.ChangeStateNow(NpcFsmLayer.BodyLayer, NpcBodyStateType.KnockDown_Up);
-        }
+        owner.OnKnockDown(motionType);
     }
 
     protected override void Exit(CharacterActorBase owner)

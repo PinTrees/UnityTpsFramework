@@ -54,13 +54,8 @@ public class NpcCombatController : MonoBehaviour
             currentAttackNode = attackCombo.attackNodes.First();
             if (currentAttackNode)
             {
-                var target = ownerCharacter.targetController.forcusTarget;
-                if (target.targetController.activeAttackers.Count <= 0
-                && target.targetController.attackers.Count <= 0)
-                {
-                    ownerCharacter.IsReadyToAttack = true;
-                    target.targetController.attackers.Add(ownerCharacter);
-                }
+                ownerCharacter.IsReadyToAttack = true;
+                ownerCharacter.targetController.forcusTarget.targetController.attackers.Add(ownerCharacter);
             }
         }
     }

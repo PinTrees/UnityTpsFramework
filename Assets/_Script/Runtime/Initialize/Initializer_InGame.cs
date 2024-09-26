@@ -15,6 +15,7 @@ public class Initializer_InGame : MonoBehaviour
         InputManager.Instance.Init();
         GraphicManager.Instance.Init();
         TaskSystem.Instance.Init();
+        GizmosSystem.Instance.Init();
         //await UniTask.Yield();
 
         ObjectPoolManager.Instance.Init();

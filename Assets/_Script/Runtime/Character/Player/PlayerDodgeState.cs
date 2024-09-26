@@ -8,12 +8,12 @@ using UnityEngine.EventSystems;
 
 public class PlayerDodgeStateType
 {
-    public const string None = "None";
-    public const string Roll = "Roll";
-    public const string Short = "Short";
-    public const string Long = "Long";
-    public const string Slide = "Slide";
-    public const string JustDodge = "JustDodge";
+    public const string None = "DG_None";
+    public const string Roll = "DG_Roll";
+    public const string Short = "DG_Short";
+    public const string Long = "DG_Long";
+    public const string Slide = "DG_Slide";
+    public const string JustDodge = "DG_Just";
 }
 
 public class PlayerDodgeState_None : FsmState

@@ -119,7 +119,7 @@ public class HitboxDataTree : ScriptableObject
     public List<BuffDebuffEventBase> buffDebuffEvents;
 
 
-    public void Enter(CharacterActorBase owner)
+    public void Enter(CharacterActorBase owner, string attackUid)
     {
         owner.targetController.hitTargets.Clear();
 
@@ -139,11 +139,11 @@ public class HitboxDataTree : ScriptableObject
 
         for(int i = 0; i < hitboxTimelines.Count; ++i)
         {
-            UpdateHitbox(hitboxTimelines[i], owner);
+            UpdateHitbox(hitboxTimelines[i], owner, attackUid);
         }
     }
 
-    private void UpdateHitbox(HitboxTimeline timeline, CharacterActorBase owner)
+    private void UpdateHitbox(HitboxTimeline timeline, CharacterActorBase owner, string attackUid)
     {
         bool isStart = false;
         bool isUpdate = false;
@@ -154,7 +154,7 @@ public class HitboxDataTree : ScriptableObject
 
         TaskSystem.CoroutineUpdateLost(() =>
         {
-            if (!isStart && owner.animator.IsPlayedOverTime(timeline.hitboxSpawnNormailzeTime.start))
+            if (!isStart && owner.animator.IsPlayedOverTime(attackUid, timeline.hitboxSpawnNormailzeTime.start))
             {
                 hitboxs[index].Enter();
                 isStart = true;
@@ -198,7 +198,7 @@ public class HitboxDataTree : ScriptableObject
                 }
             }
 
-            if (isStart && isUpdate && owner.animator.IsPlayedOverTime(timeline.hitboxSpawnNormailzeTime.exit))
+            if (isStart && isUpdate && owner.animator.IsPlayedOverTime(attackUid, timeline.hitboxSpawnNormailzeTime.exit))
             {
                 hitboxs[index].Exit();
                 return true;
@@ -209,7 +209,6 @@ public class HitboxDataTree : ScriptableObject
         timeout: 5, timeoutAction: () => 
         {
             hitboxs[index].Exit();
-            Debug.LogWarning("Hitbox update timed out.");
         }, onExit: () =>
         {
             ListPool<CharacterActorBase>.Release(hitTargets);

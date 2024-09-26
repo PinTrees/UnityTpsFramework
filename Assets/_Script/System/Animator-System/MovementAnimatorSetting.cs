@@ -10,6 +10,7 @@ public class MovementAnimatorSetting : ScriptableObject
 {
     public AnimationClip8Dir standWalk;
     public AnimationClip8Dir standRun;
+    public AnimationClip standSprint;
 
     [Space]
     public MovementAnimatorSetting overrideAnimatorSetting;
@@ -21,6 +22,7 @@ public class MovementAnimatorSetting : ScriptableObject
     {
         animatorController.CreateBlendTree(standWalk, "StandWalk", "Walk");
         animatorController.CreateBlendTree(standRun, "StandRun", "Run");
+        animatorLayer.AddState(standSprint, "StandSprint", "Sprint");
     }
 #endif
 }
