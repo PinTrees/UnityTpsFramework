@@ -79,7 +79,7 @@ public class NpcHitState_HitHard : FsmState
             owner.animator.Play("StandHitHard", 0, 0.0f);
             owner.legsAnimator.CrossFadeActive(true);
 
-            await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
 
         // Knockback Setting 
@@ -175,7 +175,7 @@ public class NpcHitState_Custom : FsmState
             owner.animator.CrossFadeInFixedTime("CustomHit", 0.15f);
             owner.animator.SetNormalizeTime("CustomHit", hitData.customHitSetting.playNormalizeTime.start);
 
-            await owner.animator.TransitionCompleteAsync("Hit");
+            await owner.animator.WaitMustTransitionComplete("Hit");
         }
 
         // Knockback Setting 

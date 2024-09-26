@@ -35,7 +35,7 @@ public class NpcMovementState_Idle : FsmState
         if (owner.IsKnockDown) return;
 
         owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f); 
-        await owner.animator.TransitionCompleteAsync("Idle"); 
+        await owner.animator.WaitMustTransitionComplete("Idle"); 
     }
 
     public override async UniTask Exit()

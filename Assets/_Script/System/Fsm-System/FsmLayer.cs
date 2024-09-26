@@ -57,7 +57,7 @@ namespace Fsm
 
             if (isFsmInitialized)
             {
-                currentState?.Update();
+                currentState?.StateUpdate();
                 lastStateUpdateTime = Time.time;
 
                 if (changeStateQueue.Count > 0)
@@ -105,11 +105,12 @@ namespace Fsm
         /// 상태를 FSM에 추가합니다.
         /// </summary>
         /// <param name="state">추가할 상태</param>
-        public void AddState(FsmState state)
+        public FsmState AddState(FsmState state)
         {
             stateMap[state.stateId] = state;
             state.layer = this;
             state.owner = fsmObject;
+            return state;
         }
 
         /// <summary>

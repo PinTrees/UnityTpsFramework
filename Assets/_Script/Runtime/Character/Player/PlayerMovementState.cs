@@ -46,7 +46,7 @@ public class PlayerMovementState_Idle : FsmState
         owner.IsIdle = true;
 
         owner.animator.applyRootMotion = true;
-        owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f);
+        owner.animator.CrossFadePlay("StandIdle", 0.15f);
         owner.legsAnimator.CrossFadeActive(true);
     }
 
@@ -110,7 +110,7 @@ public class PlayerMovementState_Walk : FsmState
         if (!owner.CanMove())
             return;
 
-        if (owner.movementDir == Vector3.zero)
+        if (owner.movementDir.sqrMagnitude <= float.Epsilon)
         {
             owner.OnIdle();
             return;
@@ -156,7 +156,7 @@ public class PlayerMovementState_Run : FsmState
         if (!owner.CanMove())
             return;
 
-        if (owner.movementDir == Vector3.zero)
+        if (owner.movementDir.sqrMagnitude <= float.Epsilon)
         {
             owner.OnIdle();
             return;

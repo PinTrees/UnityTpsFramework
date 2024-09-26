@@ -40,7 +40,7 @@ public class CharacterActorBase : FsmObjectBase
 
     // Runtime Value
     [Header("Runtime Value")]
-    [HideInInspector] public Vector3 movementDir;
+    public Vector3 movementDir;
     [HideInInspector] public Vector3 lastMovementDir;
 
     // Status Value

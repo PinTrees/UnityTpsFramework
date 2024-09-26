@@ -1,18 +1,55 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public static class AnimatorEx
 {
-    public static async UniTask TransitionCompleteAsync(this Animator animator, string state) => 
+    public static Dictionary<Animator, bool> animatorLockedMap = new();
+
+    public static void Init()
+    {
+        animatorLockedMap.Clear();
+    }
+    public static void CrossFadePlay(this Animator animator, string stateName, float duration)
+    {
+        if (animator.IsLocked())
+            return;
+        animator.CrossFadeInFixedTime(stateName, duration);
+    }
+    public static bool IsLocked(this Animator animator)
+    {
+        if (!animatorLockedMap.ContainsKey(animator)) return false;
+        return animatorLockedMap[animator];
+    }
+    public static void SetLocked(this Animator animator, bool active)
+    {
+        animatorLockedMap[animator] = active;
+    }
+
+    public static async UniTask WaitMustTransitionComplete(this Animator animator, string state) => 
         await animator.WaitForStateToStart(state);
     public static async UniTask TransitionCompleteAsync(this Animator animator, string state, float normalizeTime)
         =>  await animator.WaitForStateToEnd(state, normalizeTime);
 
     private static IEnumerator WaitForStateToStart(this Animator animator, string state)
     {
-        while (!animator.IsPlaying(state, 0))
-            yield return null;  // 코루틴으로 대기
+        while (animator.IsLocked())
+            yield return null;
+        
+        animator.SetLocked(true);
+
+        animator.CrossFadeInFixedTime(state, 0.15f);
+        while (true)
+        {
+            if (animator.IsPlaying(state, 0))
+                break;
+            yield return null;  
+        }
+
+        animator.SetLocked(false);
+        yield break;
     }
     private static IEnumerator WaitForStateToEnd(this Animator animator, string state, float normalizeTime)
     {

@@ -33,11 +33,8 @@ public class PlayerAttackController : MonoBehaviour
     {
         if (attackPatternData == null)
             return;
-
-        if (ownerCharacter.IsJustDodge) return;
-        if (ownerCharacter.IsHit) return;
-        if (ownerCharacter.IsAttack) return;
-        if (ownerCharacter.IsDodge) return;
+        if (!ownerCharacter.CanAttack())
+            return;
 
         // Attack Combo Setting
         currentAttackCombo = attackPatternData.FindAttackCombo(ownerCharacter);

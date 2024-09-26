@@ -30,7 +30,7 @@ public class PlayerCharacterActorBase : CharacterActorBase
 
         lockOnController = gameObject.GetComponent<LockOnController>();
         lockOnController.Init(this);
-        attackController = baseObject.GetOrAddComponent<PlayerAttackController>();
+        attackController = baseObject.GetComponent<PlayerAttackController>();
         attackController.Init(this);
         inputController = baseObject.GetComponent<PlayerInputController>();
         inputController.Init(this);
@@ -60,6 +60,10 @@ public class PlayerCharacterActorBase : CharacterActorBase
         var attackLayer = fsmContext.CreateLayer(PlayerFsmLayer.AttackLayer);
         attackLayer.AddState(new PlayerAttackState_None());
         attackLayer.AddState(new PlayerAttackState_Attack());
+        attackLayer.FindState(PlayerAttackStateType.None).onUpdate = () =>
+        {
+            attackController.AttackUpdate();
+        };
 
         var movementLayer = fsmContext.CreateLayer(PlayerFsmLayer.MovementLayer);
         movementLayer.AddState(new PlayerMovementState_None());
@@ -80,8 +84,6 @@ public class PlayerCharacterActorBase : CharacterActorBase
 
     protected override void Update()
     {
-        attackController?.AttackUpdate();
-
         base.Update();
 
         float horizontalInput = Input.GetAxis("Horizontal"); 
@@ -138,11 +140,23 @@ public class PlayerCharacterActorBase : CharacterActorBase
         return true;
     }
 
+    public bool CanAttack()
+    {
+        if (IsDeath) return false;
+        if (IsHit) return false;
+        if (IsDodge) return false;
+        if (IsAttack) return false;
+        if (IsJustDodge) return false;
+        return true;
+    }
+
     public override void OnAttack()
     {
         base.OnAttack();
 
         IsAttack = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.None); 
         fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.Attack);
     }
 

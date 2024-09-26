@@ -49,7 +49,7 @@ public class NpcBodyState_KnockDown_Up : FsmState
         {
             currentAnimationTag = "KnockDownUp";
             owner.animator.CrossFadeInFixedTime("KnockDownUp", 0.15f);
-            await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
     }
     public override async UniTask Exit()
@@ -134,7 +134,7 @@ public class NpcBodyState_Death : FsmState
             owner.animator.speed = 1;
             owner.animator.CrossFadeInFixedTime("Death", 0.15f);
             owner.animator.SetNormalizeTime("Death", 0.01f);
-            await owner.animator.TransitionCompleteAsync("Death");
+            await owner.animator.WaitMustTransitionComplete("Death");
         }
 
         owner.targetController.Exit();

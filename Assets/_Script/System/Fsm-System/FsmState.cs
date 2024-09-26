@@ -41,7 +41,6 @@ namespace Fsm.State
         public float stateEnterTime;
         public string currentAnimationTag;
         public bool isStartAnimation;
-        public bool canUpdate = true;
 
         private float stateEnterAnimationNormalizeTime;
 
@@ -78,7 +77,6 @@ namespace Fsm.State
             stateEnterTime = Time.time;
             currentAnimationTag = "";
             isStartAnimation = false;
-            canUpdate = true;
             stateEnterAnimationNormalizeTime = 0;
             if (onEnter != null) onEnter();
         }
@@ -90,11 +88,12 @@ namespace Fsm.State
 
         public void StateUpdate()
         {
-            if (onUpdate != null) onUpdate();
             AnimationUpdate();
 
-            if (canUpdate)
-                Update();
+            if (onUpdate != null)
+                onUpdate();
+
+            Update();
         }
         private void AnimationUpdate()
         {
@@ -153,7 +152,6 @@ namespace Fsm.State
         /// </summary>
         public virtual void OnAnimationExit() 
         {
-            canUpdate = false;
         }
 
         public virtual void OnDrawGizmos() { }

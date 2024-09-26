@@ -86,7 +86,7 @@ public class NpcAttackState_Attack : FsmState
             if (attackNode.animationPlayNormailzeTime.start > 0.01f)
                 owner.animator.SetNormalizeTime(currentAnimationTag, attackNode.animationPlayNormailzeTime.start);
 
-            await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
 
         // Hitbox Event Start

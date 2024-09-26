@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class PlayerAttackStateType
 {
-    public const string None = "ATK_None";
-    public const string Attack = "ATK_Attack";
+    public const string None = "AK_None";
+    public const string Attack = "AK_Attack";
 }
 
 public class PlayerAttackState_None  : FsmState
@@ -23,6 +23,16 @@ public class PlayerAttackState_None  : FsmState
         // Data Set
         owner = GetOwner<PlayerCharacterActorBase>();
         owner.IsAttack = false;
+    }
+
+    public override async UniTask Exit()
+    {
+        await base.Exit();
+    }
+
+    public override void Update()
+    {
+        base.Update();
     }
 }
 
@@ -53,13 +63,11 @@ public class PlayerAttackState_Attack : FsmState
         attackNode = owner.attackController.currentAttackNode;
         attackNode.Init();
 
+        Debug.Log("AAAAAAAAAAAAAAAAA");
+
         var targetPosition = attackTarget != null ? attackTarget.baseObject.transform.position : Vector3.zero;
         var ownerPosition = owner.baseObject.transform.position;
 
-        // State Setting
-        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
-        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
-        
         // Target Position Setting
         targetLookAtPosition = targetPosition;
         if (targetLookAtPosition != Vector3.zero)
@@ -95,7 +103,7 @@ public class PlayerAttackState_Attack : FsmState
 
             owner.legsAnimator.CrossFadeActive(attackNode.useLegIK);
             owner.lookAnimator.CrossFadeActive(false);
-            // await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
 
         // Event Start
@@ -140,7 +148,7 @@ public class PlayerAttackState_Attack : FsmState
 
     public override void Update()
     {
-        base.Update();
+        Debug.Log("AAAAAAAAAAAAAAAAA");
 
         if (owner.animator.IsPlayedOverTime(currentAnimationTag, attackNode.animationPlayNormailzeTime.exit))
         {
@@ -209,8 +217,9 @@ public class PlayerAttackState_Attack : FsmState
         else if (attackNode.attackerTransformSetting.useAttackerTransform
               && attackNode.attackerTransformSetting.lookAtTarget)
         {
-            var targetPosition = owner.targetController.forcusTarget.baseObject.transform.position;
-            owner.baseObject.transform.LookAt_Y(targetPosition, 360f);
+            var target = owner.targetController.forcusTarget;
+            if(target != null)
+                owner.baseObject.transform.LookAt_Y(target.baseObject.transform.position, 360f);
         }
         // LookAt Camera 
         else

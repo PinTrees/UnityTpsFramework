@@ -94,7 +94,7 @@ public class PlayerDodgeState_JustDodge : FsmState
             owner.animator.applyRootMotion = animationSetting.dodgeLong.useRootMotion;
             owner.animator.CrossFadeInFixedTime("DodgeLong", 0.15f);
             owner.animator.SetNormalizeTime("DodgeLong", 0.01f);
-            await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
 
         // Transform Setting
