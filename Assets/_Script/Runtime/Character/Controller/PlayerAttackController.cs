@@ -26,8 +26,29 @@ public class PlayerAttackController : MonoBehaviour
         isInit = true;
 
         ownerCharacter = owner;
-        StartCoroutine(UpdateAttackTask());
         StartCoroutine(UpdateJustDodgeTask().ToCoroutine());
+    }
+
+    public void AttackUpdate()
+    {
+        if (attackPatternData == null)
+            return;
+
+        if (ownerCharacter.IsJustDodge) return;
+        if (ownerCharacter.IsHit) return;
+        if (ownerCharacter.IsAttack) return;
+        if (ownerCharacter.IsDodge) return;
+
+        // Attack Combo Setting
+        currentAttackCombo = attackPatternData.FindAttackCombo(ownerCharacter);
+        if (currentAttackCombo == null) return;
+
+        // Attack Node Setting
+        currentAttackNode = currentAttackCombo.attackNodes.First();
+        if (currentAttackNode != null)
+        {
+            ownerCharacter.OnAttack();
+        }
     }
 
     async UniTask UpdateJustDodgeTask()
@@ -90,40 +111,6 @@ public class PlayerAttackController : MonoBehaviour
                         break;
                     }
                 }
-            }
-        }
-    }
-
-    IEnumerator UpdateAttackTask()
-    {
-        if (attackPatternData == null)
-        {
-            yield break;
-        }
-
-        while (true)
-        {
-            yield return null;
-
-            if (ownerCharacter.IsJustDodge)
-                continue;
-            if (ownerCharacter.IsHit)
-                continue;
-            if (ownerCharacter.IsAttack)
-                continue;
-            if (ownerCharacter.IsDodge)
-                continue;
-
-            // Attack Combo Setting
-            currentAttackCombo = attackPatternData.FindAttackCombo(ownerCharacter);
-            if (currentAttackCombo == null)
-                continue;
-
-            // Attack Node Setting
-            currentAttackNode = currentAttackCombo.attackNodes.First();
-            if (currentAttackNode != null)
-            {
-                ownerCharacter.OnAttack();
             }
         }
     }

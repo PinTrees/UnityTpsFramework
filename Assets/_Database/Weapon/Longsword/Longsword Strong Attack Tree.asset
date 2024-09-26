@@ -61,6 +61,12 @@ MonoBehaviour:
     start: 0
     exit: 0.34761906
   timeScale: 0.8
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &-7321123330997530433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,6 +149,12 @@ MonoBehaviour:
     start: 0
     exit: 1
   timeScale: 1
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &-3532435493634853091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +237,12 @@ MonoBehaviour:
     start: 0
     exit: 1
   timeScale: 1
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &-1314383962672108146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,6 +328,12 @@ MonoBehaviour:
     start: 0
     exit: 1
   timeScale: 1
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,6 +445,12 @@ MonoBehaviour:
     start: 0.0066666687
     exit: 0.30190477
   timeScale: 0.8
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &4945072514318800264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,6 +536,12 @@ MonoBehaviour:
     start: 0.14761904
     exit: 0.48476192
   timeScale: 0.5
+  superArmorSetting:
+    useSuperAmor: 1
+    superAmorType: 1
+    superAmorNormalizeTime:
+      start: 0.000000010337933
+      exit: 0.4028907
 --- !u!114 &8518331147882895614
 MonoBehaviour:
   m_ObjectHideFlags: 0

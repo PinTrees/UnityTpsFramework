@@ -94,7 +94,7 @@ public class FsmObjectBaseEditor : Editor
             {
                 string stateChange = "";
                 layer.Value.GetStateChangeList().ForEach(e => stateChange += e.type + ", ");
-                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.previousStateType} -> {layer.Value.currentState.stateId} -> {stateChange}), [{layer.Value.isChangeStateLocked}]" +
+                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.previousStateType} -> {layer.Value.currentState.stateId}),({stateChange}) [{layer.Value.isChangeStateLocked}]" +
                     $"\nLastUpdate: [{layer.Value.lastStateUpdateTime}], [{layer.Value.lastStateChangeUpdateTime}]"
                 , EditorStyles.helpBox);
             }
@@ -102,21 +102,9 @@ public class FsmObjectBaseEditor : Editor
             string stateChangeHitsory = "";
             fsmObject.fsmContext.stateChangeHistory.ForEach(e =>
             {
-                stateChangeHitsory += $" {e},";
+                stateChangeHitsory += $"{e} >";
             });
             EditorGUILayout.LabelField($"[{stateChangeHitsory}]", EditorStyles.helpBox);
-        }
-
-        if(fsmObject.animator)
-        {
-            //// 현재 애니메이터의 상태 정보 얻기
-            //var stateInfo = fsmObject.animator.GetCurrentAnimatorStateInfo(0);  // 0은 첫 번째 레이어
-            //// 애니메이션 이름 얻기
-            //string currentAnimationName = fsmObject.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-            //// 태그 얻기
-            //string currentTag = fsmObject.animator.GetCurrentAnimatorStateInfo(0).tagHash.ToString();
-            //
-            //EditorGUILayout.LabelField($"Animator: ({currentAnimationName}), [{currentTag}]", EditorStyles.helpBox);
         }
 
         // 기본 인스펙터 렌더링

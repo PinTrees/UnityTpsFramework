@@ -4,6 +4,7 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using DG.Tweening;
+using System.Linq;
 
 public class NpcAttackStateType
 {
@@ -48,7 +49,6 @@ public class NpcAttackState_Attack : FsmState
         
         owner = GetOwner<NpcCharacterActorBase>();
         owner.IsAttack = true;
-        owner.IsStartToAttack = false;
         isComboAttack = false;
         attackNode = owner.combatController.currentAttackNode;
         attackTarget = owner.targetController.forcusTarget;
@@ -106,7 +106,6 @@ public class NpcAttackState_Attack : FsmState
     {
         await base.Exit();
 
-        owner.IsAttack = false;
         owner.combatController.ExitAttack();
 
         // Exit Event
@@ -128,6 +127,7 @@ public class NpcAttackState_Attack : FsmState
         {
             owner.targetController.forcusTarget.targetController.activeAttackers.Remove(owner);
             owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+            owner.IsAttack = false;
         }
     }
 
@@ -147,8 +147,50 @@ public class NpcAttackState_Attack : FsmState
             return;
         }
 
+        if (owner.animator.IsPlayedInTime(currentAnimationTag, attackNode.nextAttackNormalizeTime.start, attackNode.nextAttackNormalizeTime.exit))
+        {
+            var nextRootAttackCombo = owner.combatController.attackPatternData.FindAttackCombo(owner);
+            AttackNode nextRootAttackNode = null;
+            if (nextRootAttackCombo != null)
+            {
+                nextRootAttackNode = nextRootAttackCombo.attackNodes.First();
+                if (nextRootAttackNode == attackNode)
+                    nextRootAttackNode = null;
+            }
+
+            var nextComboAttackNode = owner.combatController.CanNextAttackCombo(attackNode);
+
+            if (nextRootAttackNode)
+            {
+                if (nextComboAttackNode == null)
+                {
+                    owner.combatController.SetAttackCombo(nextRootAttackCombo);
+                    nextComboAttackNode = nextRootAttackNode;
+                }
+                else if (nextRootAttackNode.priorityRank > nextComboAttackNode.priorityRank)
+                {
+                    owner.combatController.SetAttackCombo(nextRootAttackCombo);
+                    nextComboAttackNode = nextRootAttackNode;
+                }
+            }
+            if (nextComboAttackNode)
+            {
+                isComboAttack = true;
+                owner.combatController.SetNextComboAttack(nextComboAttackNode);
+                layer.ChangeStateNow(NpcAttackStateType.Attack);
+                return;
+            }
+            else if (nextRootAttackNode)
+            {
+                isComboAttack = true;
+                owner.combatController.SetNextComboAttack(nextRootAttackNode);
+                layer.ChangeStateNow(NpcAttackStateType.Attack);
+                return;
+            }
+        }
+
         // Rotation Transform Setting
-        if(owner.targetController.forcusTarget)
+        if (owner.targetController.forcusTarget)
         {
             var targetTransform = owner.targetController.forcusTarget.baseObject.transform;
             owner.baseObject.transform.LookAt_Y(targetTransform, 180.0f);

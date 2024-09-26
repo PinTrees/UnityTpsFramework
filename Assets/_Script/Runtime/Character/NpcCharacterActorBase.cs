@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Fsm;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class NpcFsmLayer
 {
@@ -166,50 +167,38 @@ public class NpcCharacterActorBase : CharacterActorBase
         return true;
     }
 
+    public void CancleAttack()
+    {
+        var target = targetController.forcusTarget;
+        IsAttack = false;
+        IsReadyToAttack = false;
+        target.targetController.activeAttackers.Remove(this);
+        fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
+    }
+
     public override void OnAttack()
     {
         base.OnAttack();
 
-        targetController.lockDetectUpdate = true;
-        var target = targetController.forcusTarget;
+        IsAttack = true;
+        IsReadyToAttack = false;
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+        fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.Attack);
+    }
 
-        TaskSystem.CoroutineUpdateLost(() =>
+    public override void OnRunToAttack()
+    {
+        base.OnRunToAttack();
+
+        if (IsDeath)
         {
-            if (IsDeath || IsHit)
-            {
-                IsReadyToAttack = false;
-                IsStartToAttack = false;
-                target.targetController.activeAttackers.Remove(this);
-                return true;
-            }
+            CancleAttack();
+            return;
+        }
 
-            if (IsStartToAttack)
-            {
-                IsAttack = true;
-                IsReadyToAttack = false;
-                IsStartToAttack = false;
-                fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.Attack);
-                return true;
-            }
-
-            if (IsRunToAttack)
-                return false;
-
-            // 플레이어와의 거리 확인
-            if (combatController.currentAttackNode.attackerTransformSetting.useAttackerTransform)
-            {
-                var attackerTransformSetting = combatController.currentAttackNode.attackerTransformSetting;
-                var distancFromTarget = attackerTransformSetting.distanceFromTarget;
-                var distance = Vector3.Distance(targetController.forcusTarget.baseObject.transform.position, baseObject.transform.position);
-
-                if(distance > distancFromTarget)
-                {
-                    IsRunToAttack = true;
-                    fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.RunToAttack, distancFromTarget);
-                }
-            }
-            return false;
-        }, 0.1f);
+        targetController.lockDetectUpdate = true;
+        IsRunToAttack = true;
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.RunToAttack);
     }
 
     public override bool OnHit(HitData data)

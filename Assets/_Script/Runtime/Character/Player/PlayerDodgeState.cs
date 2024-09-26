@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Fsm;
 using Fsm.State;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,26 +37,23 @@ public class PlayerDodgeState_None : FsmState
     {
         base.Update();
 
-        if (owner.IsJustDodge) return;
-        if (owner.IsHit) return;
-        if (owner.IsAttack) return;
+        if (!owner.CanDodge())
+            return;
 
-        if (owner.movementDir != Vector3.zero)
+        if (owner.movementDir == Vector3.zero)
+            return;
+
+        if (Input.GetKey(KeyCode.C))
         {
-            if (Input.GetKey(KeyCode.C))
+            owner.OnDodgeRoll();
+            return;
+        }
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            layer.ChangeStateNow(PlayerDodgeStateType.Slide, new PlayerDodgeState_Slide.StateData()
             {
-                owner.IsDodge = true;
-                layer.ChangeStateNow(PlayerDodgeStateType.Roll);
-                return;
-            }
-
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                layer.ChangeStateNow(PlayerDodgeStateType.Slide, new PlayerDodgeState_Slide.StateData()
-                {
-                    moveDirection = owner.movementDir.normalized,// .NormalizeToBoundary(),
-                });
-            }
+                moveDirection = owner.movementDir.normalized,// .NormalizeToBoundary(),
+            });
         }
     }
 }
@@ -159,12 +157,10 @@ public class PlayerDodgeState_Roll : FsmState
 
         // Data Parsing        
         owner = GetOwner<PlayerCharacterActorBase>();
+        owner.IsDodge = true;
         animatorSetting = owner.scriptableAnimatorSetting.dodgeAnimatorSetting;
         moveDirection = owner.movementDir.NormalizeToBoundary();
         IsDiagonalDirection = Mathf.Abs(moveDirection.x) > 0.1f && Mathf.Abs(moveDirection.z) > 0.1f;
-
-        // State Setting
-        await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
 
         // Animation Setting
         {
@@ -200,6 +196,7 @@ public class PlayerDodgeState_Roll : FsmState
     public override async UniTask Exit()
     {
         await base.Exit();
+        owner.IsDodge = false;
 
         // Data Set
         TimeEx.CrossFadeTimeScale(1f, 0.15f).Forget();
@@ -207,18 +204,17 @@ public class PlayerDodgeState_Roll : FsmState
         // Animator Setting
         {
             owner.animator.speed = 1;
-            owner.animator.applyRootMotion = false;
             owner.animator.CrossFadeLayerWeight(1, 0);
         }
 
-        // State Chain Setting
-        await owner.fsmContext.ChangeStateNowAsync(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
-
         // Camera Setting
         CameraManager.Instance.ChangeCamera("PlayerMainCamera", 1.5f);
+    }
 
-        // State Exit
-        owner.IsDodge = false;
+    public override void OnAnimationExit()
+    {
+        //base.OnAnimationExit();
+        //owner.OnDodgeStop();
     }
 
     public override void Update()
@@ -227,7 +223,7 @@ public class PlayerDodgeState_Roll : FsmState
 
         if (owner.animator.IsPlayedOverTime(currentAnimationTag, 0.75f))
         {
-            layer.ChangeStateNow(PlayerDodgeStateType.None);
+            owner.OnDodgeStop();
             return;
         }
 
@@ -250,12 +246,6 @@ public class PlayerDodgeState_Roll : FsmState
             var dir = owner.baseObject.transform.rotation * moveDirection;
             owner.baseObject.transform.position += dir.normalized * 4.0f * Time.unscaledDeltaTime;
         }
-    }
-
-    public override void OnAnimationExit()
-    {
-        base.OnAnimationExit(); 
-        layer.ChangeStateNow(PlayerDodgeStateType.None);
     }
 }
 

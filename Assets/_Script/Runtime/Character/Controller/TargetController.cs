@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,10 +61,6 @@ public class TargetController : MonoBehaviour
 
     protected void Update()
     {
-        //attackers.ForEach(e =>
-        //{
-        //    GizmosSystem.Instance.DrawLine(ownerCharacter.GetCenterOfMass(), e.GetCenterOfMass());
-        //});
     }
 
     protected void LateUpdate()
@@ -74,8 +71,13 @@ public class TargetController : MonoBehaviour
             var attacker = attackers.PopRandomElement();
             if(attacker)
             {
-                attacker.OnAttack();
                 activeAttackers.Add(attacker);
+                attacker.IsReadyToAttack = true;
+                attacker.targetController.lockDetectUpdate = true;
+                attacker.transform.DOMove(attacker.transform.position, 0.15f).OnComplete(() =>
+                {
+                    attacker.OnRunToAttack();
+                });
             }
         }
     }

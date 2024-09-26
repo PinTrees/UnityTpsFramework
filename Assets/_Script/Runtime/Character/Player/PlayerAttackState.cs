@@ -95,7 +95,6 @@ public class PlayerAttackState_Attack : FsmState
 
             owner.legsAnimator.CrossFadeActive(attackNode.useLegIK);
             owner.lookAnimator.CrossFadeActive(false);
-
             // await owner.animator.TransitionCompleteAsync(currentAnimationTag);
         }
 
@@ -118,6 +117,8 @@ public class PlayerAttackState_Attack : FsmState
     {
         await base.Exit();
 
+        owner.IsSuperArmor = false;
+
         // Event Exit
         attackNode.Exit(owner);
         attackNode.hitboxTree.Exit();
@@ -132,7 +133,7 @@ public class PlayerAttackState_Attack : FsmState
         if (!isComboAttack)
         {
             owner.attackController.ClearAttackCombo();
-            owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle); 
+            owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
             owner.IsAttack = false;
         }
     }
@@ -145,6 +146,12 @@ public class PlayerAttackState_Attack : FsmState
         {
             layer.ChangeStateNow(PlayerAttackStateType.None);
             return;
+        }
+
+        if(attackNode.superArmorSetting.useSuperAmor)
+        {
+            var superArmorSetting = attackNode.superArmorSetting;
+            owner.IsSuperArmor = owner.animator.IsPlayedInTime(currentAnimationTag, superArmorSetting.superAmorNormalizeTime.start, superArmorSetting.superAmorNormalizeTime.exit);
         }
 
         if (owner.animator.IsPlayedInTime(currentAnimationTag, attackNode.nextAttackNormalizeTime.start, attackNode.nextAttackNormalizeTime.exit))

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class CharacterActorBase : FsmObjectBase
 {
@@ -44,6 +45,10 @@ public class CharacterActorBase : FsmObjectBase
 
     // Status Value
     public bool IsDodge = false;
+    public bool IsRun = false;
+    public bool IsWalk = false;
+    public bool IsIdle = false;
+
     public bool IsAttack = false;
     public bool IsJustDodge = false;
     public bool IsHit = false;
@@ -52,11 +57,11 @@ public class CharacterActorBase : FsmObjectBase
     public bool IsConfrontingTrace = false;
     public bool IsDeath = false;
     // State - BuffDebuff Value
+    public bool IsSuperArmor = false;
     public bool IsSturn = false;
     public bool IsKnockDown = false;
     public bool IsCanNotMove = false;
     public bool IsReadyToAttack = false;
-    public bool IsStartToAttack = false;
     public bool IsRunToAttack = false;
 
 
@@ -67,9 +72,9 @@ public class CharacterActorBase : FsmObjectBase
         lookTargetTransform = new GameObject("lookTargetTransform").transform;
         lookTargetTransform.SetParent(baseObject.transform);
 
-        navMeshAgent = baseObject.CreateChildWithComponent<NavMeshAgent>();
+        navMeshAgent = baseObject.CreateChildWithComponent<NavMeshAgent>("NavMaehAgent");
         navMeshAgent.height = 1.5f;
-        navMeshAgent.speed = 0.01f;
+        navMeshAgent.speed = 3.0f;
         navMeshAgent.angularSpeed = 180.0f;
         navMeshAgent.acceleration = 99.0f;
         navMeshAgent.stoppingDistance = 0.0f;
@@ -121,14 +126,31 @@ public class CharacterActorBase : FsmObjectBase
     protected override void LateUpdate()
     {
         base.LateUpdate();
+        navMeshAgent.transform.localPosition = Vector3.zero;
     }
 
     public virtual void OnKnockDown(KnockDownMotionType motionType)
     {
     }
+    public virtual void OnRunToAttack()
+    {
+    }
     public virtual void OnAttack()
     {
     }
+    public virtual void OnDodgeRoll()
+    {
+    }
+    public virtual void OnRun()
+    {
+    }
+    public virtual void OnWalk()
+    {
+    }
+    public virtual void OnIdle()
+    {
+    }
+
     public virtual bool OnHit(HitData hitData)
     {
         if (IsDeath) return false;

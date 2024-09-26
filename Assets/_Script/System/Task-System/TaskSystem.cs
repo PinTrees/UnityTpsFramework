@@ -64,9 +64,12 @@ public class TaskSystem : Singleton<TaskSystem>
     private static IEnumerator CoroutineUpdateWithDelay(Func<bool> action, float delay, float timeout, Action timeoutAction = null, Action onExit = null)
     {
         float elapsedTime = 0f;
-        while (!action())
+        while (true)
         {
             yield return new WaitForSeconds(delay);
+
+            if (action())
+                yield break;
 
             if (timeout > 0)
             {

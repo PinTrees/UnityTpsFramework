@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Fsm;
 using Fsm.State;
 using UnityEngine;
 
@@ -282,10 +283,6 @@ public class NpcMovementState_ConfrontingTrace : FsmState
         confrontingBandingOffset = Random.Range(-(float)combatData.confrontingBandingOffset, (float)combatData.confrontingBandingOffset);
         confrontingPositionOffset = Random.insideUnitCircle * combatData.congrontingPositionOffset;
 
-        // Navgation Setting
-        owner.navMeshAgent.updateRotation = false;
-        owner.navMeshAgent.speed = 2;
-
         // Animation Setting
         {
             owner.animator.speed = 1;
@@ -314,14 +311,16 @@ public class NpcMovementState_ConfrontingTrace : FsmState
         // Target Check
         var target = owner.targetController.forcusTarget;
         if (target == null)
+        {
+            layer.ChangeStateNow(NpcMovementStateType.Idle);
             return;
+        }
 
         // Position Setting
         var ownerPosition = owner.baseObject.transform.position;
         var targetPosition = target.baseObject.transform.position;
 
         // Transform Setting
-        owner.navMeshAgent.transform.localPosition = Vector3.zero;
         owner.baseObject.transform.LookAt_Y(target.baseObject.transform.position, 360f);
 
         // Animation Setting
@@ -352,9 +351,10 @@ public class NpcMovementState_ConfrontingTrace : FsmState
             float subPositionDistance = Vector3.Distance(confrontingPosition, targetPosition);
             Vector3 ownerDirection = (ownerPosition - targetPosition).normalized;
             ownerDirection = ownerDirection.Rotate(angle * 0.5f, Vector3.up);
-            var subPosition = targetPosition + ownerDirection * subPositionDistance;
+            var subPosition = targetPosition + ownerDirection * subPositionDistance + ownerDirection * 0.5f;
 
             owner.navMeshAgent.SetDestination(subPosition);
+            GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, subPosition);
             return;
         }
         else if (angle < -70)
@@ -362,9 +362,10 @@ public class NpcMovementState_ConfrontingTrace : FsmState
             float subPositionDistance = Vector3.Distance(confrontingPosition, targetPosition);
             Vector3 ownerDirection = (ownerPosition - targetPosition).normalized;
             ownerDirection = ownerDirection.Rotate(angle * 0.5f, Vector3.up);
-            var subPosition = targetPosition + ownerDirection * subPositionDistance;
+            var subPosition = targetPosition + ownerDirection * subPositionDistance + ownerDirection * 0.5f;
 
             owner.navMeshAgent.SetDestination(subPosition);
+            GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, subPosition);
             return;
         }
 
@@ -378,6 +379,7 @@ public class NpcMovementState_ConfrontingTrace : FsmState
 
         // Navigation Setting
         owner.navMeshAgent.SetDestination(confrontingPosition);
+        GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, confrontingPosition);
     }
 }
 
@@ -385,16 +387,17 @@ public class NpcMovementState_RunToAttack : FsmState
 {
     new NpcCharacterActorBase owner;
     float distanseFromTarget = 0.0f;
+    AttackNode attackNode;
     public NpcMovementState_RunToAttack() : base(NpcMovementStateType.RunToAttack) { }
 
     public override async UniTask Enter()
     {
         await base.Enter();
         owner = GetOwner<NpcCharacterActorBase>();
+        owner.navMeshAgent.ResetPath();
         owner.IsRunToAttack = true;
-        owner.navMeshAgent.speed = 0.0f;
-        distanseFromTarget = float.Parse(layer.param.ToString());
-        distanseFromTarget = Mathf.Max(distanseFromTarget, 0.75f);
+        attackNode = owner.combatController.currentAttackNode;
+        distanseFromTarget = Mathf.Max(attackNode.attackerTransformSetting.distanceFromTarget, 0.75f);
 
         currentAnimationTag = "Sprint";
         owner.animator.applyRootMotion = true;
@@ -407,9 +410,7 @@ public class NpcMovementState_RunToAttack : FsmState
     public override async UniTask Exit()
     {
         await base.Exit();
-        owner.navMeshAgent.speed = 3.0f;
         owner.IsRunToAttack = false;
-        owner.IsStartToAttack = false;
     }
 
     public override void Update()
@@ -418,29 +419,26 @@ public class NpcMovementState_RunToAttack : FsmState
 
         if (owner.IsDeath || owner.IsHit)
         {
-            owner.IsReadyToAttack = false;
-            owner.IsStartToAttack = false;
-            owner.targetController.forcusTarget.targetController.activeAttackers.Remove(owner);
+            owner.CancleAttack();
             return;
         }
 
         GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, owner.targetController.forcusTarget.baseObject.transform.position);
 
-        if (owner.IsStartToAttack)
-            return;
-
         var target = owner.targetController.forcusTarget;
         if (target == null)
+        {
+            layer.ChangeStateNow(NpcMovementStateType.Idle);
             return;
+        }
        
-        owner.navMeshAgent.SetDestination(target.baseObject.transform.position);
         owner.baseObject.transform.LookAt_Y(target.baseObject.transform, 360.0f);
 
         var distance = Vector3.Distance(owner.baseObject.transform.position, target.baseObject.transform.position);
         if (distance < distanseFromTarget)
         {
-            owner.IsStartToAttack = true;
-            owner.navMeshAgent.ResetPath();
+            layer.ChangeStateNow(NpcMovementStateType.Idle);
+            owner.OnAttack();
             return;
         }
     }

@@ -77,6 +77,20 @@ public class AttackerTransformSetting
     public float transitionDuration;
 }
 
+public enum SuperAmorType
+{
+    None,
+    SuperAmor,
+}
+[Serializable]
+public class SuperAmorSetting
+{
+    public bool useSuperAmor;
+    public SuperAmorType superAmorType;
+    [AnimationTime(0, 1)]
+    public AnimationInNormalizeTimeData superAmorNormalizeTime;
+}
+
 [Serializable]
 public class AttackNode : ScriptableObject
 {
@@ -120,6 +134,9 @@ public class AttackNode : ScriptableObject
     [AnimationTime(0, 1)]
     public AnimationInNormalizeTimeData timeScaleNormailzeTime;
     public float timeScale = 1;
+
+    [Header("Super Armor Setting")]
+    public SuperAmorSetting superArmorSetting;
 
 
     public void Init()

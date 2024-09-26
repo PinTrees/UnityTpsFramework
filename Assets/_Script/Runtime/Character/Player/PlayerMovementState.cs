@@ -5,32 +5,21 @@ using UnityEngine;
 
 public class PlayerMovementStateType
 {
+    public const string None = "MV_None";
     public const string Idle = "MV_Idle";
     public const string Walk = "MV_Walk";
     public const string Run = "MV_Run";
 }
 
-public class PlayerMovementState_Idle : FsmState
+public class PlayerMovementState_None : FsmState
 {
     new PlayerCharacterActorBase owner;
-
-    public PlayerMovementState_Idle() : base(PlayerMovementStateType.Idle) { }
+    public PlayerMovementState_None() : base(PlayerMovementStateType.None) { }
 
     public override async UniTask Enter()
     {
         await base.Enter();
-
         owner = GetOwner<PlayerCharacterActorBase>();
-
-        if (owner.IsAttack) return;
-        if (owner.IsHit) return;
-        if (owner.IsDeath) return;
-
-        currentAnimationTag = "Idle";
-        owner.animator.applyRootMotion = true;
-        owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f);
-
-        owner.legsAnimator.CrossFadeActive(true);
     }
 
     public override async UniTask Exit()
@@ -41,32 +30,49 @@ public class PlayerMovementState_Idle : FsmState
     public override void Update()
     {
         base.Update();
+    }
+}
 
-        if (owner.IsJustDodge)
-            return;
-        if (owner.IsHit)
-            return;
-        if (owner.IsDodge)
-            return;
-        if (owner.IsAttack)
-            return;
+public class PlayerMovementState_Idle : FsmState
+{
+    new PlayerCharacterActorBase owner;
+    public PlayerMovementState_Idle() : base(PlayerMovementStateType.Idle) { }
 
-        if (owner.movementDir != Vector3.zero)
-        {
-            layer.ChangeStateNow(PlayerMovementStateType.Walk);
-            return;
-        }
+    public override async UniTask Enter()
+    {
+        await base.Enter();
 
-        var target = owner.targetController.forcusTarget;
-        if (target)
-        {
-            owner.baseObject.transform.LookAt_Y(target.baseObject.transform, 360f);
-        }
+        owner = GetOwner<PlayerCharacterActorBase>();
+        owner.IsIdle = true;
+
+        owner.animator.applyRootMotion = true;
+        owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f);
+        owner.legsAnimator.CrossFadeActive(true);
     }
 
-    public override void OnAnimationExit()
+    public override async UniTask Exit()
     {
-        base.OnAnimationExit();
+        await base.Exit();
+        owner.IsIdle = false;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (!owner.CanMove())
+            return;
+
+        if (owner.movementDir == Vector3.zero)
+            return;
+
+        if (Input.GetKey(KeyCode.LeftShift))
+            owner.OnRun();
+        else 
+            owner.OnWalk();
+
+        var target = owner.targetController.forcusTarget;
+        if (target) owner.baseObject.transform.LookAt_Y(target.baseObject.transform, 360f);
     }
 }
 
@@ -82,6 +88,7 @@ public class PlayerMovementState_Walk : FsmState
         await base.Enter();
 
         owner = GetOwner<PlayerCharacterActorBase>();
+        owner.IsWalk = true;
 
         currentAnimationTag = "Walk";
         owner.animator.applyRootMotion = true;
@@ -93,26 +100,24 @@ public class PlayerMovementState_Walk : FsmState
     public override async UniTask Exit()
     {
         await base.Exit();
+        owner.IsWalk = false;
     }
 
     public override void Update()
     {
         base.Update();
 
+        if (!owner.CanMove())
+            return;
+
         if (owner.movementDir == Vector3.zero)
         {
-            layer.ChangeStateNow(PlayerMovementStateType.Idle);
+            owner.OnIdle();
             return;
         }
 
         if (Input.GetKey(KeyCode.LeftShift))
-        {
-            layer.ChangeStateNow(PlayerMovementStateType.Run);
-            return;
-        }
-
-        //var targetMoveDir = owner.baseObject.transform.rotation * owner.movementDir;
-        //owner.baseObject.transform.position += targetMoveDir.normalized * 1.8f * Time.deltaTime;
+            owner.OnRun();
 
         owner.baseObject.transform.LookCameraY(10f);
     }
@@ -141,26 +146,24 @@ public class PlayerMovementState_Run : FsmState
     public override async UniTask Exit()
     {
         await base.Exit();
+        owner.IsRun = false;
     }
 
     public override void Update()
     {
         base.Update();
 
+        if (!owner.CanMove())
+            return;
+
         if (owner.movementDir == Vector3.zero)
         {
-            layer.ChangeStateNow(PlayerMovementStateType.Idle);
+            owner.OnIdle();
             return;
         }
 
         if (!Input.GetKey(KeyCode.LeftShift))
-        {
-            layer.ChangeStateNow(PlayerMovementStateType.Walk);
-            return;
-        }
-
-        //var targetMoveDir = owner.baseObject.transform.rotation * owner.movementDir;
-        //owner.baseObject.transform.position += targetMoveDir.normalized * 3.0f * Time.deltaTime;
+            owner.OnWalk();
 
         owner.baseObject.transform.LookCameraY(10f);
     }

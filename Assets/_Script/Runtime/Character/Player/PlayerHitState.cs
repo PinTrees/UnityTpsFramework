@@ -144,7 +144,7 @@ public class PlayerHitState_HitHard : FsmState
         //owner.animator.CrossFadeLayerWeight(1, 1);
 
         // State Setting
-        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+        owner.OnIdle();
     }
 
     public override void Update()

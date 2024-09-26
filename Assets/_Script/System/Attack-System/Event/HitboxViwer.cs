@@ -10,6 +10,8 @@ public class HitboxViwer : MonoBehaviour
     {
         if (ownerCharacter == null)
             return;
+        if (hitboxTree == null)
+            return;
 
         hitboxTree.DrawGizmo(ownerCharacter);
     }

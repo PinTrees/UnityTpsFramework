@@ -8,6 +8,13 @@ using Cysharp.Threading.Tasks;
 
 namespace Fsm
 {
+    public struct LayerStateChangeContainer
+    {
+        public string LayerName;
+        public string StateName;
+        public object Param;
+    }
+
     /// <summary>
     /// FSM(유한 상태 기계)의 컨텍스트를 관리하는 클래스입니다.
     /// 상태를 추가, 변경, 업데이트하는 기능을 제공합니다.
@@ -16,8 +23,11 @@ namespace Fsm
     {
         public FsmObjectBase fsmObject;
         public List<string> stateChangeHistory = new();
-        [SerializeField] public Dictionary<string, FsmLayer> layers = new();      // FSM 컨텍스트를 소유하는 오브젝트
+        [SerializeField] public Dictionary<string, FsmLayer> layers = new();        // FSM 컨텍스트를 소유하는 오브젝트
 
+        // Runtime Value
+        private readonly Queue<LayerStateChangeContainer> changeStateQueue = new();      // 상태 변경을 위한 대기열
+        private bool isChangeStateLocked = false;                                        // 상태 변경 상태 잠금
 
         #region Init
         /// <summary>

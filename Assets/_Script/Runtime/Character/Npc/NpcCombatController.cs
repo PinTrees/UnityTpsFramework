@@ -12,6 +12,7 @@ public class NpcCombatController : MonoBehaviour
 
     [Header("Runtime Value")]
     [SerializeField] private NpcCharacterActorBase ownerCharacter;
+    [SerializeField] public AttackComboData currentAttackCombo;
     [SerializeField] public AttackNode currentAttackNode;
 
     public Coroutine coroutineUpdateReadyToAttack;
@@ -20,6 +21,36 @@ public class NpcCombatController : MonoBehaviour
     {
         this.ownerCharacter = ownerCharacter;
         coroutineUpdateReadyToAttack = StartCoroutine(UpdateReayToAttack());
+    }
+
+    public void SetNextComboAttack(AttackNode attackNode)
+    {
+        currentAttackNode = attackNode;
+    }
+    public void ClearAttackCombo()
+    {
+        currentAttackCombo = null;
+        currentAttackNode = null;
+    }
+    public AttackNode CanNextAttackCombo(AttackNode currentAttackNode)
+    {
+        if (currentAttackCombo == null)
+            return null;
+
+        var currentAttackComboIndex = currentAttackCombo.attackNodes.IndexOf(currentAttackNode);
+        if (currentAttackCombo.attackNodes.Count <= currentAttackComboIndex + 1)
+            return null;
+
+        var nextAttackCombo = currentAttackCombo.attackNodes[currentAttackComboIndex + 1];
+        if (nextAttackCombo.CanAttack(ownerCharacter))
+            return nextAttackCombo;
+
+        return null;
+    }
+
+    public void SetAttackCombo(AttackComboData attackCombo)
+    {
+        currentAttackCombo = attackCombo;
     }
 
     IEnumerator UpdateReayToAttack()
@@ -54,7 +85,6 @@ public class NpcCombatController : MonoBehaviour
             currentAttackNode = attackCombo.attackNodes.First();
             if (currentAttackNode)
             {
-                ownerCharacter.IsReadyToAttack = true;
                 ownerCharacter.targetController.forcusTarget.targetController.attackers.Add(ownerCharacter);
             }
         }

@@ -19,16 +19,21 @@ public class PlayerCharacterActorBase : CharacterActorBase
     [Header("Player Controller Setting")]
     public LockOnController lockOnController;
     public PlayerAttackController attackController;
+    public PlayerInputController inputController;
 
 
     protected override void OnInit()
     {
         base.OnInit();
 
+        navMeshAgent.radius = 0.01f;
+
         lockOnController = gameObject.GetComponent<LockOnController>();
         lockOnController.Init(this);
         attackController = baseObject.GetOrAddComponent<PlayerAttackController>();
         attackController.Init(this);
+        inputController = baseObject.GetComponent<PlayerInputController>();
+        inputController.Init(this);
 
         InitFsm();
 
@@ -57,6 +62,7 @@ public class PlayerCharacterActorBase : CharacterActorBase
         attackLayer.AddState(new PlayerAttackState_Attack());
 
         var movementLayer = fsmContext.CreateLayer(PlayerFsmLayer.MovementLayer);
+        movementLayer.AddState(new PlayerMovementState_None());
         movementLayer.AddState(new PlayerMovementState_Idle());
         movementLayer.AddState(new PlayerMovementState_Walk());
         movementLayer.AddState(new PlayerMovementState_Run());
@@ -74,6 +80,8 @@ public class PlayerCharacterActorBase : CharacterActorBase
 
     protected override void Update()
     {
+        attackController?.AttackUpdate();
+
         base.Update();
 
         float horizontalInput = Input.GetAxis("Horizontal"); 
@@ -110,12 +118,70 @@ public class PlayerCharacterActorBase : CharacterActorBase
         base.LateUpdate();
     }
 
+    public bool CanMove()
+    {
+        if (IsDeath) return false;
+        if (IsJustDodge) return false;
+        if (IsHit) return false;
+        if (IsDodge) return false;
+        if (IsAttack) return false;
+        return true;
+    }
+
+    public bool CanDodge()
+    {
+        if (IsDeath) return false;
+        if (IsJustDodge) return false;
+        if (IsHit) return false;
+        if (IsDodge) return false;
+        if (IsAttack) return false;
+        return true;
+    }
+
     public override void OnAttack()
     {
         base.OnAttack();
 
         IsAttack = true;
         fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.Attack);
+    }
+
+    public void OnDodgeStop()
+    {
+        fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+    }
+
+    public void OnIdle()
+    {
+        IsIdle = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+    }
+
+    public void OnStop()
+    {
+        fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+    }
+
+    public override void OnRun()
+    {
+        IsRun = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Run);
+    }
+
+    public override void OnWalk()
+    {
+        IsWalk = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Walk);
+    }
+
+    public void OnDodgeRoll()
+    {
+        IsDodge = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.Roll);
     }
 
     public override bool OnHit(HitData hitData)
