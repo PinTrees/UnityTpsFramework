@@ -62,12 +62,10 @@ public class NpcHitState_HitHard : FsmState
         hitDirection = owner.baseObject.transform.position - stateData.hitData.ownerCharacter.baseObject.transform.position;
         hitDirection.Normalize();
 
-        // State Setting
-        owner.fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
-        owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle); 
-
         // Animation Setting;
         {
+            owner.legsAnimator.CrossFadeActive(true);
+
             owner.animator.SetFloat("hx", 0);
             owner.animator.SetFloat("hy", 1);
 
@@ -77,9 +75,7 @@ public class NpcHitState_HitHard : FsmState
             owner.animator.Play("StandIdle", 0, 0);
             await UniTask.Yield();
             owner.animator.Play("StandHitHard", 0, 0.0f);
-            owner.legsAnimator.CrossFadeActive(true);
-
-            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
+            await owner.animator.WaitMustTransitionCompleteAsync("StandHitHard", "Hit");
         }
 
         // Knockback Setting 
@@ -117,7 +113,7 @@ public class NpcHitState_HitHard : FsmState
 
         if (owner.animator.IsPlayedOverTime(currentAnimationTag, 0.99f))
         {
-            HitExit();
+            owner.OnIdle();
             return;
         }
     }
@@ -125,19 +121,7 @@ public class NpcHitState_HitHard : FsmState
     public override void OnAnimationExit()
     {
         base.OnAnimationExit();
-        HitExit();
-    }
-
-    private void HitExit()
-    {
-        if (hitData.hitEndMotionType == HitboxHitEndMotionType.LieDown_Up)
-        {
-            layer.ChangeStateNow(NpcHitStateType.None);
-            return;
-        }
-
-        layer.ChangeStateNow(NpcHitStateType.None);
-        return;
+        owner.OnIdle();
     }
 }
 
@@ -175,7 +159,7 @@ public class NpcHitState_Custom : FsmState
             owner.animator.CrossFadeInFixedTime("CustomHit", 0.15f);
             owner.animator.SetNormalizeTime("CustomHit", hitData.customHitSetting.playNormalizeTime.start);
 
-            await owner.animator.WaitMustTransitionComplete("Hit");
+            await owner.animator.WaitMustTransitionCompleteAsync("Hit");
         }
 
         // Knockback Setting 

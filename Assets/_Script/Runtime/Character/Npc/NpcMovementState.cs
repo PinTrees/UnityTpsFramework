@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class NpcMovementStateType
 {
+    public const string None = "MV_None";
     public const string Idle = "MV_Idle";
     public const string Walk = "MV_Walk";
     public const string Run = "MV_Run";
@@ -15,6 +16,46 @@ public class NpcMovementStateType
     public const string ConfrontingTrace = "MV_ConfrontingTrace";      // 대치 달리기 상태 - 타겟주위까지 전속력으로 이동
     public const string TacticalMove = "MV_TacticalMove";              // 전술적 위치 조정
     public const string RunToAttack = "MV_ReadyToAttackTrace";
+}
+
+public class NpcMovementState_None : FsmState
+{
+    new NpcCharacterActorBase owner;
+    public NpcMovementState_None() : base(NpcMovementStateType.None) { }
+
+    public override async UniTask Enter()
+    {
+        await base.Enter();
+        owner = GetOwner<NpcCharacterActorBase>();
+    }
+
+    public override async UniTask Exit()
+    {
+        await base.Exit();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (!owner.CanMove())
+            return;
+
+        var target = owner.targetController.forcusTarget;
+        if (target == null)
+            return;
+
+        var targetPosition = target.baseObject.transform.position;
+        var ownerPosition = owner.baseObject.transform.position;
+        var targetDistance = Vector3.Distance(ownerPosition, targetPosition);
+
+        if (targetDistance < owner.characterData.combatData.traceStartRange)
+        {
+            owner.IsTrace = true;
+            layer.ChangeStateNow(NpcMovementStateType.Trace);
+            return;
+        }
+    }
 }
 
 public class NpcMovementState_Idle : FsmState
@@ -29,13 +70,7 @@ public class NpcMovementState_Idle : FsmState
         owner = GetOwner<NpcCharacterActorBase>();
         combatData = owner.characterData.combatData;
 
-        if (owner.IsHit) return;
-        if (owner.IsDeath) return;
-        if (owner.IsAttack) return;
-        if (owner.IsKnockDown) return;
-
-        owner.animator.CrossFadeInFixedTime("StandIdle", 0.15f); 
-        await owner.animator.WaitMustTransitionComplete("Idle"); 
+        await owner.animator.WaitMustTransitionCompleteAsync("StandIdle", "Idle"); 
     }
 
     public override async UniTask Exit()
@@ -47,12 +82,8 @@ public class NpcMovementState_Idle : FsmState
     {
         base.Update();
 
-        if (owner.IsTrace) return;
-        if (owner.IsDeath) return;
-        if (owner.IsHit) return;
-        if (owner.IsAttack) return;
-        if (owner.IsKnockDown) return;
-        if (owner.IsCanNotMove) return;
+        if (!owner.CanMove())
+            return;
 
         var target = owner.targetController.forcusTarget;
         if (target == null)

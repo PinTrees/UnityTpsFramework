@@ -183,6 +183,9 @@ public class HitboxDataTree : ScriptableObject
                         vfxCenter.transform.position = target.GetCenterOfMass() + Random.insideUnitSphere * 0.1f;
                         vfxCenter.transform.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
 
+                        if (!target.CanHit())
+                            continue;
+
                         target.OnHit(new HitData()
                         {
                             hitDirection = hitboxs[index].hitDirectionType,
@@ -192,7 +195,6 @@ public class HitboxDataTree : ScriptableObject
                             knockbackSetting = knockbackSetting,
                             buffDebuffEvents = buffDebuffEvents,
                         });
-
                         owner.targetController.hitTargets.Add(target);
                     }
                 }

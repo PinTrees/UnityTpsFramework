@@ -52,9 +52,8 @@ public class NpcDodgeState_ConfrontingDodge : FsmState
             currentAnimationTag = "Dodge";
             owner.animator.applyRootMotion = true;
             owner.animator.speed = 1.2f;
-            owner.animator.CrossFadeInFixedTime("DodgeLong", 0.15f);
+            await owner.animator.WaitMustTransitionCompleteAsync("DodgeLong", "Dodge");
             owner.animator.SetNormalizeTime("DodgeLong", 0.01f);
-            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
     }
 

@@ -63,8 +63,6 @@ public class PlayerAttackState_Attack : FsmState
         attackNode = owner.attackController.currentAttackNode;
         attackNode.Init();
 
-        Debug.Log("AAAAAAAAAAAAAAAAA");
-
         var targetPosition = attackTarget != null ? attackTarget.baseObject.transform.position : Vector3.zero;
         var ownerPosition = owner.baseObject.transform.position;
 
@@ -103,7 +101,7 @@ public class PlayerAttackState_Attack : FsmState
 
             owner.legsAnimator.CrossFadeActive(attackNode.useLegIK);
             owner.lookAnimator.CrossFadeActive(false);
-            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
+            await owner.animator.WaitMustTransitionCompleteAsync(currentAnimationTag);
         }
 
         // Event Start
@@ -141,18 +139,15 @@ public class PlayerAttackState_Attack : FsmState
         if (!isComboAttack)
         {
             owner.attackController.ClearAttackCombo();
-            owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
             owner.IsAttack = false;
         }
     }
 
     public override void Update()
     {
-        Debug.Log("AAAAAAAAAAAAAAAAA");
-
         if (owner.animator.IsPlayedOverTime(currentAnimationTag, attackNode.animationPlayNormailzeTime.exit))
         {
-            layer.ChangeStateNow(PlayerAttackStateType.None);
+            owner.OnAttackStop();
             return;
         }
 
@@ -281,7 +276,7 @@ public class PlayerAttackState_Attack : FsmState
     public override void OnAnimationExit()
     {
         base.OnAnimationExit();
-        layer.ChangeStateNow(PlayerAttackStateType.None);
+        owner.OnAttackStop();
     }
 }
 

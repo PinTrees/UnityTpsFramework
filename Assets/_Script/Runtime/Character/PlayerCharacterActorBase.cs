@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Fsm;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerFsmLayer
 {
@@ -120,7 +121,7 @@ public class PlayerCharacterActorBase : CharacterActorBase
         base.LateUpdate();
     }
 
-    public bool CanMove()
+    public override bool CanMove()
     {
         if (IsDeath) return false;
         if (IsJustDodge) return false;
@@ -150,6 +151,14 @@ public class PlayerCharacterActorBase : CharacterActorBase
         return true;
     }
 
+    public override bool CanHit()
+    {
+        if (IsDeath) return false;
+        if (IsDodge) return false;
+        if (IsJustDodge) return false;
+        return true;
+    }
+
     public override void OnAttack()
     {
         base.OnAttack();
@@ -166,7 +175,13 @@ public class PlayerCharacterActorBase : CharacterActorBase
         fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
     }
 
-    public void OnIdle()
+    public void OnAttackStop()
+    {
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
+    }
+
+    public override void OnIdle()
     {
         IsIdle = true;
         fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
@@ -190,7 +205,7 @@ public class PlayerCharacterActorBase : CharacterActorBase
         fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Walk);
     }
 
-    public void OnDodgeRoll()
+    public override void OnDodgeRoll()
     {
         IsDodge = true;
         fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
@@ -198,21 +213,15 @@ public class PlayerCharacterActorBase : CharacterActorBase
         fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.Roll);
     }
 
-    public override bool OnHit(HitData hitData)
+    public override void OnHit(HitData hitData)
     {
-        if (!base.OnHit(hitData))
-            return false;
-
-        if (IsDodge) return false;
-        if (IsJustDodge) return false;
-
-        Debug.Log("Player Hit");
         IsHit = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
+        fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.None);
         fsmContext.ChangeStateNow(PlayerFsmLayer.HitLayer, PlayerHitStateType.HitHard, new HitStateData()
         {
             hitData = hitData,
         });
-
-        return true;
     }
 }

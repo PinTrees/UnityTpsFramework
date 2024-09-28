@@ -1,17 +1,21 @@
 using Fsm;
 using UnityEngine;
-using UnityEngine.AI;
-using System.Linq;
-
-
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+public enum FsmStateChangeType
+{
+    None,
+    Wait,
+    Forced,
+}
+
 public class FsmObjectBase : MonoBehaviour
 {
-    public FsmContext fsmContext;
+    public FsmStateChangeType stateChangeType;
+    [HideInInspector] public FsmContext fsmContext;
 
     [SerializeField] public GameObject baseObject;
 
@@ -93,8 +97,9 @@ public class FsmObjectBaseEditor : Editor
             foreach (var layer in fsmObject.fsmContext.layers)
             {
                 string stateChange = "";
+                string currentState = layer.Value.currentState == null ? "NULL" : layer.Value.currentState.stateId;
                 layer.Value.GetStateChangeList().ForEach(e => stateChange += e.type + ", ");
-                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.previousStateType} -> {layer.Value.currentState.stateId}),({stateChange}) [{layer.Value.isChangeStateLocked}]" +
+                EditorGUILayout.LabelField($"{layer.Key}: ({layer.Value.previousStateType} -> {currentState}),({stateChange}) [{layer.Value.isChangeStateLocked}]" +
                     $"\nLastUpdate: [{layer.Value.lastStateUpdateTime}], [{layer.Value.lastStateChangeUpdateTime}]"
                 , EditorStyles.helpBox);
             }

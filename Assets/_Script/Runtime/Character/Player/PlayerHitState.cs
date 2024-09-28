@@ -101,11 +101,6 @@ public class PlayerHitState_HitHard : FsmState
         hitDirection = owner.baseObject.transform.position - hitStateData.hitData.ownerCharacter.baseObject.transform.position;
         hitDirection = hitDirection.normalized;
 
-        // State Setting
-        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
-        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
-        owner.fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.Idle);
-
         // Animation Setting;
         {
             owner.legsAnimator.CrossFadeActive(true);
@@ -116,12 +111,8 @@ public class PlayerHitState_HitHard : FsmState
             currentAnimationTag = "Hit";
             owner.animator.speed = 1;
             owner.animator.applyRootMotion = animationSetting.standHitHard.useRootMotion;
-            owner.animator.Play("StandIdle", 0, 0);
-            await UniTask.Yield();
-            owner.animator.Play("StandHitHard", 0, 0.0f);
             owner.legsAnimator.CrossFadeActive(true);
-
-            //await owner.animator.TransitionCompleteAsync(currentAnimationTag);
+            await owner.animator.WaitMustTransitionCompleteAsync("StandHitHard", "Hit");
         }
 
         // Camera Setting

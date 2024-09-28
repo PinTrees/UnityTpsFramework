@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public static class AnimatorEx
@@ -28,22 +27,28 @@ public static class AnimatorEx
         animatorLockedMap[animator] = active;
     }
 
-    public static async UniTask WaitMustTransitionComplete(this Animator animator, string state) => 
-        await animator.WaitForStateToStart(state);
-    public static async UniTask TransitionCompleteAsync(this Animator animator, string state, float normalizeTime)
-        =>  await animator.WaitForStateToEnd(state, normalizeTime);
-
-    private static IEnumerator WaitForStateToStart(this Animator animator, string state)
+    public static async UniTask WaitMustTransitionCompleteAsync(this Animator animator, string state_name, string state_tag="") => 
+        await animator.WaitForStateToStart(state_name, state_tag);
+    //public static async UniTask TransitionCompleteAsync(this Animator animator, string state_name, string state_tag, float normalizeTime)
+    //    =>  await animator.WaitForStateToEnd(state_name, state_tag, normalizeTime); 
+     
+    private static IEnumerator WaitForStateToStart(this Animator animator, string state_name, string state_tag="")
     {
+        if (state_tag == "")
+            state_tag = state_name;
+
+        if (animator.IsPlaying(state_tag, 0))
+            yield break;
+
         while (animator.IsLocked())
             yield return null;
         
         animator.SetLocked(true);
 
-        animator.CrossFadeInFixedTime(state, 0.15f);
+        animator.CrossFadeInFixedTime(state_name, 0.15f, 0);
         while (true)
         {
-            if (animator.IsPlaying(state, 0))
+            if (animator.IsPlaying(state_tag, 0))
                 break;
             yield return null;  
         }

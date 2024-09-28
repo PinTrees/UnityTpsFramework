@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class CharacterActorBase : FsmObjectBase
 {
@@ -135,9 +134,7 @@ public class CharacterActorBase : FsmObjectBase
     public virtual void OnRunToAttack()
     {
     }
-    public virtual void OnAttack()
-    {
-    }
+    public virtual void OnAttack() { }
     public virtual void OnDodgeRoll()
     {
     }
@@ -147,16 +144,13 @@ public class CharacterActorBase : FsmObjectBase
     public virtual void OnWalk()
     {
     }
-    public virtual void OnIdle()
-    {
-    }
+    public virtual void OnIdle() { }
 
-    public virtual bool OnHit(HitData hitData)
-    {
-        if (IsDeath) return false;
-        if (IsKnockDown) return false;
-        return true;
-    }
+    public virtual bool CanMove() { return false; }
+
+    public virtual bool CanHit() { return false; }
+    public virtual void OnHit(HitData hitData) { }
+    
     public virtual void OnDeath()
     {
     }

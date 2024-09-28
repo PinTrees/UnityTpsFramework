@@ -4174,6 +4174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015630a2e05587b4cb8968feaa0105b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateChangeType: 2
   baseObject: {fileID: 4391847927488828035}
   animator: {fileID: 0}
   characterCollider: {fileID: 0}
@@ -4188,6 +4189,9 @@ MonoBehaviour:
   movementDir: {x: 0, y: 0, z: 0}
   lastMovementDir: {x: 0, y: 0, z: 0}
   IsDodge: 0
+  IsRun: 0
+  IsWalk: 0
+  IsIdle: 0
   IsAttack: 0
   IsJustDodge: 0
   IsHit: 0
@@ -4195,11 +4199,11 @@ MonoBehaviour:
   IsConfronting: 0
   IsConfrontingTrace: 0
   IsDeath: 0
+  IsSuperArmor: 0
   IsSturn: 0
   IsKnockDown: 0
   IsCanNotMove: 0
   IsReadyToAttack: 0
-  IsStartToAttack: 0
   IsRunToAttack: 0
   combatController: {fileID: 0}
   IsTrace: 0
@@ -4986,6 +4990,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPatternData: {fileID: 11400000, guid: 084881d0eca1c7545b061fec9c47029b, type: 2}
   ownerCharacter: {fileID: 0}
+  currentAttackCombo:
+    conditions: []
+    attackNodes: []
   currentAttackNode: {fileID: 0}
 --- !u!114 &3979907474187230660
 MonoBehaviour:

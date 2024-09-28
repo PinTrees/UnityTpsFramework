@@ -27,6 +27,7 @@ namespace Fsm
         private readonly Dictionary<string, FsmState> stateMap = new();         // 가능한 모든 상태들을 저장하는 맵   
         private readonly Queue<StateChangeContainer> changeStateQueue = new();  // 상태 변경을 위한 대기열
         public List<StateChangeContainer> GetStateChangeList() { return changeStateQueue.ToList(); }
+        public Coroutine changeStateCoroutine;
 
         public string previousStateType { get; private set; }        // 이전에 활성화되었던 상태
 
@@ -52,19 +53,37 @@ namespace Fsm
 
         public void Update()
         {
-            if (isChangeStateLocked)
+            if (!isFsmInitialized)
                 return;
 
-            if (isFsmInitialized)
+            if (fsmObject.stateChangeType == FsmStateChangeType.Wait)
             {
+                if (isChangeStateLocked)
+                    return;
+
                 currentState?.StateUpdate();
                 lastStateUpdateTime = Time.time;
 
                 if (changeStateQueue.Count > 0)
                 {
-                    fsmObject.StartCoroutine(UpdateStateChangeTask());
+                    fsmObject.StartCoroutine(UpdateStateChangeTask(changeStateQueue.Dequeue()));
                     lastStateChangeUpdateTime = Time.time;
                 }
+            }
+            else if (fsmObject.stateChangeType == FsmStateChangeType.Forced)
+            {
+                if (changeStateQueue.Count > 0)
+                {
+                    if (changeStateCoroutine != null) fsmObject.StopCoroutine(changeStateCoroutine);
+                    changeStateCoroutine = fsmObject.StartCoroutine(UpdateStateChangeTask(changeStateQueue.Dequeue()));
+                    lastStateChangeUpdateTime = Time.time;
+                }
+
+                if (isChangeStateLocked) 
+                    return; 
+
+                currentState?.StateUpdate();
+                lastStateUpdateTime = Time.time;
             }
         }
 
@@ -153,16 +172,10 @@ namespace Fsm
         /// 변경 대기열을 초기화합니다.
         /// </summary>
         /// <param name="type">변경할 상태</param>
-        public void ChangeStateNow(string type, object param = null)
-        {
-            fsmObject.StartCoroutine(ChangeStateNowAsync(type, param).ToCoroutine()); 
-        }
 
-        IEnumerator UpdateStateChangeTask()
+        IEnumerator UpdateStateChangeTask(StateChangeContainer currentChangeState)
         {
             isChangeStateLocked = true;
-
-            var currentChangeState = changeStateQueue.Dequeue();
             this.param = currentChangeState.param;
 
             // 현재 상태가 있는 경우 Exit
@@ -186,6 +199,20 @@ namespace Fsm
             currentChangeState.onComplete();
 
             isChangeStateLocked = false;
+        }
+
+        public void ChangeStateNow(string type, object param = null)
+        {
+            if (changeStateQueue.Where(e => e.type == type).Count() > 0)
+                return;
+
+            StateChangeContainer newChange = new StateChangeContainer()
+            {
+                type = type,
+                param = param,
+                onComplete = () => { }
+            };
+            changeStateQueue.Enqueue(newChange);
         }
 
         public async UniTask ChangeStateNowAsync(string type, object param = null)

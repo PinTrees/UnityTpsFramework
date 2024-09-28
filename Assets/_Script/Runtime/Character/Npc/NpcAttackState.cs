@@ -55,9 +55,6 @@ public class NpcAttackState_Attack : FsmState
         var targetPosition = attackTarget.baseObject.transform.position;
         var ownerPosition = owner.baseObject.transform.position;
 
-        // State Setting
-        owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
-
         // Attacker Transform Setting
         if (attackTarget)
         {
@@ -82,11 +79,10 @@ public class NpcAttackState_Attack : FsmState
             currentAnimationTag = attackNode.uid;
             owner.animator.speed = attackNode.animationSpeed;
             owner.animator.applyRootMotion = attackNode.useRootMotion;
-            owner.animator.CrossFadeInFixedTime(currentAnimationTag, 0.15f);
+            // owner.animator.CrossFadeInFixedTime(currentAnimationTag, 0.15f);
+            await owner.animator.WaitMustTransitionCompleteAsync(currentAnimationTag);
             if (attackNode.animationPlayNormailzeTime.start > 0.01f)
                 owner.animator.SetNormalizeTime(currentAnimationTag, attackNode.animationPlayNormailzeTime.start);
-
-            await owner.animator.WaitMustTransitionComplete(currentAnimationTag);
         }
 
         // Hitbox Event Start

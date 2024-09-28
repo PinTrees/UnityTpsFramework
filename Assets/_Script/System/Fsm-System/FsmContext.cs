@@ -137,7 +137,7 @@ namespace Fsm
             if (!layers.ContainsKey(layer))
                 return;
 
-            fsmObject.StartCoroutine(ChangeStateNowAsync(layer, type, param).ToCoroutine());
+            layers[layer].ChangeStateNow(type, param);
         }
 
         public async UniTask ChangeStateNowAsync(string layer, string type, object param=null)
