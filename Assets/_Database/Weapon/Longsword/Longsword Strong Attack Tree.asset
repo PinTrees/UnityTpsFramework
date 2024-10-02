@@ -423,7 +423,7 @@ MonoBehaviour:
     useAttackerTransform: 1
     lookAtTarget: 0
     distanceFromTarget: 1.25
-    distanceFromTargetOver: 0
+    distanceFromTargetOver: 2
     transitionDuration: 0.5
   canJustDodge: 0
   canJustDodgeDistance: 0
