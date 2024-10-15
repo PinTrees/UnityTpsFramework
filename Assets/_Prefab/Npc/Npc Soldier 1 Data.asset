@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Npc Soldier 1 Data
   m_EditorClassIdentifier: 
   combatData:
-    traceStartRange: 10
+    traceStartRange: 35
     avoidDistance: 1.5
-    confrontingRange: 3.5
-    confrontingBandingOffset: 0.8
-    congrontingPositionOffset: 1.5
-    repositionDuration: 5
-    repositionDurationRandomOffset: 5
+    confrontingRange: 6.5
+    confrontingBandingOffset: 1
+    congrontingPositionOffset: 3.5
+    repositionDuration: 3
+    repositionDurationRandomOffset: 3
   uid: af5e4cd1-57f9-4711-b550-91e39c9efff6
   hostilityLimit: 0
   hostilityCriteriaWeight:

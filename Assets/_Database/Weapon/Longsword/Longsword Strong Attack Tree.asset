@@ -41,6 +41,13 @@ MonoBehaviour:
     distanceFromTarget: 0
     distanceFromTargetOver: 0
     transitionDuration: 0
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0.40055764
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0.20167288
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -129,6 +136,13 @@ MonoBehaviour:
     distanceFromTarget: 0
     distanceFromTargetOver: 0
     transitionDuration: 0
+    moveSpeedPerSec: 0
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -213,10 +227,17 @@ MonoBehaviour:
   attackDirectionType: 0
   attackerTransformSetting:
     useAttackerTransform: 1
-    lookAtTarget: 0
+    lookAtTarget: 1
     distanceFromTarget: 1.25
-    distanceFromTargetOver: 2
+    distanceFromTargetOver: 4
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0.5994424
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0.39869893
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -304,10 +325,17 @@ MonoBehaviour:
   attackDirectionType: 0
   attackerTransformSetting:
     useAttackerTransform: 1
-    lookAtTarget: 0
+    lookAtTarget: 1
     distanceFromTarget: 1.25
-    distanceFromTargetOver: 0
+    distanceFromTargetOver: 4
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0.59200746
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0.39869893
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -421,10 +449,17 @@ MonoBehaviour:
   attackDirectionType: 0
   attackerTransformSetting:
     useAttackerTransform: 1
-    lookAtTarget: 0
+    lookAtTarget: 1
     distanceFromTarget: 1.25
-    distanceFromTargetOver: 2
+    distanceFromTargetOver: 4
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0.6031599
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0.40055764
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -512,10 +547,17 @@ MonoBehaviour:
   attackDirectionType: 5
   attackerTransformSetting:
     useAttackerTransform: 1
-    lookAtTarget: 0
+    lookAtTarget: 1
     distanceFromTarget: 1.25
-    distanceFromTargetOver: 2
+    distanceFromTargetOver: 4
     transitionDuration: 0.3
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0.60130113
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0.40055764
   canJustDodge: 1
   canJustDodgeDistance: 2.5
   canJustDodgeNormailzetime:

@@ -59,11 +59,12 @@ public class NpcCombatController : MonoBehaviour
         {
             yield return new WaitForSeconds(0.15f);
 
-
             if (ownerCharacter.IsDeath)
                 continue;
 
             if (ownerCharacter.IsReadyToAttack) 
+                continue;
+            if (ownerCharacter.IsRunToAttack)
                 continue;
 
             if (ownerCharacter.IsAttack)
@@ -85,7 +86,8 @@ public class NpcCombatController : MonoBehaviour
             currentAttackNode = attackCombo.attackNodes.First();
             if (currentAttackNode)
             {
-                ownerCharacter.targetController.forcusTarget.targetController.attackers.Add(ownerCharacter);
+                SetAttackCombo(attackCombo);
+                ownerCharacter.targetController.forcusTarget.targetController.AddAttackableWaitingActor(ownerCharacter);
             }
         }
     }
@@ -94,57 +96,6 @@ public class NpcCombatController : MonoBehaviour
     {
         if (coroutineUpdateReadyToAttack != null)
             StopCoroutine(coroutineUpdateReadyToAttack);
-    }
-
-    // Attackable Loop Task
-    async UniTask UpdateTask()
-    {
-        while (true)
-        {
-            await UniTask.Yield();
-
-            if (ownerCharacter.IsDeath)
-                return;
-
-            if (ownerCharacter.IsAttack)
-                continue;
-            if (ownerCharacter.IsHit)
-                continue;
-
-            if (ownerCharacter.IsDodge)
-                continue;
-            if (!ownerCharacter.IsConfronting)
-                continue;
-            if (!ownerCharacter.targetController.forcusTarget)
-                continue;
-
-            continue;
-
-            //var attackCombo = attackPatternData.FindAttackCombo(ownerCharacter);
-            //if (attackCombo == null)
-            //    continue;
-            //
-            //currentAttackNode = attackCombo.attackNodes.First();
-            //if (currentAttackNode)
-            //{
-            //    if(currentAttackNode.canJustDodge)
-            //    {
-            //        var attackVfx = VfxObject.Create("VfxSpark2");
-            //        //var transform = ownerCharacter.animator.GetBoneTransform(HumanBodyBones.RightHand).transform;
-            //        //attackVfx.transform.SetParent(transform, true);
-            //        attackVfx.transform.localScale = Vector3.one;
-            //        attackVfx.transform.position = ownerCharacter.GetCenterOfMass() + Vector3.up;
-            //        attackVfx.transform.DOScale(Vector3.one * 1.5f, 0.35f).OnComplete(() =>
-            //        {
-            //            attackVfx.Stop();
-            //        });
-            //    }
-            //
-            //    ownerCharacter.IsAttack = true;
-            //    yield return ownerCharacter.StartCoroutine(ownerCharacter.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle));
-            //    yield return ownerCharacter.StartCoroutine(ownerCharacter.fsmContext.ChangeStateNowAsync(NpcFsmLayer.AttackLayer, NpcAttackStateType.Attack));
-            //}
-        }
     }
 
     public void ExitAttack()

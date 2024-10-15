@@ -84,8 +84,12 @@ public class PlayerAttackState_Attack : FsmState
                 {
                     var dir = owner.baseObject.transform.position - targetPosition;
                     var attackerPosition = targetPosition + dir.normalized * attackNode.attackerTransformSetting.distanceFromTarget;
-                    owner.baseObject.transform.DOMoveX(attackerPosition.x, attackNode.attackerTransformSetting.transitionDuration);
-                    owner.baseObject.transform.DOMoveZ(attackerPosition.z, attackNode.attackerTransformSetting.transitionDuration);
+                    float distanceToMove = Vector3.Distance(owner.baseObject.transform.position, attackerPosition);
+                    float moveDuration = distanceToMove / (attackNode.attackerTransformSetting.moveSpeedPerSec + 0.0001f);
+
+                    owner.baseObject.transform.DOKill();
+                    owner.baseObject.transform.DOMoveX(attackerPosition.x, moveDuration);
+                    owner.baseObject.transform.DOMoveZ(attackerPosition.z, moveDuration);
                 }
             }
         }
@@ -129,6 +133,9 @@ public class PlayerAttackState_Attack : FsmState
         attackNode.Exit(owner);
         attackNode.hitboxTree.Exit();
         attackNode.conditions.ForEach(e => e.Exit(owner));
+
+        // 공격자 위치 수정 로직 제거
+        owner.baseObject.transform.DOKill();
 
         foreach (var item in spawnedVfxObjects)
         {

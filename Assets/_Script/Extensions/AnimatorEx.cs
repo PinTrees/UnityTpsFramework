@@ -5,11 +5,12 @@ using UnityEngine;
 
 public static class AnimatorEx
 {
-    public static Dictionary<Animator, bool> animatorLockedMap = new();
+    public static Dictionary<Animator, bool> animatorTransitionLocks = new();
 
     public static void Init()
     {
-        animatorLockedMap.Clear();
+        animatorTransitionLocks.Clear();
+        animatorTransitionLocks = new();
     }
     public static void CrossFadePlay(this Animator animator, string stateName, float duration)
     {
@@ -19,31 +20,40 @@ public static class AnimatorEx
     }
     public static bool IsLocked(this Animator animator)
     {
-        if (!animatorLockedMap.ContainsKey(animator)) return false;
-        return animatorLockedMap[animator];
+        if (!animatorTransitionLocks.ContainsKey(animator)) return false;
+        return animatorTransitionLocks[animator];
     }
     public static void SetLocked(this Animator animator, bool active)
     {
-        animatorLockedMap[animator] = active;
+        animatorTransitionLocks[animator] = active;
     }
 
-    public static async UniTask WaitMustTransitionCompleteAsync(this Animator animator, string state_name, string state_tag="") => 
-        await animator.WaitForStateToStart(state_name, state_tag);
-    //public static async UniTask TransitionCompleteAsync(this Animator animator, string state_name, string state_tag, float normalizeTime)
-    //    =>  await animator.WaitForStateToEnd(state_name, state_tag, normalizeTime); 
-     
+    public static async UniTask WaitMustTransitionCompleteAsync(this Animator animator, string state_name, string state_tag="")
+    {
+        if (animator.IsLocked())
+        {
+            return; 
+        }
+
+        animator.SetLocked(true);
+
+        try
+        {
+            await animator.WaitForStateToStart(state_name, state_tag);
+        }
+        finally
+        {
+            animator.SetLocked(false);
+        }
+    }
+
     private static IEnumerator WaitForStateToStart(this Animator animator, string state_name, string state_tag="")
     {
-        if (state_tag == "")
+        if (string.IsNullOrEmpty(state_tag))
             state_tag = state_name;
 
         if (animator.IsPlaying(state_tag, 0))
             yield break;
-
-        while (animator.IsLocked())
-            yield return null;
-        
-        animator.SetLocked(true);
 
         animator.CrossFadeInFixedTime(state_name, 0.15f, 0);
         while (true)
@@ -56,6 +66,7 @@ public static class AnimatorEx
         animator.SetLocked(false);
         yield break;
     }
+
     private static IEnumerator WaitForStateToEnd(this Animator animator, string state, float normalizeTime)
     {
         while (!animator.IsPlayedOverTime(state, normalizeTime, 0))
@@ -185,6 +196,16 @@ public static class AnimatorEx
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag(tag)
          && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= start
          && animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= end)
+        {
+            return true;
+        }
+        else return false;
+    }
+    public static bool IsPlayedInTime(this Animator animator, string tag, AnimationInNormalizeTimeData animationNormalizeTime)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag(tag)
+         && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= animationNormalizeTime.start
+         && animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= animationNormalizeTime.exit)
         {
             return true;
         }

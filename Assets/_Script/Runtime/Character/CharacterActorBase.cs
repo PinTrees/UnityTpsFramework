@@ -125,7 +125,7 @@ public class CharacterActorBase : FsmObjectBase
     protected override void LateUpdate()
     {
         base.LateUpdate();
-        navMeshAgent.transform.localPosition = Vector3.zero;
+        navMeshAgent.transform.localPosition = new Vector3(0, navMeshAgent.transform.localPosition.y, 0);
     }
 
     public virtual void OnKnockDown(KnockDownMotionType motionType)

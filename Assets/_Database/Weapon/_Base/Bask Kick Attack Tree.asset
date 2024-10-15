@@ -49,6 +49,13 @@ MonoBehaviour:
     distanceFromTarget: 0
     distanceFromTargetOver: 0
     transitionDuration: 0
+    moveSpeedPerSec: 0
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -69,6 +76,12 @@ MonoBehaviour:
     start: 0
     exit: 1
   timeScale: 1
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,8 +129,15 @@ MonoBehaviour:
     useAttackerTransform: 1
     lookAtTarget: 1
     distanceFromTarget: 1
-    distanceFromTargetOver: 2.5
+    distanceFromTargetOver: 4
     transitionDuration: 0.35
+    moveSpeedPerSec: 4.5
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0.19609667
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0.19981413
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -138,6 +158,12 @@ MonoBehaviour:
     start: 0.10159818
     exit: 0.28424656
   timeScale: 0.7
+  superArmorSetting:
+    useSuperAmor: 0
+    superAmorType: 0
+    superAmorNormalizeTime:
+      start: 0
+      exit: 0
 --- !u!114 &2900624139022392075
 MonoBehaviour:
   m_ObjectHideFlags: 0

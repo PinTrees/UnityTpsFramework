@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693ce852eb5c7464e84de23efa0625dd, type: 3}
+  m_Name: Tree
+  m_EditorClassIdentifier: 
+  prefabs:
+  - uid: 9fec1d21-19e1-4a3d-b36b-4c6effb32af5
+    prefab: {fileID: 2833670695253338663, guid: 24806e0af1c0add4b95efecedda2f82b, type: 3}
+  - uid: f4975c30-4948-4fac-a7d2-5683880423a1
+    prefab: {fileID: 1188851071226158421, guid: efeccde15f1578444b9215f05f74a600, type: 3}
+  - uid: 0bb3a3df-e8b7-4d74-be47-6c7a216eb56f
+    prefab: {fileID: 6705054642125352515, guid: e6fa5429db057ae448eca2baa2ddd858, type: 3}
+  - uid: 93ef8978-4023-4c1c-b81e-7fff39e942de
+    prefab: {fileID: 347358295215006617, guid: decdfc3d209ae994498c075f16ad460e, type: 3}
+  - uid: bc5f9436-bb08-4fe7-b73a-aa5f7c1d1272
+    prefab: {fileID: 7701800546615615887, guid: 635fd28cfdd002a48b040b3d8d3c7ec1, type: 3}
+  - uid: d15bab36-715a-4187-a8d5-169d40c41895
+    prefab: {fileID: 5710710618311435520, guid: f6da966b162426e4aa871300a27d146b, type: 3}
+  plantSize: {x: 1.5, y: 1.5}
+  maxScale: {x: 1, y: 1, z: 1}
+  minScale: {x: 1.5, y: 1.5, z: 1.5}
+  useLockAspectRatio: 1

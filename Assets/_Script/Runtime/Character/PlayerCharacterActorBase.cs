@@ -98,17 +98,6 @@ public class PlayerCharacterActorBase : CharacterActorBase
             lastMovementDir = Vector3.zero;
 
         movementDir = currentDir;
-
-        if(lastMovementDir != Vector3.zero)
-        {
-            animator.SetFloat("x", lastMovementDir.x);
-            animator.SetFloat("y", lastMovementDir.z);
-        }
-        else
-        {
-            animator.SetFloat("x", movementDir.x);
-            animator.SetFloat("y", movementDir.z);
-        }
     }
 
     protected override void FixedUpdate()
@@ -208,13 +197,16 @@ public class PlayerCharacterActorBase : CharacterActorBase
     public override void OnDodgeRoll()
     {
         IsDodge = true;
+        fsmContext.ChangeStateNow(PlayerFsmLayer.HitLayer, PlayerHitStateType.None);
         fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
         fsmContext.ChangeStateNow(PlayerFsmLayer.MovementLayer, PlayerMovementStateType.None);
         fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.Roll);
     }
 
-    public override void OnHit(HitData hitData)
+    public override async void OnHit(HitData hitData)
     {
+        base.OnHit(hitData);
+
         IsHit = true;
         fsmContext.ChangeStateNow(PlayerFsmLayer.AttackLayer, PlayerAttackStateType.None);
         fsmContext.ChangeStateNow(PlayerFsmLayer.DodgeLayer, PlayerDodgeStateType.None);
@@ -223,5 +215,8 @@ public class PlayerCharacterActorBase : CharacterActorBase
         {
             hitData = hitData,
         });
+
+        await PostProcessingManager.Instance.Vignette.CrossFade(0.15f, targetIntensity: 0.5f);
+        await PostProcessingManager.Instance.Vignette.CrossFade(0.5f, targetIntensity: 0f);
     }
 }

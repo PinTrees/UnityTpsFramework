@@ -1,7 +1,10 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Fsm.State;
 using System.Collections;
 using UnityEngine;
+using static PlayerDodgeState_Slide;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerHitStateType
 {
@@ -87,6 +90,7 @@ public class PlayerHitState_HitHard : FsmState
     new PlayerCharacterActorBase owner;
     Vector3 hitDirection;
     HitStateData hitStateData;
+    HitData hitData;
     HitAnimatorSetting animationSetting;
 
     public PlayerHitState_HitHard() : base(PlayerHitStateType.HitHard) { }
@@ -98,12 +102,14 @@ public class PlayerHitState_HitHard : FsmState
         owner = GetOwner<PlayerCharacterActorBase>();
         animationSetting = owner.scriptableAnimatorSetting.hitAnimatorSetting;
         hitStateData = layer.param as HitStateData;
+        hitData = hitStateData.hitData;
+
         hitDirection = owner.baseObject.transform.position - hitStateData.hitData.ownerCharacter.baseObject.transform.position;
-        hitDirection = hitDirection.normalized;
+        hitDirection.Normalize();
 
         // Animation Setting;
         {
-            owner.legsAnimator.CrossFadeActive(true);
+            owner.legsAnimator.CrossFadeActive(false);
 
             owner.animator.SetFloat("hx", 0);
             owner.animator.SetFloat("hy", 1);
@@ -111,8 +117,27 @@ public class PlayerHitState_HitHard : FsmState
             currentAnimationTag = "Hit";
             owner.animator.speed = 1;
             owner.animator.applyRootMotion = animationSetting.standHitHard.useRootMotion;
-            owner.legsAnimator.CrossFadeActive(true);
-            await owner.animator.WaitMustTransitionCompleteAsync("StandHitHard", "Hit");
+            owner.animator.SetNormalizeTime("StandHitHard", 0.01f);
+        }
+
+        // Knockback Setting 
+        if (hitData.knockbackSetting.useKnockback)
+        {
+            owner.animator.applyRootMotion = false;
+            var knockbackSetting = hitData.knockbackSetting;
+            var ownerPosition = owner.baseObject.transform.position;
+            if (knockbackSetting.knockbackType == HitboxKnockbackType.Back)
+            {
+                var knockbackAmount = knockbackSetting.knockbackAmount;
+                Vector3 knockbackXZOffet = knockbackSetting.useAttackerDirection
+                   ? hitData.ownerCharacter.baseObject.transform.rotation * new Vector3(-knockbackAmount.x, 0, -knockbackAmount.z)
+                   : owner.baseObject.transform.rotation * new Vector3(knockbackAmount.x, 0, knockbackAmount.z);
+
+                var endPosition = ownerPosition + knockbackXZOffet;
+                owner.baseObject.transform.DOKill();
+                owner.baseObject.transform.DOMoveX(endPosition.x, knockbackSetting.duration);
+                owner.baseObject.transform.DOMoveZ(endPosition.z, knockbackSetting.duration);
+            }
         }
 
         // Camera Setting
@@ -132,19 +157,24 @@ public class PlayerHitState_HitHard : FsmState
 
         // Animator Setting
         owner.legsAnimator.CrossFadeActive(false);
+        //var layerIndex = owner.animator.GetLayerIndex("Arm");
         //owner.animator.CrossFadeLayerWeight(1, 1);
-
-        // State Setting
-        owner.OnIdle();
     }
 
     public override void Update()
     {
         base.Update();
 
+        if(Input.GetKey(KeyCode.C) && owner.movementDir != Vector3.zero)
+        {
+            owner.OnDodgeRoll();
+            return;
+        }
+
         if (owner.animator.IsPlayedOverTime(currentAnimationTag, 0.8f))
         {
             layer.ChangeStateNow(PlayerHitStateType.None);
+            owner.OnIdle();
             return;
         }
 
@@ -158,5 +188,6 @@ public class PlayerHitState_HitHard : FsmState
     {
         base.OnAnimationExit();
         layer.ChangeStateNow(PlayerHitStateType.None);
+        owner.OnIdle();
     }
 }

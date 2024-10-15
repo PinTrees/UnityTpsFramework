@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376476fc7ea139040a96eae9633cf5cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tag: VfxSlash3
-  vfx: {fileID: 379885624081529388}
+  visualEffect: {fileID: 379885624081529388}
   lifeDuration: 2
+  useManualRelease: 0
   lookCamera: 0
 --- !u!1 &7417640429424282609
 GameObject:

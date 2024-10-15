@@ -34,6 +34,7 @@ public class CameraManager : Singleton<CameraManager>
     // runtima value
     public List<CameraBase> cameras = new();
     public CameraBase currentActiveCamera;
+    public string startCameraName = "";
 
     // component
     private Camera mainCamera;
@@ -56,7 +57,8 @@ public class CameraManager : Singleton<CameraManager>
         cameras.ForEach(e => e.Init());
         cameras.ForEach(e => e.TurnOffCamera());
 
-        ChangeCamera(cameras.First());
+        if (startCameraName != "") ChangeCamera(startCameraName);
+        else ChangeCamera(cameras.First());
     }
 
     public void UpdateCameraTransform()
@@ -72,18 +74,23 @@ public class CameraManager : Singleton<CameraManager>
             mainCamera.fieldOfView = currentActiveCamera.fieldOfView;
 
             // 쉐이크 오프셋 적용
-            foreach (var shakeData in shakeOffsetMap)
-            {
-                Vector3 eulerAngleOffset = shakeData.Value.Item1;
-                Vector3 positionOffset = shakeData.Value.Item2;
-                float distanceOffset = shakeData.Value.Item3;
+            ApplyShakeOffset();
+        }
+    }
 
-                // 회전 오프셋과 위치 오프셋을 카메라에 적용
-                mainCamera.transform.position += positionOffset;
-                mainCamera.transform.rotation *= Quaternion.Euler(eulerAngleOffset);
+    private void ApplyShakeOffset()
+    {
+        foreach (var shakeData in shakeOffsetMap)
+        {
+            Vector3 eulerAngleOffset = shakeData.Value.Item1;
+            Vector3 positionOffset = shakeData.Value.Item2;
+            float distanceOffset = shakeData.Value.Item3;
 
-                mainCamera.transform.position += currentActiveCamera.transform.forward * distanceOffset;
-            }
+            // 회전 오프셋과 위치 오프셋을 카메라에 적용
+            mainCamera.transform.position += positionOffset;
+            mainCamera.transform.rotation *= Quaternion.Euler(eulerAngleOffset);
+
+            mainCamera.transform.position += currentActiveCamera.transform.forward * distanceOffset;
         }
     }
 
@@ -184,12 +191,13 @@ public class CameraManager : Singleton<CameraManager>
 
             float lerp = (Time.unscaledTime - startTransitionTime) / duration;
             SetupCameraLerp(mainCamera, currentActiveCamera, lerp);
+            ApplyShakeOffset();
 
             yield return null;
         }
 
-        // force setting
         SetupCameraLerp(mainCamera, currentActiveCamera, lerp: 1f);
+        ApplyShakeOffset();
 
         transitionCorutine = null;
     }

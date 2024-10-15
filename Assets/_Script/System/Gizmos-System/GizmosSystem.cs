@@ -10,6 +10,7 @@ public struct GizmoLineDataContainer
 
 public class GizmosSystem : Singleton<GizmosSystem>
 {
+    public bool useGizmo = false;   
     public GameObject lineRendererContainer;
 
     public Queue<GizmoLineDataContainer> inGameLineGizmoDataRenderQueue = new();
@@ -18,6 +19,10 @@ public class GizmosSystem : Singleton<GizmosSystem>
     public override void Init()
     {
         base.Init();
+   
+        if (!useGizmo)
+            return;
+
         lineRendererContainer = new GameObject("GizmoSystem-LineRendererContainer");
         for(int i = 0; i < 50; ++i)
         {
@@ -29,6 +34,9 @@ public class GizmosSystem : Singleton<GizmosSystem>
 
     public void DrawLine(Vector3 startPos, Vector3 endPos)
     {
+        if (!useGizmo)
+            return;
+
         inGameLineGizmoDataRenderQueue.Enqueue(new GizmoLineDataContainer()
         {
             startPos = startPos,
@@ -38,6 +46,9 @@ public class GizmosSystem : Singleton<GizmosSystem>
 
     public void LateUpdate()
     {
+        if (!useGizmo)
+            return;
+
         lineRenderers.ForEach(e =>
         {
             if(inGameLineGizmoDataRenderQueue.Count <= 0)

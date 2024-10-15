@@ -11,6 +11,8 @@ public class Initializer_InGame : MonoBehaviour
     // 절차적 초기화
     protected async UniTaskVoid Init()
     {
+        PostProcessingManager.Instance.Init();
+
         DetecteSystem.Init();
         InputManager.Instance.Init();
         GraphicManager.Instance.Init();
@@ -26,12 +28,15 @@ public class Initializer_InGame : MonoBehaviour
         AnimatorLayerWeightEx.Init();
 
         CameraManager.Instance.Init();
-        CameraManager.Instance.ChangeCamera("PlayerMainCamera");
 
-        NavigationSystem.Instance.Init();
+        try
+        {
+            NavigationSystem.Instance.Init();
+        }
+        catch { }
 
         // Character Create
-        NpcManager.Instance.Init();
         PlayerManager.Instance.Init();
+        NpcManager.Instance.Init();
     }
 }

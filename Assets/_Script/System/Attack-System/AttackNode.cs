@@ -75,6 +75,12 @@ public class AttackerTransformSetting
     public float distanceFromTarget;
     public float distanceFromTargetOver;
     public float transitionDuration;
+    public float moveSpeedPerSec;
+
+    [AnimationTime(0, 1)]
+    public AnimationInNormalizeTimeData canMoveableNormalizeTime;
+    [AnimationTime(0, 1)]
+    public AnimationInNormalizeTimeData canRotateableNormalizeTime; 
 }
 
 public enum SuperAmorType

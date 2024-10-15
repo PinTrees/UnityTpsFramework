@@ -72,29 +72,27 @@ public class NpcHitState_HitHard : FsmState
             currentAnimationTag = "Hit";
             owner.animator.speed = 1;
             owner.animator.applyRootMotion = animationSetting.standHitHard.useRootMotion;
-            owner.animator.Play("StandIdle", 0, 0);
-            await UniTask.Yield();
-            owner.animator.Play("StandHitHard", 0, 0.0f);
-            await owner.animator.WaitMustTransitionCompleteAsync("StandHitHard", "Hit");
+            owner.animator.SetNormalizeTime("StandHitHard", 0.01f);
         }
 
         // Knockback Setting 
         if (hitData.knockbackSetting.useKnockback)
         {
+            owner.animator.applyRootMotion = false;
+
             var knockbackSetting = hitData.knockbackSetting;
             var ownerPosition = owner.baseObject.transform.position;
             if (knockbackSetting.knockbackType == HitboxKnockbackType.Back)
             {
                 var knockbackAmount = knockbackSetting.knockbackAmount;
-                var knockbackXZOffet = (knockbackSetting.useAttackerDirection
-                    ? hitData.ownerCharacter.baseObject.transform.rotation
-                    : owner.baseObject.transform.rotation) * new Vector3(knockbackAmount.x, 0, knockbackAmount.z);
-
+                Vector3 knockbackXZOffet = knockbackSetting.useAttackerDirection 
+                    ? hitData.ownerCharacter.baseObject.transform.rotation * new Vector3(-knockbackAmount.x, 0, -knockbackAmount.z)
+                    : owner.baseObject.transform.rotation * new Vector3(knockbackAmount.x, 0, knockbackAmount.z);
+                
                 var endPosition = ownerPosition + knockbackXZOffet;
-                owner.baseObject.transform.DOMove(endPosition, knockbackSetting.duration).OnComplete(() =>
-                {
-                  
-                });
+                owner.baseObject.transform.DOKill();
+                owner.baseObject.transform.DOMoveX(endPosition.x, knockbackSetting.duration);
+                owner.baseObject.transform.DOMoveZ(endPosition.z, knockbackSetting.duration);
             }
         }
     }
@@ -111,9 +109,9 @@ public class NpcHitState_HitHard : FsmState
     {
         base.Update(); 
 
-        if (owner.animator.IsPlayedOverTime(currentAnimationTag, 0.99f))
+        if (owner.animator.IsPlayedOverTime(currentAnimationTag, 0.85f))
         {
-            owner.OnIdle();
+            layer.ChangeStateNow(NpcHitStateType.None);
             return;
         }
     }
@@ -121,7 +119,7 @@ public class NpcHitState_HitHard : FsmState
     public override void OnAnimationExit()
     {
         base.OnAnimationExit();
-        owner.OnIdle();
+        layer.ChangeStateNow(NpcHitStateType.None);
     }
 }
 
@@ -142,9 +140,6 @@ public class NpcHitState_Custom : FsmState
         owner.IsHit = true;
         hitStateData = layer.param as HitStateData;
         hitData = hitStateData.hitData;
-
-        // State Setting
-        await owner.fsmContext.ChangeStateNowAsync(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
 
         // Transform Setting
         attackerPosition = hitStateData.hitData.ownerCharacter.baseObject.transform.position;

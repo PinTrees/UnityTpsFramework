@@ -236,6 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376476fc7ea139040a96eae9633cf5cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tag: VfxSlash
-  vfx: {fileID: 2316791457046966736}
+  visualEffect: {fileID: 2316791457046966736}
   lifeDuration: 2
+  useManualRelease: 0
+  lookCamera: 0

@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useBaseTransform: 1
   detectorSetting:
-    detectRange: 0
+    shapeType: 1
     detectLayer:
       serializedVersion: 2
       m_Bits: 7168
+    detectRange: 0
     detectAngle: 0
     detectMaxCount: 0
-    shapeType: 1
     offset: {x: 0, y: 1, z: 0.75}
     rotationOffset: {x: 0, y: 0, z: 0}
     size: {x: 0.75, y: 1.5, z: 1.25}
@@ -34,6 +34,7 @@ MonoBehaviour:
     exit: 0
   hitAnimationSpeed: 1
   targets:
+  - {fileID: 0}
   - {fileID: 0}
   isHit: 1
 --- !u!114 &11400000
@@ -57,7 +58,7 @@ MonoBehaviour:
   hitboxTimelines:
   - hitboxSpawnNormailzeTime:
       start: 0.15656567
-      exit: 0.20202021
+      exit: 0.19758067
   hitboxs:
   - {fileID: -733632143239411280}
   knockbackSetting:
@@ -88,9 +89,7 @@ MonoBehaviour:
     overrideIdlePlayNormalizeTime:
       start: 0
       exit: 0
-  useTimeStopEvent: 0
-  timeStopDuration: 0.1
-  buffDebuffEventSetting: {fileID: 6229076711192757714}
+  buffDebuffEvents: []
 --- !u!114 &6229076711192757714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7ce56178169bae45866511d6295a371, type: 3}
   m_Name: BuffDebuffEvent
   m_EditorClassIdentifier: 
-  buffdebuffType: 201
+  buffdebuffEnterTime: 0
   duration: 3
   useRootMotion: 0
-  animationClip: {fileID: 0}
+  bodyAnimationType: 0

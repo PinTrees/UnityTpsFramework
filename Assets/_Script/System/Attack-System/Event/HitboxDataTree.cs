@@ -174,6 +174,8 @@ public class HitboxDataTree : ScriptableObject
                             continue;
                         if (onlyOneHitbox && owner.targetController.hitTargets.Contains(target))
                             continue;
+                        if (!target.CanHit())
+                            continue;
 
                         var vfx = VfxObject.Create("VfxBlood2");
                         vfx.transform.position = target.GetCenterOfMass() + Random.insideUnitSphere * 0.1f;
@@ -182,9 +184,6 @@ public class HitboxDataTree : ScriptableObject
                         var vfxCenter = VfxObject.Create("VfxBlood7");
                         vfxCenter.transform.position = target.GetCenterOfMass() + Random.insideUnitSphere * 0.1f;
                         vfxCenter.transform.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
-
-                        if (!target.CanHit())
-                            continue;
 
                         target.OnHit(new HitData()
                         {

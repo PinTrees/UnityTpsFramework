@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Fsm.State;
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerMovementStateType
 {
@@ -119,7 +120,30 @@ public class PlayerMovementState_Walk : FsmState
         if (Input.GetKey(KeyCode.LeftShift))
             owner.OnRun();
 
-        owner.baseObject.transform.LookCameraY(10f);
+        if(owner.targetController.forcusTarget != null)
+        {
+            Vector3 cameraForward = Camera.main.transform.forward;
+            cameraForward.y = 0; // Y축은 제거하여 평면 상의 방향만 사용
+            cameraForward.Normalize();
+
+            Vector3 cameraRight = Camera.main.transform.right;
+            cameraRight.y = 0; // Y축 제거
+            cameraRight.Normalize();
+
+            Vector3 inputDir = (cameraForward * owner.movementDir.z) + (cameraRight * owner.movementDir.x);
+
+            Vector3 localDir = owner.baseObject.transform.InverseTransformDirection(inputDir);
+            owner.animator.SetFloat("x", localDir.x);
+            owner.animator.SetFloat("y", localDir.z);
+
+            owner.baseObject.transform.LookAt_Y(owner.targetController.forcusTarget.baseObject.transform, 360f);
+        }
+        else
+        {
+            owner.baseObject.transform.LookCameraY(10f);
+            owner.animator.SetFloat("x", owner.movementDir.x);
+            owner.animator.SetFloat("y", owner.movementDir.z);
+        }
     }
 }
 
@@ -165,6 +189,29 @@ public class PlayerMovementState_Run : FsmState
         if (!Input.GetKey(KeyCode.LeftShift))
             owner.OnWalk();
 
-        owner.baseObject.transform.LookCameraY(10f);
+        if (owner.targetController.forcusTarget != null)
+        {
+            Vector3 cameraForward = Camera.main.transform.forward;
+            cameraForward.y = 0; // Y축은 제거하여 평면 상의 방향만 사용
+            cameraForward.Normalize();
+
+            Vector3 cameraRight = Camera.main.transform.right;
+            cameraRight.y = 0; // Y축 제거
+            cameraRight.Normalize();
+
+            Vector3 inputDir = (cameraForward * owner.movementDir.z) + (cameraRight * owner.movementDir.x);
+
+            Vector3 localDir = owner.baseObject.transform.InverseTransformDirection(inputDir);
+            owner.animator.SetFloat("x", localDir.x);
+            owner.animator.SetFloat("y", localDir.z);
+
+            owner.baseObject.transform.LookAt_Y(owner.targetController.forcusTarget.baseObject.transform, 360f);
+        }
+        else
+        {
+            owner.baseObject.transform.LookCameraY(10f);
+            owner.animator.SetFloat("x", owner.movementDir.x);
+            owner.animator.SetFloat("y", owner.movementDir.z);
+        }
     }
 }

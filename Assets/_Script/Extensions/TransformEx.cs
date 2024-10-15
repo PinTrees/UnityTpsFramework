@@ -3,6 +3,12 @@ using UnityEngine;
 
 public static class TransformEx 
 {
+    public static void SetPositionY(this Transform transform, float y)
+    {
+        Vector3 position = transform.position;  
+        position.y = y;                         
+        transform.position = position;          
+    }
     public static Transform TryFindChild(this Transform transform, string name)
     {
         Transform find = transform.GetComponentsInChildren<Transform>().Where(x => x.name == name).First();

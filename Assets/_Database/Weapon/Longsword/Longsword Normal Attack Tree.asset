@@ -48,6 +48,13 @@ MonoBehaviour:
     distanceFromTarget: 1
     distanceFromTargetOver: 2.5
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -61,7 +68,7 @@ MonoBehaviour:
     start: 0
     exit: 0.6028572
   nextAttackNormalizeTime:
-    start: 0.34964418
+    start: 0.30420354
     exit: 0.7990476
   useTimeScale: 0
   timeScaleNormailzeTime:
@@ -107,7 +114,6 @@ MonoBehaviour:
   priorityRank: 0
   conditions:
   - {fileID: -8658882805325164958}
-  - {fileID: 8178034392383246569}
   events: []
   vfxEvents:
   - vfxPlayNormalizeTime:
@@ -138,8 +144,15 @@ MonoBehaviour:
     useAttackerTransform: 1
     lookAtTarget: 1
     distanceFromTarget: 1
-    distanceFromTargetOver: 2.5
+    distanceFromTargetOver: 4
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0
   canJustDodge: 1
   canJustDodgeDistance: 2
   canJustDodgeNormailzetime:
@@ -153,7 +166,7 @@ MonoBehaviour:
     start: 0
     exit: 0.6518265
   nextAttackNormalizeTime:
-    start: 0.24644129
+    start: 0.21792036
     exit: 0.7
   useTimeScale: 0
   timeScaleNormailzeTime:
@@ -212,8 +225,15 @@ MonoBehaviour:
     useAttackerTransform: 1
     lookAtTarget: 1
     distanceFromTarget: 1
-    distanceFromTargetOver: 2.5
+    distanceFromTargetOver: 3.5
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -227,7 +247,7 @@ MonoBehaviour:
     start: 0
     exit: 0.59904766
   nextAttackNormalizeTime:
-    start: 0.2998221
+    start: 0.24889383
     exit: 0.59523815
   useTimeScale: 0
   timeScaleNormailzeTime:
@@ -305,6 +325,13 @@ MonoBehaviour:
     distanceFromTarget: 1
     distanceFromTargetOver: 2.5
     transitionDuration: 0.5
+    moveSpeedPerSec: 3
+    canMoveableNormalizeTime:
+      start: 0
+      exit: 0
+    canRotateableNormalizeTime:
+      start: 0
+      exit: 0
   canJustDodge: 0
   canJustDodgeDistance: 0
   canJustDodgeNormailzetime:
@@ -318,7 +345,7 @@ MonoBehaviour:
     start: 0
     exit: 0.6015982
   nextAttackNormalizeTime:
-    start: 0.2962634
+    start: 0.26659295
     exit: 0.98
   useTimeScale: 0
   timeScaleNormailzeTime:
@@ -382,20 +409,3 @@ MonoBehaviour:
   inputDownKey: 
   inputUpKey: 
   inputHoldKey: 43010000
---- !u!114 &8178034392383246569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49715e7796b1a9847a57a989e29f5611, type: 3}
-  m_Name: "\uB0B4\uB824\uBCA0\uAE30 - \uC6B0\uCE21 (RandomCondition)"
-  m_EditorClassIdentifier: 
-  targetLayers:
-  - {fileID: 11400000, guid: 2cd2a3594be903d428c4a251003e6c4f, type: 2}
-  id: 2
-  frequency: 1.25
-  activePercent: 0.1

@@ -2,6 +2,22 @@ using UnityEngine;
 
 public static class Vector3Ex
 {
+    public static bool Eqaul_XZ(this Vector3 a, Vector3 b)
+    {
+        if (a.x != b.x) return false;
+        if (a.z != b.z) return false;
+        return true;
+    }
+
+    public static Vector3 RandomVector(Vector3 min, Vector3 max)
+    {
+        return new Vector3(
+            Random.Range(min.x, max.x),
+            Random.Range(min.y, max.y),
+            Random.Range(max.z, max.z)
+            );
+    }
+
     public static Vector3 NormalizeToBoundary(this Vector3 vector)
     {
         // 8방향 벡터 미리 정의

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693ce852eb5c7464e84de23efa0625dd, type: 3}
+  m_Name: "Grass_\uBBFC\uB4E4\uB798"
+  m_EditorClassIdentifier: 
+  prefabs:
+  - uid: 
+    prefab: {fileID: 9209275548776343435, guid: 0e3cf0c44a134984788c0101d1e092b1, type: 3}
+  - uid: 
+    prefab: {fileID: 1220231044113418178, guid: 39b68154f07085442ba0619bad0290ba, type: 3}
+  - uid: 
+    prefab: {fileID: 809912666025450251, guid: edb5b04f0d33e904499c63db18338e51, type: 3}
+  - uid: 
+    prefab: {fileID: 3192247334657052252, guid: db40d0773ce0ce54ea24a5e11eabb786, type: 3}
+  - uid: 
+    prefab: {fileID: 7388643554690064035, guid: 9c97b8087ced14a4f8a2ca2818507336, type: 3}
+  plantSize: {x: 1, y: 1}
+  maxScale: {x: 1, y: 1, z: 1}
+  minScale: {x: 1.2, y: 1.2, z: 1.2}
+  useLockAspectRatio: 1

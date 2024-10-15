@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using DG.Tweening;
 using System.Linq;
+using TMPro;
 
 public class NpcAttackStateType
 {
@@ -52,33 +53,13 @@ public class NpcAttackState_Attack : FsmState
         isComboAttack = false;
         attackNode = owner.combatController.currentAttackNode;
         attackTarget = owner.targetController.forcusTarget;
-        var targetPosition = attackTarget.baseObject.transform.position;
-        var ownerPosition = owner.baseObject.transform.position;
-
-        // Attacker Transform Setting
-        if (attackTarget)
-        {
-            // LookAt Target - RRR
-            owner.baseObject.transform.LookAt_Y(targetPosition);
-
-            if (attackNode.attackerTransformSetting.useAttackerTransform && attackTarget)
-            {
-                if ((Vector3.Distance(ownerPosition, targetPosition) < attackNode.attackerTransformSetting.distanceFromTargetOver)
-                 || attackNode.attackerTransformSetting.distanceFromTargetOver == 0)
-                {
-                    var dir = owner.baseObject.transform.position - targetPosition;
-                    var attackerPosition = targetPosition + dir.normalized * attackNode.attackerTransformSetting.distanceFromTarget;
-                    owner.baseObject.transform.DOMoveX(attackerPosition.x, attackNode.attackerTransformSetting.transitionDuration);
-                    owner.baseObject.transform.DOMoveZ(attackerPosition.z, attackNode.attackerTransformSetting.transitionDuration);
-                }
-            }
-        }
 
         // Animation Setting
         {
             currentAnimationTag = attackNode.uid;
             owner.animator.speed = attackNode.animationSpeed;
             owner.animator.applyRootMotion = attackNode.useRootMotion;
+            owner.legsAnimator.CrossFadeActive(attackNode.useLegIK);
             // owner.animator.CrossFadeInFixedTime(currentAnimationTag, 0.15f);
             await owner.animator.WaitMustTransitionCompleteAsync(currentAnimationTag);
             if (attackNode.animationPlayNormailzeTime.start > 0.01f)
@@ -102,15 +83,12 @@ public class NpcAttackState_Attack : FsmState
     {
         await base.Exit();
 
-        owner.combatController.ExitAttack();
+        attackNode.Exit(owner);
+        attackNode.hitboxTree.Exit();
+        attackNode.conditions.ForEach(e => e.Exit(owner));
 
-        // Exit Event
-        if (attackNode != null)
-        {
-            attackNode.Exit(owner);
-            attackNode.hitboxTree.Exit();
-            attackNode.conditions.ForEach(e => e.Exit(owner));
-        }
+        // 공격자 위치 수정 로직 제거
+        owner.baseObject.transform.DOKill();
 
         // Vfx Event Exit
         foreach (var item in spawnedVfxObjects)
@@ -121,8 +99,10 @@ public class NpcAttackState_Attack : FsmState
 
         if (!isComboAttack)
         {
+            owner.combatController.ExitAttack();
+            owner.combatController.ClearAttackCombo();
             owner.targetController.forcusTarget.targetController.activeAttackers.Remove(owner);
-            owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+            owner.fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.None);
             owner.IsAttack = false;
         }
     }
@@ -137,7 +117,42 @@ public class NpcAttackState_Attack : FsmState
     {
         base.Update();
 
-        if(owner.animator.IsPlayedOverTime(currentAnimationTag, attackNode.animationPlayNormailzeTime.exit))
+        var targetPosition = attackTarget.baseObject.transform.position;
+        var ownerPosition = owner.baseObject.transform.position;
+
+        // Attacker Transform Setting
+        if (attackTarget)
+        {
+            // LookAt Target - RRR
+            if (attackNode.attackerTransformSetting.lookAtTarget
+             && owner.animator.IsPlayedInTime(currentAnimationTag, attackNode.attackerTransformSetting.canRotateableNormalizeTime))
+            {
+                owner.baseObject.transform.LookAt_Y(targetPosition, 360.0f);
+            }
+
+            if (attackNode.attackerTransformSetting.useAttackerTransform
+             && owner.animator.IsPlayedInTime(currentAnimationTag, attackNode.attackerTransformSetting.canMoveableNormalizeTime))
+            {
+                var distance = Vector3.Distance(ownerPosition, targetPosition);
+                if (distance < attackNode.attackerTransformSetting.distanceFromTargetOver
+                 && attackNode.attackerTransformSetting.distanceFromTargetOver != 0)
+                {
+                    var dir = owner.baseObject.transform.position - targetPosition;
+
+                    float distanceToTarget = Vector3.Distance(ownerPosition, targetPosition);
+                    if (distanceToTarget < attackNode.attackerTransformSetting.distanceFromTarget)
+                    {
+                        dir *= -1f;
+                    }
+
+                    var a = distance / attackNode.attackerTransformSetting.distanceFromTargetOver;
+                    var moveSpeed = Mathf.Lerp(0.1f, attackNode.attackerTransformSetting.moveSpeedPerSec, a);
+                    owner.baseObject.transform.position -= dir.normalized * moveSpeed * Time.deltaTime;
+                }
+            }
+        }
+
+        if (owner.animator.IsPlayedOverTime(currentAnimationTag, attackNode.animationPlayNormailzeTime.exit))
         {
             layer.ChangeStateNow(NpcAttackStateType.None);
             return;
@@ -145,41 +160,21 @@ public class NpcAttackState_Attack : FsmState
 
         if (owner.animator.IsPlayedInTime(currentAnimationTag, attackNode.nextAttackNormalizeTime.start, attackNode.nextAttackNormalizeTime.exit))
         {
-            var nextRootAttackCombo = owner.combatController.attackPatternData.FindAttackCombo(owner);
-            AttackNode nextRootAttackNode = null;
-            if (nextRootAttackCombo != null)
-            {
-                nextRootAttackNode = nextRootAttackCombo.attackNodes.First();
-                if (nextRootAttackNode == attackNode)
-                    nextRootAttackNode = null;
-            }
+            //var nextRootAttackCombo = owner.combatController.attackPatternData.FindAttackCombo(owner);
+            //AttackNode nextRootAttackNode = null;
+            //if (nextRootAttackCombo != null)
+            //{
+            //    nextRootAttackNode = nextRootAttackCombo.attackNodes.First();
+            //    if (nextRootAttackNode == attackNode)
+            //        nextRootAttackNode = null;
+            //}
 
             var nextComboAttackNode = owner.combatController.CanNextAttackCombo(attackNode);
 
-            if (nextRootAttackNode)
-            {
-                if (nextComboAttackNode == null)
-                {
-                    owner.combatController.SetAttackCombo(nextRootAttackCombo);
-                    nextComboAttackNode = nextRootAttackNode;
-                }
-                else if (nextRootAttackNode.priorityRank > nextComboAttackNode.priorityRank)
-                {
-                    owner.combatController.SetAttackCombo(nextRootAttackCombo);
-                    nextComboAttackNode = nextRootAttackNode;
-                }
-            }
             if (nextComboAttackNode)
             {
                 isComboAttack = true;
                 owner.combatController.SetNextComboAttack(nextComboAttackNode);
-                layer.ChangeStateNow(NpcAttackStateType.Attack);
-                return;
-            }
-            else if (nextRootAttackNode)
-            {
-                isComboAttack = true;
-                owner.combatController.SetNextComboAttack(nextRootAttackNode);
                 layer.ChangeStateNow(NpcAttackStateType.Attack);
                 return;
             }

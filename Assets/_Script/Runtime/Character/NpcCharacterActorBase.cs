@@ -1,8 +1,6 @@
 using Cysharp.Threading.Tasks;
-using Fsm;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UI.GridLayoutGroup;
 
 public class NpcFsmLayer
@@ -73,7 +71,7 @@ public class NpcCharacterActorBase : CharacterActorBase
         fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
         fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.None);
         fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
-        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.None);
 
         healthController.Init(this, 1000);
     }
@@ -140,7 +138,6 @@ public class NpcCharacterActorBase : CharacterActorBase
     public override bool CanHit()
     {
         if (IsDeath) return false;
-        if (IsKnockDown) return false;
         if (IsDodge) return false;
         return true;
     }
@@ -156,7 +153,7 @@ public class NpcCharacterActorBase : CharacterActorBase
         base.OnKnockDown(motionType);
 
         IsKnockDown = true;
-        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.None);
 
         if (motionType == KnockDownMotionType.KnockDown_Up)
         {
@@ -172,8 +169,11 @@ public class NpcCharacterActorBase : CharacterActorBase
             return;
 
         IsDeath = true;
-        var bodyLayer = fsmContext.FindLayer(NpcFsmLayer.BodyLayer);
-        bodyLayer.ChangeStateNow(NpcBodyStateType.Death);
+        fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.None);
+        fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.None);
+        fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.None);
+        fsmContext.ChangeStateNow(NpcFsmLayer.BodyLayer, NpcBodyStateType.Death);
 
         indicator?.Close();
     }
@@ -205,7 +205,7 @@ public class NpcCharacterActorBase : CharacterActorBase
     public override void OnAttack()
     {
         base.OnAttack();
-
+        
         IsAttack = true;
         IsReadyToAttack = false;
         fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.None);
@@ -222,21 +222,35 @@ public class NpcCharacterActorBase : CharacterActorBase
             return;
         }
 
+        if(combatController.currentAttackCombo == null)
+        {
+            CancleAttack();
+            return;
+        }
+
         targetController.lockDetectUpdate = true;
         IsRunToAttack = true;
         fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.RunToAttack);
     }
 
-    public override void OnHit(HitData data)
+    public override async void OnHit(HitData data)
     {
+        base.OnHit(data);
+
         healthController.TakeDamage(new vDamage()
         {
             damage = 250,
         });
 
+        if(IsDeath)
+            return;
+        if (IsKnockDown)
+            return;
+
         IsHit = true;
         fsmContext.ChangeStateNow(NpcFsmLayer.AttackLayer, NpcAttackStateType.None);
-        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.Idle);
+        fsmContext.ChangeStateNow(NpcFsmLayer.MovementLayer, NpcMovementStateType.None);
+
         if (data.customHitSetting.useCustomHit)
         {
             fsmContext.ChangeStateNow(NpcFsmLayer.HitLayer, NpcHitStateType.Custom, new HitStateData()
@@ -251,5 +265,8 @@ public class NpcCharacterActorBase : CharacterActorBase
                 hitData = data,
             });
         }
+
+        await PostProcessingManager.Instance.ChromaticAberration.CrossFadeIntensity(0.5f, 0.15f);
+        await PostProcessingManager.Instance.ChromaticAberration.CrossFadeIntensity(0.0f, 0.5f);
     }
 }

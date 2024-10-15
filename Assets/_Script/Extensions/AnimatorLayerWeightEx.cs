@@ -50,12 +50,10 @@ public static class AnimatorLayerWeightEx
                 await UniTask.Yield(token);
             }
 
-            // 마지막에 정확히 목표 가중치로 설정
             animator.SetLayerWeight(layerIndex, targetWeight);
         }
         catch (OperationCanceledException)
         {
-            // 작업이 취소된 경우 처리
             Debug.Log("CrossFadeLayerWeight operation was canceled.");
         }
         finally

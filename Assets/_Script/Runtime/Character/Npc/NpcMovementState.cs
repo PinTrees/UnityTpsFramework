@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Fsm;
 using Fsm.State;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class NpcMovementStateType
 {
@@ -141,6 +142,8 @@ public class NpcMovementState_Trace : FsmState
         owner.navMeshAgent.transform.rotation = owner.baseObject.transform.rotation;
 
         owner.animator.applyRootMotion = true;
+        owner.animator.SetFloat("x", 0);
+        owner.animator.SetFloat("y", 0);
         owner.animator.CrossFadeInFixedTime("StandRun", 0.15f);
     }
 
@@ -158,7 +161,6 @@ public class NpcMovementState_Trace : FsmState
         var target = owner.targetController.forcusTarget;
         if(target == null)
         {
-            layer.ChangeStateNow(NpcMovementStateType.Idle);
             return;
         }
 
@@ -245,12 +247,12 @@ public class NpcMovementState_Confronting : FsmState
         owner.baseObject.transform.LookAt_Y(target.baseObject.transform, 360);
 
         // Dodge
-        if(targetDistance < npcCombatData.avoidDistance)
-        {
-            owner.IsDodge = true;
-            owner.fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.ConfrontingDodge);
-            return;
-        }
+        //if(targetDistance < npcCombatData.avoidDistance)
+        //{
+        //    owner.IsDodge = true;
+        //    owner.fsmContext.ChangeStateNow(NpcFsmLayer.DodgeLayer, NpcDodgeStateType.ConfrontingDodge);
+        //    return;
+        //}
 
         if (targetDistance > npcCombatData.confrontingRange * 1.5f)
         {
@@ -318,8 +320,9 @@ public class NpcMovementState_ConfrontingTrace : FsmState
         {
             owner.animator.speed = 1;
             owner.animator.applyRootMotion = true;
+
             owner.animator.SetFloat("x", 0);
-            owner.animator.SetFloat("y", 1);
+            owner.animator.SetFloat("y", 0);
             owner.animator.CrossFadeInFixedTime("StandRun", 0.15f);
             owner.legsAnimator.CrossFadeActive(false);
         }
@@ -343,7 +346,6 @@ public class NpcMovementState_ConfrontingTrace : FsmState
         var target = owner.targetController.forcusTarget;
         if (target == null)
         {
-            layer.ChangeStateNow(NpcMovementStateType.Idle);
             return;
         }
 
@@ -425,15 +427,18 @@ public class NpcMovementState_RunToAttack : FsmState
     {
         await base.Enter();
         owner = GetOwner<NpcCharacterActorBase>();
-        owner.navMeshAgent.ResetPath();
         owner.IsRunToAttack = true;
+        
+        owner.navMeshAgent.ResetPath();
+        owner.navMeshAgent.transform.rotation = owner.baseObject.transform.rotation;
+
         attackNode = owner.combatController.currentAttackNode;
-        distanseFromTarget = Mathf.Max(attackNode.attackerTransformSetting.distanceFromTarget, 0.75f);
+        distanseFromTarget = Mathf.Max(attackNode.attackerTransformSetting.distanceFromTargetOver * 0.5f, 1.5f);
 
         currentAnimationTag = "Sprint";
         owner.animator.applyRootMotion = true;
         owner.animator.SetFloat("x", 0);
-        owner.animator.SetFloat("y", 1);
+        owner.animator.SetFloat("y", 0);
         owner.animator.CrossFadeInFixedTime("StandSprint", 0.1f);
         owner.legsAnimator.CrossFadeActive(false);
     }
@@ -454,16 +459,33 @@ public class NpcMovementState_RunToAttack : FsmState
             return;
         }
 
-        GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, owner.targetController.forcusTarget.baseObject.transform.position);
-
         var target = owner.targetController.forcusTarget;
         if (target == null)
         {
-            layer.ChangeStateNow(NpcMovementStateType.Idle);
+            owner.CancleAttack();
+            layer.ChangeStateNow(NpcMovementStateType.None);
             return;
         }
-       
-        owner.baseObject.transform.LookAt_Y(target.baseObject.transform, 360.0f);
+
+        GizmosSystem.Instance.DrawLine(owner.baseObject.transform.position, owner.targetController.forcusTarget.baseObject.transform.position);
+
+        // Animation Param Setting
+        {
+            Vector3 currentDirection = owner.navMeshAgent.desiredVelocity.normalized;
+            Vector3 localDirection = owner.baseObject.transform.InverseTransformDirection(currentDirection);
+            Vector3 currentV = new Vector3(owner.animator.GetFloat("x"), 0, owner.animator.GetFloat("y"));
+
+            localDirection = Vector3.Lerp(currentV, localDirection, 5f * Time.deltaTime);
+
+            owner.animator.SetFloat("x", localDirection.x);
+            owner.animator.SetFloat("y", localDirection.z);
+        }
+
+        owner.baseObject.transform.rotation = Quaternion.Lerp(owner.baseObject.transform.rotation, owner.navMeshAgent.transform.rotation, 5 * Time.deltaTime);
+        owner.baseObject.transform.SetPositionY(owner.navMeshAgent.transform.position.y);
+
+        var targetPosition = target.baseObject.transform.position;
+        owner.navMeshAgent.SetDestination(targetPosition);
 
         var distance = Vector3.Distance(owner.baseObject.transform.position, target.baseObject.transform.position);
         if (distance < distanseFromTarget)

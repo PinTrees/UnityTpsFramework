@@ -3,17 +3,20 @@ using UnityEngine.VFX;
 
 public class VfxObject : MonoBehaviour
 {
-    public string tag;
-    public VisualEffect vfx;
+    [Header("Component Setting")]
+    public VisualEffect visualEffect;
+
+    [Header("Life Setting")]
     public float lifeDuration = 0.5f;
+    public bool useManualRelease = false;
 
     [Header("Effect Setting")]
     public bool lookCamera;
 
+    [Header("Runtime Value")]
     private float spawnTime;
     private bool isReleased = false;
     private bool isSpawned = false;
-
     private float emission = 0;
 
     public static T Create<T>(string tag) where T : VfxObject
@@ -44,9 +47,9 @@ public class VfxObject : MonoBehaviour
 
     protected virtual void OnInit()
     {
-        if(vfx != null)
+        if(visualEffect != null)
         {
-            emission = vfx.GetFloat("Emission");
+            emission = visualEffect.GetFloat("Emission");
         }
     }
 
@@ -58,9 +61,9 @@ public class VfxObject : MonoBehaviour
         if (lookCamera)
             transform.LookAt(Camera.main.transform, Vector3.up);
 
-        if(vfx)
+        if(visualEffect)
         {
-            vfx.SetFloat("Emission", emission);
+            visualEffect.SetFloat("Emission", emission);
         }
 
         gameObject.SetActive(true);
@@ -75,31 +78,31 @@ public class VfxObject : MonoBehaviour
         isReleased = true;
         isSpawned = false;
 
-        ObjectPoolManager.Instance.Release(tag, this.gameObject); 
+        ObjectPoolManager.Instance.Release(gameObject.name, this.gameObject); 
     }
 
     public void Play()
     {
-        if (vfx == null)
+        if (visualEffect == null)
             return;
 
-        vfx.Play();
+        visualEffect.Play();
     }
 
     public void Stop()
     {
-        if (vfx == null)
+        if (visualEffect == null)
             return;
 
-        vfx.Stop();
+        visualEffect.Stop();
     }
 
     public void SetFloat(string tag, float v)
     {
-        if (vfx == null)
+        if (visualEffect == null)
             return;
 
-        vfx.SetFloat(tag, v);
+        visualEffect.SetFloat(tag, v);
     }
 
     public void Update()

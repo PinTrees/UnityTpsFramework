@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693ce852eb5c7464e84de23efa0625dd, type: 3}
+  m_Name: BiomeResource
+  m_EditorClassIdentifier: 
+  prefabs:
+  - uid: 18758e01-2458-49b9-b96b-20732a5ea587
+    prefab: {fileID: 6692502664262018212, guid: 9425abc770f41d64d8ec8f04bff23be1, type: 3}
+  - uid: 5de90059-d766-4c5a-b4a9-32aa66f8b8b7
+    prefab: {fileID: 8865531709731093868, guid: e183df8d39548dc498a6b776456052e2, type: 3}
+  - uid: bd71411f-da42-4154-a9ee-3aa44081a383
+    prefab: {fileID: 5237701679006048374, guid: fced22502a0e9d443b129fcb559c8d06, type: 3}
+  - uid: e55bec70-ac66-4c33-8c32-997e6581cef2
+    prefab: {fileID: 4465717341026418169, guid: 0d6049acf2ae14842a22e883873901db, type: 3}
+  - uid: d3b440e8-d300-4657-ac8a-61fc20770da1
+    prefab: {fileID: 8778070602062283885, guid: 807b699900ccca94a9251931891ce2c8, type: 3}
+  - uid: 65dad958-6953-4e1d-a8ac-5312322c05e0
+    prefab: {fileID: 2221317281267359601, guid: 418107d982e945b4ba978c6c28d8d5a9, type: 3}
+  - uid: 6049bb7e-658a-40c4-bf5b-26d11dc6c0c4
+    prefab: {fileID: 7465775691643055800, guid: 2bd6db6558b0bba4599de00bf9dfce5a, type: 3}
+  - uid: 5f4ac4fd-f450-4467-ad42-c1ded726ac66
+    prefab: {fileID: 5586568058837602505, guid: 7f1bba99439f0da45a2981731854d229, type: 3}
+  - uid: 9a04409a-53ee-483c-af62-5708f83d82a9
+    prefab: {fileID: 1200585968673809589, guid: 462c30893f1c700418f3912ddd442eb3, type: 3}
+  plantSize: {x: 0.7, y: 0.7}
+  maxScale: {x: 0.8, y: 0.8, z: 0.8}
+  minScale: {x: 1, y: 1, z: 1}
+  useLockAspectRatio: 1
