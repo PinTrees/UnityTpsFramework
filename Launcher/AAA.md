@@ -136,16 +136,18 @@ slot.Close(); // 내부적으로 Release() 호출됨
 ```csharp
 protected override void OnShow()
 {
+    // 초기화 전에 표기될 가능성이 있는UI의 경우 널체크 필요할 수 있음
     userData.OnChange += RefreshUI;
 }
 protected override void OnClose()
 {
-    // 닫기 시 객체 존재 확인 필요 / null 체크
+    // 초기화 전에 표기될 가능성이 있는UI의 경우 널체크 필요할 수 있음
     userData.OnChange -= RefreshUI;
 }
 public override void Show()
 {
     // 부모함수 호출 전 값이 할당되어야 함.
+    this.userData = UserDataManager.Instance.userData;
     base.Show();
 }
 ```
