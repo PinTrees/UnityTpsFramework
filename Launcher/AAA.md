@@ -22,8 +22,34 @@ UISystemManager
 
 UISystemManager는 런타임에서 명시적으로 초기화되어야 하며, UI 진입 시점에 Instance 접근을 통해 자동으로 생성됨.
 
-OnInit() 내에서 컴포넌트 캐싱, 버튼 이벤트 등록 등의 초기 설정을 수행해야 함.
 
+
+
+
+## 함수 호출순서 - UIViewBase
+
+Init > OnInit
+Show(oeverride) > Show(parent) > OnShow(override) 
+Close(oeverride) > Close(parent) > OnClose(override) 
+
+
+## 특수 함수 설명
+즉시 닫기 함수.
+해당 UI의 애니메이션을을 포함한 모든 추가작업 없이 즉시 UI를 닫습니다. -> 씬 진입 및 초기화 시 사용 될 수 있음
+```
+public void CloseImmadiate()
+```
+닫기 대기 함수
+해당 UI의 상태가 닫기 상태가 될 때까지 로직을 대기함.
+```
+public async UniTask WaitForClose()
+```
+
+
+## 사용 예시
+
+### 초기화
+OnInit() 내에서 컴포넌트 캐싱, 버튼 이벤트 등록 등의 초기 설정을 수행해야 함.
 ```csharp
 protected override void OnInit()
 {
@@ -32,11 +58,10 @@ protected override void OnInit()
 }
 ```
 
-풀링 기반 UI 사용
+### 풀링 기반 UI 사용
 풀 등록
 UI 오브젝트는 런타임에서 UISystemManager.Instance.CreatePool<T>()을 통해 풀에 등록됨.
 중복 등록은 내부적으로 자동 방지됨.
-
 ```csharp
 protected override void OnInit()
 {
@@ -45,9 +70,8 @@ protected override void OnInit()
 }
 ```
 
-해제 처리
-풀링된 오브젝트는 Close() 시점에서 Release() 호출을 통해 반환되어야 함.
-
+### 해제 처리
+풀링된 오브젝트의 Close() 시점에서 Release() 호출을 통해 반환되어야 함.
 ```csharp
 public override void Close()
 {
@@ -56,7 +80,7 @@ public override void Close()
 }
 ```
 
-버튼 이벤트 확장
+### 버튼 이벤트 확장
 다음 확장 메서드를 통해 버튼 이벤트를 간편하게 등록할 수 있음.
 
 SetOnClickListener : 기존 리스너 제거 후 등록
@@ -69,7 +93,7 @@ button.SetOnPointDownListener(() => { /* 처리 */ });
 // 가능한 모든 연결 이벤트는 람다로 처리하지 말것, 모호성 증가
 ```
 
-드래그 & 드롭 처리
+### 드래그 & 드롭 처리
 UIDragBase
 IBeginDragHandler, IDragHandler, IEndDragHandler를 구현함.
 
@@ -82,7 +106,7 @@ protected override void OnDragging(PointerEventData eventData)
 }
 ```
 
-UI_DropTarget
+### UI_DropTarget
 IDropHandler, IPointerEnterHandler, IPointerExitHandler를 구현함.
 
 드롭 대상에서 오브젝트 수신 및 콜백 처리 가능함.
@@ -91,7 +115,7 @@ IDropHandler, IPointerEnterHandler, IPointerExitHandler를 구현함.
 public Action<GameObject> OnDropEvent;
 ```
 
-동적 UI 생성 및 해제
+### 동적 UI 생성 및 해제
 슬롯, 버튼 등은 런타임에서 동적으로 생성 및 해제하여 사용함.
 
 생성
@@ -106,8 +130,9 @@ slot.Show(unitData);
 slot.Close(); // 내부적으로 Release() 호출됨
 ```
 
-데이터 바인딩 및 자동 갱신
+### 데이터 바인딩 및 자동 갱신
 데이터 변경 시, 이벤트를 통해 UI 갱신을 자동으로 처리함.
+
 ```csharp
 protected override void OnShow()
 {
@@ -115,11 +140,17 @@ protected override void OnShow()
 }
 protected override void OnClose()
 {
+    // 닫기 시 객체 존재 확인 필요 / null 체크
     userData.OnChange -= RefreshUI;
+}
+public override void Show()
+{
+    // 부모함수 호출 전 값이 할당되어야 함.
+    base.Show();
 }
 ```
 
-탭 UI 처리
+### 탭 UI 처리
 UITabGroup, UITabButton 구성 요소를 사용하여 탭 전환 UI를 구현할 수 있음.
 탭 선택 시 콜백을 통해 View 제어가 가능함.
 ```csharp
@@ -127,7 +158,7 @@ tabButton.SetOnSelectListener(() => ShowView());
 tabGroup.SelectTabButton(defaultTab);
 ```
 
-레이아웃 갱신
+### 레이아웃 갱신
 동적으로 슬롯이 추가되거나 제거된 경우, 레이아웃 강제 갱신이 필요함.
 RefreshLayout() 호출을 통해 LayoutGroup 요소를 즉시 갱신할 수 있음.
 ```csharp
